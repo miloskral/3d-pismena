@@ -1,0 +1,2596 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Svetelné písmená — generátor 3D modelu z DXF</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-0: #0b0f14;
+    --bg-1: #131922;
+    --bg-2: #1c2430;
+    --bg-3: #26303d;
+    --line: #2c3744;
+    --line-2: #3a4654;
+    --text: #e6edf3;
+    --text-dim: #8b97a7;
+    --text-soft: #b3becc;
+    --accent: #4dd0e1;
+    --accent-2: #00b8d4;
+    --accent-3: #80deea;
+    --warn: #ffb74d;
+    --err: #ef5350;
+    --ok: #66bb6a;
+    --shadow: 0 12px 40px rgba(0,0,0,0.45);
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--bg-0);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.45;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  #app {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    height: 100vh;
+  }
+
+  /* ---------- PANEL ---------- */
+  #panel {
+    background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-0) 100%);
+    border-right: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .brand {
+    padding: 18px 22px 16px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(0,0,0,0.18);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .brand-logo {
+    width: 36px; height: 36px;
+    border-radius: 9px;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+    display: flex;
+    align-items: center; justify-content: center;
+    box-shadow: 0 6px 18px rgba(77, 208, 225, 0.35);
+    flex-shrink: 0;
+  }
+  .brand-logo svg { width: 22px; height: 22px; }
+
+  .brand h1 {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.1px;
+  }
+  .brand .sub {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  /* tabs */
+  .tabs {
+    display: flex;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg-1);
+  }
+  .tab {
+    flex: 1;
+    padding: 11px 6px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-weight: 600;
+    position: relative;
+    transition: color .15s;
+  }
+  .tab:hover { color: var(--text-soft); }
+  .tab.active { color: var(--accent); }
+  .tab.active::after {
+    content: '';
+    position: absolute;
+    left: 12%; right: 12%;
+    bottom: -1px;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  .scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 18px 22px 12px;
+  }
+  .scroll::-webkit-scrollbar { width: 8px; }
+  .scroll::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 4px; }
+  .scroll::-webkit-scrollbar-track { background: transparent; }
+
+  .section {
+    margin-bottom: 22px;
+  }
+  .section-title {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-dim);
+    font-weight: 700;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .field { margin-bottom: 12px; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .field label {
+    display: block;
+    font-size: 12px;
+    color: var(--text-soft);
+    margin-bottom: 5px;
+    font-weight: 500;
+  }
+  .field .hint {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 4px;
+    line-height: 1.35;
+  }
+
+  input[type="number"], select, input[type="text"] {
+    width: 100%;
+    padding: 9px 11px;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 13px;
+    font-family: inherit;
+    transition: all .15s;
+  }
+  input[type="number"]:focus, select:focus, input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: var(--bg-1);
+    box-shadow: 0 0 0 3px rgba(77, 208, 225, 0.12);
+  }
+  input[type="number"]::-webkit-inner-spin-button { opacity: 0.4; }
+  select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%238b97a7' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+    cursor: pointer;
+  }
+
+  .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 11px;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .checkbox-row:hover { border-color: var(--line-2); }
+  .checkbox-row input { accent-color: var(--accent); }
+  .checkbox-row label { font-size: 12px; color: var(--text); cursor: pointer; margin: 0; flex: 1; }
+
+  /* button-group */
+  .seg {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+    background: var(--bg-2);
+    padding: 4px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+  }
+  .seg.cols-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .seg button {
+    padding: 9px 4px;
+    background: transparent;
+    border: none;
+    border-radius: 5px;
+    color: var(--text-dim);
+    font-size: 10.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .15s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .seg button svg { width: 26px; height: 26px; opacity: 0.65; }
+  .seg button:hover { color: var(--text-soft); }
+  .seg button:hover svg { opacity: 0.9; }
+  .seg button.active {
+    background: linear-gradient(180deg, var(--bg-3), var(--bg-2));
+    color: var(--accent);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.04), 0 2px 6px rgba(0,0,0,0.4);
+  }
+  .seg button.active svg { opacity: 1; }
+
+  /* buttons */
+  .btn {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 7px;
+    border: 1px solid transparent;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .15s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: inherit;
+  }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn svg { width: 16px; height: 16px; }
+
+  .btn-primary {
+    background: linear-gradient(180deg, var(--accent) 0%, var(--accent-2) 100%);
+    color: #0a1014;
+    box-shadow: 0 4px 14px rgba(77,208,225,0.25), inset 0 1px 0 rgba(255,255,255,0.25);
+  }
+  .btn-primary:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(77,208,225,0.4), inset 0 1px 0 rgba(255,255,255,0.3);
+  }
+  .btn-primary:not(:disabled):active { transform: translateY(0); }
+
+  .btn-ghost {
+    background: var(--bg-2);
+    color: var(--text);
+    border-color: var(--line);
+  }
+  .btn-ghost:not(:disabled):hover {
+    background: var(--bg-3);
+    border-color: var(--line-2);
+  }
+
+  .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  /* ---------- ACTIONS BAR ---------- */
+  .actions {
+    padding: 14px 22px 14px;
+    border-top: 1px solid var(--line);
+    background: rgba(0,0,0,0.22);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* status bar */
+  #status {
+    padding: 8px 22px;
+    background: var(--bg-1);
+    border-top: 1px solid var(--line);
+    font-size: 11px;
+    color: var(--text-dim);
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  #status .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--text-dim);
+    flex-shrink: 0;
+  }
+  #status.ready .dot { background: var(--text-dim); }
+  #status.work .dot { background: var(--warn); animation: pulse 1.2s infinite; }
+  #status.ok .dot { background: var(--ok); }
+  #status.err .dot { background: var(--err); }
+  #status.err { color: var(--err); }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+
+  /* file box */
+  .file-box {
+    padding: 14px;
+    background: var(--bg-2);
+    border: 1px dashed var(--line-2);
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .file-box:hover {
+    border-color: var(--accent);
+    background: var(--bg-3);
+  }
+  .file-box.has-file {
+    border-style: solid;
+    border-color: var(--ok);
+    background: rgba(102,187,106,0.08);
+  }
+  .file-box .icon {
+    display: block;
+    margin: 0 auto 8px;
+    width: 32px; height: 32px;
+    color: var(--text-dim);
+  }
+  .file-box.has-file .icon { color: var(--ok); }
+  .file-box .label { color: var(--text-soft); font-size: 13px; font-weight: 500; }
+  .file-box .name { color: var(--accent); font-size: 12px; margin-top: 4px; word-break: break-all; }
+  .file-box .info { color: var(--text-dim); font-size: 11px; margin-top: 4px; }
+
+  /* ---------- VIEWPORT ---------- */
+  #viewport {
+    position: relative;
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(77,208,225,0.06) 0%, transparent 60%),
+      linear-gradient(180deg, #0e1419 0%, #050709 100%);
+    overflow: hidden;
+  }
+  #canvas-wrap { position: absolute; inset: 0; }
+  #canvas-wrap canvas { display: block; outline: none; }
+
+  /* viewport overlay */
+  .vp-overlay {
+    position: absolute;
+    pointer-events: none;
+    color: var(--text-soft);
+    z-index: 5;
+  }
+  .vp-overlay.tl { top: 16px; left: 16px; }
+  .vp-overlay.tr { top: 16px; right: 16px; pointer-events: auto; }
+  .vp-overlay.bl { bottom: 16px; left: 16px; }
+  .vp-overlay.br { bottom: 16px; right: 16px; pointer-events: auto; }
+
+  .vp-card {
+    background: rgba(15, 22, 31, 0.78);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 14px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    font-size: 12px;
+  }
+  .vp-card .key { color: var(--text-dim); font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; }
+  .vp-card .val { color: var(--text); font-weight: 600; font-size: 13px; }
+  .vp-stats { display: grid; grid-template-columns: auto auto auto; gap: 14px; }
+  .vp-stats > div { text-align: center; }
+
+  .vp-buttons {
+    display: flex;
+    gap: 6px;
+    background: rgba(15, 22, 31, 0.78);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 4px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .vp-buttons button {
+    background: transparent;
+    border: none;
+    color: var(--text-soft);
+    cursor: pointer;
+    padding: 7px 10px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all .15s;
+  }
+  .vp-buttons button:hover { background: var(--bg-3); color: var(--text); }
+  .vp-buttons button.active { background: var(--accent); color: #0a1014; }
+  .vp-buttons button svg { width: 14px; height: 14px; }
+
+  .vp-empty {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dim);
+    text-align: center;
+    pointer-events: none;
+  }
+  .vp-empty svg { width: 80px; height: 80px; opacity: 0.3; margin-bottom: 14px; }
+  .vp-empty h2 { font-size: 16px; font-weight: 600; color: var(--text-soft); margin-bottom: 4px; }
+  .vp-empty p { font-size: 12px; max-width: 360px; line-height: 1.5; }
+
+  /* loading */
+  .vp-busy {
+    position: absolute;
+    inset: 0;
+    background: rgba(8,12,16,0.65);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .vp-busy.show { display: flex; }
+  .spin {
+    display: inline-block;
+    width: 18px; height: 18px;
+    border: 2px solid var(--line-2);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-right: 10px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* schematic diagram */
+  .diagram {
+    width: 100%;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 14px;
+  }
+  .diagram svg { width: 100%; height: 130px; display: block; }
+
+  /* accent label colors used in svg */
+  .label-1 { fill: #4dd0e1; }
+  .label-2 { fill: #ffb74d; }
+  .label-3 { fill: #ba68c8; }
+  .label-4 { fill: #81c784; }
+
+  /* --- mobile / narrow --- */
+  @media (max-width: 800px) {
+    #app { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+    #panel { max-height: 50vh; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- ======= LEFT PANEL ======= -->
+  <aside id="panel">
+    <div class="brand">
+      <div class="brand-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0a1014" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 6l9-4 9 4v12l-9 4-9-4V6z"/>
+          <path d="M3 6l9 4 9-4"/>
+          <path d="M12 22V10"/>
+        </svg>
+      </div>
+      <div>
+        <h1>Svetelné písmená</h1>
+        <div class="sub">DXF → 3D model s falcom na plexi</div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="src">DXF</button>
+      <button class="tab" data-tab="walls">Steny</button>
+      <button class="tab" data-tab="plexi">Plexi</button>
+      <button class="tab" data-tab="bottom">Dno</button>
+    </div>
+
+    <div class="scroll">
+
+      <!-- ===== TAB: DXF ===== -->
+      <div class="tab-pane active" data-tab="src">
+        <div class="section">
+          <div class="section-title">Zdrojový DXF</div>
+          <input type="file" id="dxf-file" accept=".dxf" hidden>
+          <div class="file-box" id="file-box" tabindex="0">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            <div class="label" id="file-label">Klikni a vyber DXF</div>
+            <div class="name" id="file-name"></div>
+            <div class="info" id="file-info"></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Jednotky DXF</div>
+          <div class="field">
+            <label>V akých jednotkách je DXF</label>
+            <select id="scale">
+              <option value="1" selected>milimetre (mm) — 1:1</option>
+              <option value="10">centimetre (cm) — 1:1</option>
+            </select>
+            <div class="hint">DXF sa berie v mierke 1:1 — vyber jednotky, v ktorých je vyexportovaný. Všetky ostatné parametre nižšie sú v mm.</div>
+          </div>
+          <div class="field">
+            <label>Tolerancia oblúkov (mm)</label>
+            <input type="number" id="curve-tol" value="0.05" min="0.01" max="2" step="0.01">
+            <div class="hint">Maximálna odchýlka tetivy od oblúka. 0.05 mm je veľmi jemné, 0.01 mm extra jemné. Menej = hladšie, ale viac trojuholníkov.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== TAB: WALLS ===== -->
+      <div class="tab-pane" data-tab="walls">
+        <div class="section">
+          <div class="section-title">Telo boxu</div>
+
+          <div class="diagram">
+            <svg viewBox="0 0 280 130" xmlns="http://www.w3.org/2000/svg">
+              <!-- box cross-section: DXF = plexi outline = cavity wall in the REBATE (top section);
+                   outer wall offset OUTWARD by `outer offset` (1);
+                   lip BELOW the rebate (under the plexi) extends INWARD past DXF by `falc` (4)
+                   to catch the plexi from underneath. Plexi drops in from the top. -->
+              <g stroke="#3a4654" stroke-width="1.2" fill="#26303d">
+                <!-- left wall: outer at x=30; rebate cavity wall (DXF) at x=58 above shelf;
+                     lip cavity wall at x=70 below shelf at y=38 -->
+                <path d="M30 20 L30 110 L70 110 L70 38 L58 38 L58 30 L30 30 Z"/>
+                <!-- right wall mirror -->
+                <path d="M250 20 L250 110 L210 110 L210 38 L222 38 L222 30 L250 30 Z"/>
+              </g>
+              <!-- DXF reference line (dashed) at plexi outer edge -->
+              <line x1="58" y1="14" x2="58" y2="118" stroke="#ff7043" stroke-width="0.8" stroke-dasharray="3,2" opacity="0.8"/>
+              <line x1="222" y1="14" x2="222" y2="118" stroke="#ff7043" stroke-width="0.8" stroke-dasharray="3,2" opacity="0.8"/>
+              <text x="58" y="11" text-anchor="middle" fill="#ff7043" font-size="8" font-weight="700">DXF</text>
+              <text x="222" y="11" text-anchor="middle" fill="#ff7043" font-size="8" font-weight="700">DXF</text>
+              <!-- plexi sits in the rebate at the TOP (zShelf..zTop), outline = DXF -->
+              <rect x="58" y="30" width="164" height="8" fill="#4dd0e1" opacity="0.55" stroke="#4dd0e1" stroke-width="1"/>
+              <text x="140" y="36" text-anchor="middle" fill="#0a1014" font-size="9" font-weight="700">PLEXI</text>
+              <!-- dim arrows -->
+              <g font-size="10" font-family="-apple-system,sans-serif" font-weight="600">
+                <!-- (1) outer offset: from DXF (58) outward to outer wall (30) -->
+                <line x1="30" y1="118" x2="58" y2="118" stroke="#4dd0e1" stroke-width="1"/>
+                <line x1="30" y1="115" x2="30" y2="121" stroke="#4dd0e1" stroke-width="1"/>
+                <line x1="58" y1="115" x2="58" y2="121" stroke="#4dd0e1" stroke-width="1"/>
+                <text x="44" y="128" text-anchor="middle" class="label-1">1</text>
+
+                <!-- (2) box depth -->
+                <line x1="22" y1="20" x2="22" y2="110" stroke="#ffb74d" stroke-width="1"/>
+                <line x1="19" y1="20" x2="25" y2="20" stroke="#ffb74d" stroke-width="1"/>
+                <line x1="19" y1="110" x2="25" y2="110" stroke="#ffb74d" stroke-width="1"/>
+                <text x="14" y="68" text-anchor="middle" class="label-2">2</text>
+
+                <!-- (3) plexi thickness (= rebate depth) -->
+                <line x1="265" y1="30" x2="265" y2="38" stroke="#ba68c8" stroke-width="1"/>
+                <line x1="262" y1="30" x2="268" y2="30" stroke="#ba68c8" stroke-width="1"/>
+                <line x1="262" y1="38" x2="268" y2="38" stroke="#ba68c8" stroke-width="1"/>
+                <text x="273" y="38" text-anchor="middle" class="label-3">3</text>
+
+                <!-- (4) falc — width of the lip below shelf (from DXF=58 inward to lip-inner=70) -->
+                <line x1="58" y1="75" x2="70" y2="75" stroke="#81c784" stroke-width="1"/>
+                <line x1="58" y1="72" x2="58" y2="78" stroke="#81c784" stroke-width="1"/>
+                <line x1="70" y1="72" x2="70" y2="78" stroke="#81c784" stroke-width="1"/>
+                <text x="78" y="78" text-anchor="middle" class="label-4">4</text>
+              </g>
+            </svg>
+          </div>
+
+          <div class="field">
+            <label><span class="label-1" style="font-weight:700">●</span> Vonkajší offset — 1 (mm)</label>
+            <input type="number" id="wall" value="3" min="0.4" max="50" step="0.1">
+            <div class="hint">O koľko sa stena boxu rozšíri SMEROM VON od obrysu DXF. Toto je hrúbka steny pod falcom — viditeľný okraj zboku.</div>
+          </div>
+
+          <div class="field">
+            <label><span class="label-2" style="font-weight:700">●</span> Hĺbka boxu — 2 (mm)</label>
+            <input type="number" id="depth" value="25" min="5" max="500" step="1">
+            <div class="hint">Celková výška/hĺbka svetelného písmena (od dna po vrch falca).</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== TAB: PLEXI ===== -->
+      <div class="tab-pane" data-tab="plexi">
+        <div class="section">
+          <div class="section-title">Plexi a falc</div>
+          <div class="field">
+            <label><span class="label-3" style="font-weight:700">●</span> Hrúbka plexi — 3 (mm)</label>
+            <input type="number" id="plexi" value="3" min="1" max="20" step="0.5">
+            <div class="hint">Hrúbka plexiskla (= hĺbka falca odhora). Plexi má rozmer presne podľa DXF.</div>
+          </div>
+          <div class="field">
+            <label><span class="label-4" style="font-weight:700">●</span> Šírka falca (vnútorný offset) — 4 (mm)</label>
+            <input type="number" id="falc" value="2" min="0.2" max="50" step="0.1">
+            <div class="hint">Lip POD plexi — o koľko sa stena POD rebate (kde sedí plexi) zúži DOVNÚTRA. Plexi sa vkladá zhora a opiera sa o tento lip. Vnútorný offset = DXF posunuté dovnútra.</div>
+          </div>
+          <div class="field">
+            <label>Vôľa pre plexi (mm)</label>
+            <input type="number" id="plexi-gap" value="0.2" min="0" max="2" step="0.05">
+            <div class="hint">O koľko sa plexi vyrobí menšie oproti DXF, aby sa dalo vsunúť bez zadrhnutia. Typicky 0.1–0.3 mm.</div>
+          </div>
+          <div class="field">
+            <label>Zapustenie plexi pod hranu steny (mm)</label>
+            <input type="number" id="plexi-inset" value="0" min="0" max="20" step="0.5">
+            <div class="hint">O koľko sedí vrch plexi POD horným okrajom steny. 0 = plexi v rovine s vrchom (default). Zápornú hodnotu nezadávaj — pre plexi nad stenu treba upraviť hĺbku boxu.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== TAB: BOTTOM ===== -->
+      <div class="tab-pane" data-tab="bottom">
+        <div class="section">
+          <div class="section-title">Typ dna</div>
+          <div class="seg cols-4" id="bottom-type">
+            <button data-val="open" class="active" title="Otvorené dno (W) — iba steny">
+              <svg viewBox="0 0 40 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 4 v20 M34 4 v20"/></svg>
+              W · Otvorené
+            </button>
+            <button data-val="solid" title="Plné dno (I) — uzavretý box">
+              <svg viewBox="0 0 40 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4 v20 h28 v-20"/></svg>
+              I · Plné
+            </button>
+            <button data-val="recessed" title="Zapustené dno (U) — back plate posunutý dovnútra, steny vystupujú smerom dolu">
+              <svg viewBox="0 0 40 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4 v20 h6 v-8 h16 v8 h6 v-20"/></svg>
+              U · Zapustené
+            </button>
+            <button data-val="innerShelf" title="Plné dno s vnútorným regálom (TT) — back plate + obvodový vyvýšený rim">
+              <svg viewBox="0 0 40 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4 v20 h28 v-20 M11 24 v-7 h4 v7 M25 24 v-7 h4 v7"/></svg>
+              TT · S regálom
+            </button>
+          </div>
+          <div class="hint" style="margin-top:10px; color: var(--text-dim); font-size:11px;">
+            <strong>W — Otvorené:</strong> iba obvodové steny (najlepšie pre tlač naležato, montáž zo zadu).<br>
+            <strong>I — Plné:</strong> uzavreté dno; LED a plexi zhora.<br>
+            <strong>U — Zapustené:</strong> back plate je posunutý smerom hore, steny pokračujú pod dnom — vznikne zadný okraj na montáž.<br>
+            <strong>TT — S regálom:</strong> plné dno + vyvýšený vnútorný rim pre LED strip alebo spevnenie.
+          </div>
+        </div>
+
+        <div class="section" id="sec-back-params">
+          <div class="section-title">Parametre dna</div>
+          <div class="field" id="field-back-thick">
+            <label>Hrúbka dna (mm)</label>
+            <input type="number" id="back-thick" value="2" min="0.4" max="20" step="0.1">
+            <div class="hint">Hrúbka zadného uzáveru.</div>
+          </div>
+
+          <div class="field" id="field-bottom-inset" style="display:none">
+            <label>Hĺbka zapustenia dna (mm)</label>
+            <input type="number" id="bottom-inset" value="3" min="0.5" max="100" step="0.5">
+            <div class="hint">O koľko je back plate posunutý smerom hore od spodnej hrany steny. Vznikne tzv. „U“ profil — vhodný pre skryté skrutky alebo zapustenú montáž.</div>
+          </div>
+
+          <div class="field" id="field-shelf-h" style="display:none">
+            <label>Výška vnútorného regálu (mm)</label>
+            <input type="number" id="shelf-h" value="4" min="0.5" max="50" step="0.5">
+            <div class="hint">Výška vyvýšeného obvodového rimu nad dnom (na vnútornej strane).</div>
+          </div>
+          <div class="field" id="field-shelf-w" style="display:none">
+            <label>Šírka vnútorného regálu (mm)</label>
+            <input type="number" id="shelf-w" value="2" min="0.3" max="50" step="0.1">
+            <div class="hint">O koľko regál vyčnieva smerom dovnútra od vnútornej steny (lipInnerOuter).</div>
+          </div>
+
+          <div class="field" id="field-cable-toggle">
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+              <input type="checkbox" id="cable-on" style="width:16px; height:16px; cursor:pointer;">
+              Vytvoriť otvor pre prívodný kábel
+            </label>
+          </div>
+          <div class="field" id="field-cable" style="display:none">
+            <label>Priemer otvoru pre kábel (mm)</label>
+            <input type="number" id="cable" value="10" min="2" max="100" step="0.5">
+          </div>
+
+          <div class="field" id="field-bottom-separate">
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+              <input type="checkbox" id="bottom-separate" style="width:16px; height:16px; cursor:pointer;">
+              Tlačiť dno samostatne (vkladané do steny)
+            </label>
+            <div class="hint">Dno bude menšie ako vnútorný priestor o vôľu dole — vytlačíš ho ako druhý kus a zacvakneš/vlepíš dovnútra. Pri zaškrtnutí sa pridá tlačítko „Stiahnuť STL — Dno".</div>
+          </div>
+          <div class="field" id="field-bottom-clearance" style="display:none">
+            <label>Vôľa dna od vnútornej steny (mm)</label>
+            <input type="number" id="bottom-clearance" value="0.3" min="0" max="2" step="0.05">
+            <div class="hint">Tolerancia FDM tlače. Bežne 0.2–0.5 mm. Plus okolo dier sa rozšíri o tú istú vôľu, aby svetlo neprekrylo stenu.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="actions">
+      <button class="btn btn-primary" id="btn-generate" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+        Generovať 3D model
+      </button>
+      <button class="btn btn-ghost" id="btn-stl" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Stiahnuť STL — Stena
+      </button>
+      <button class="btn btn-ghost" id="btn-stl-bottom" disabled style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Stiahnuť STL — Dno
+      </button>
+    </div>
+
+    <div id="status" class="ready"><span class="dot"></span><span id="status-text">Pripravené — načítaj DXF</span></div>
+  </aside>
+
+  <!-- ======= 3D VIEWPORT ======= -->
+  <main id="viewport">
+    <div id="canvas-wrap"></div>
+
+    <div class="vp-empty" id="vp-empty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+        <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+        <line x1="12" y1="22.08" x2="12" y2="12"/>
+      </svg>
+      <h2>Žiadny model</h2>
+      <p>Načítaj DXF súbor s krivkami písmen a stlač <strong>Generovať</strong>. Model sa zobrazí tu — môžeš ho otáčať myšou.</p>
+    </div>
+
+    <div class="vp-overlay tl">
+      <div class="vp-card vp-stats" id="stats" style="display:none">
+        <div><div class="key">Rozmery (mm)</div><div class="val" id="stat-size">—</div></div>
+        <div><div class="key">Trojuholníky</div><div class="val" id="stat-tris">—</div></div>
+        <div><div class="key">Tvary</div><div class="val" id="stat-shapes">—</div></div>
+      </div>
+    </div>
+
+    <div class="vp-overlay tr">
+      <div class="vp-buttons">
+        <button id="vw-iso" class="active" title="Izometrický pohľad">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 8v8l10 6 10-6V8z"/><path d="M2 8l10 6 10-6"/><path d="M12 14V22"/></svg>
+          Iso
+        </button>
+        <button id="vw-top" title="Pohľad zhora">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3v18"/></svg>
+          Top
+        </button>
+        <button id="vw-front" title="Pohľad spredu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18"/></svg>
+          Front
+        </button>
+        <button id="vw-fit" title="Zarovnať">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V3h4M21 7V3h-4M3 17v4h4M21 17v4h-4"/></svg>
+          Fit
+        </button>
+      </div>
+    </div>
+
+    <div class="vp-overlay br">
+      <div class="vp-buttons">
+        <button id="vw-wireframe" title="Obrysy / drôtený model">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+          Wireframe
+        </button>
+        <button id="vw-plexi" class="active" title="Zobraz plexi">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+          Plexi
+        </button>
+      </div>
+    </div>
+
+    <div class="vp-busy" id="busy"><span class="spin"></span><span id="busy-text">Generujem…</span></div>
+  </main>
+</div>
+
+<!-- ======= SCRIPTS ======= -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+    "dxf-parser": "https://esm.sh/dxf-parser@1.1.2",
+    "earcut": "https://esm.sh/earcut@2.2.4"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { STLExporter } from 'three/addons/exporters/STLExporter.js';
+import DxfParser from 'dxf-parser';
+import earcut from 'earcut';
+
+/* =====================================================================
+   STATE
+   ===================================================================== */
+const state = {
+  rawRings: null,        // [{points: [[x,y]...], closed: bool}]
+  shapes: null,          // [{outer: poly, holes: [poly...]}]  — normalized
+  bbox: null,            // {min:{x,y}, max:{x,y}}
+  scale: 1,
+  curveTol: 0.2,
+  bottomType: 'open',
+  mesh: null,
+  plexiMesh: null,
+  fileName: null,
+};
+
+const ui = {
+  $: (id) => document.getElementById(id),
+  status(text, kind='ready') {
+    const s = ui.$('status');
+    s.className = kind;
+    ui.$('status-text').textContent = text;
+  },
+  busy(on, text='Pracujem…') {
+    const b = ui.$('busy');
+    if (on) {
+      ui.$('busy-text').textContent = text;
+      b.classList.add('show');
+    } else {
+      b.classList.remove('show');
+    }
+  },
+};
+
+/* =====================================================================
+   TABS
+   ===================================================================== */
+document.querySelectorAll('.tab').forEach(t => {
+  t.onclick = () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.querySelector(`.tab-pane[data-tab="${t.dataset.tab}"]`).classList.add('active');
+  };
+});
+
+function refreshBottomUI() {
+  const t = state.bottomType;
+  // Whole "Parametre dna" section visible only when there IS a bottom (anything but open).
+  ui.$('sec-back-params').style.display = (t === 'open') ? 'none' : 'block';
+  // Hrúbka dna platí pre I/U/TT
+  ui.$('field-back-thick').style.display = (t === 'open') ? 'none' : 'block';
+  // Zapustenie dna iba pre U
+  ui.$('field-bottom-inset').style.display = (t === 'recessed') ? 'block' : 'none';
+  // Vnútorný regál iba pre TT
+  ui.$('field-shelf-h').style.display = (t === 'innerShelf') ? 'block' : 'none';
+  ui.$('field-shelf-w').style.display = (t === 'innerShelf') ? 'block' : 'none';
+  // Cable hole toggle visible whenever there is a bottom
+  ui.$('field-cable-toggle').style.display = (t === 'open') ? 'none' : 'block';
+  // Cable diameter visible only if toggle is on AND there is a bottom
+  const cableVisible = (t !== 'open') && ui.$('cable-on').checked;
+  ui.$('field-cable').style.display = cableVisible ? 'block' : 'none';
+  // Samostatné dno checkbox visible only when there IS a bottom
+  ui.$('field-bottom-separate').style.display = (t === 'open') ? 'none' : 'block';
+  const sepOn = (t !== 'open') && ui.$('bottom-separate').checked;
+  ui.$('field-bottom-clearance').style.display = sepOn ? 'block' : 'none';
+  // Bottom-STL button visible only when separate is on
+  const btn = ui.$('btn-stl-bottom');
+  if (btn) btn.style.display = sepOn ? 'inline-flex' : 'none';
+}
+
+document.querySelectorAll('#bottom-type button').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('#bottom-type button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    state.bottomType = b.dataset.val;
+    refreshBottomUI();
+  };
+});
+ui.$('cable-on').onchange = refreshBottomUI;
+ui.$('bottom-separate').onchange = refreshBottomUI;
+refreshBottomUI();
+
+/* =====================================================================
+   FILE PICKER
+   ===================================================================== */
+const fileBox = ui.$('file-box');
+const fileInput = ui.$('dxf-file');
+
+fileBox.onclick = () => fileInput.click();
+fileBox.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') fileInput.click(); };
+fileBox.ondragover = (e) => { e.preventDefault(); fileBox.style.borderColor = 'var(--accent)'; };
+fileBox.ondragleave = () => { fileBox.style.borderColor = ''; };
+fileBox.ondrop = (e) => {
+  e.preventDefault();
+  fileBox.style.borderColor = '';
+  if (e.dataTransfer.files && e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+};
+fileInput.onchange = (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); };
+
+async function handleFile(file) {
+  state.fileName = file.name;
+  ui.$('file-label').textContent = 'Načítaný súbor';
+  ui.$('file-name').textContent = file.name;
+  ui.$('file-info').textContent = `${(file.size/1024).toFixed(1)} kB`;
+  fileBox.classList.add('has-file');
+
+  ui.status('Parsujem DXF…', 'work');
+  try {
+    const text = await file.text();
+    const parsed = parseDXF(text);
+    state.rawRings = parsed;
+    if (!parsed || parsed.length === 0) {
+      throw new Error('V DXF nenájdené žiadne uzavreté krivky.');
+    }
+    ui.$('file-info').textContent = `${(file.size/1024).toFixed(1)} kB · ${parsed.length} kriviek`;
+    ui.status(`DXF načítané: ${parsed.length} krivka/krivky · stlač Generovať`, 'ok');
+    ui.$('btn-generate').disabled = false;
+  } catch (e) {
+    console.error(e);
+    ui.status('Chyba pri čítaní DXF: ' + e.message, 'err');
+    ui.$('btn-generate').disabled = true;
+  }
+}
+
+/* =====================================================================
+   DXF PARSING
+   ===================================================================== */
+/**
+ * Convert DXF $INSUNITS code to a "multiply DXF coordinates by THIS to get mm" factor.
+ * Reference (AutoCAD INSUNITS): 0=unitless, 1=in, 2=ft, 3=mi, 4=mm, 5=cm, 6=m, 7=km,
+ * 8=µin, 9=mil, 10=yd, 11=Å, 12=nm, 13=µm, 14=dm, 15=dam, 16=hm, 17=Gm, 18=AU, 19=ly, 20=pc.
+ * Unitless (0) is treated as mm — same as the previous behavior.
+ */
+function dxfUnitToMM(insunits) {
+  switch (insunits) {
+    case 1:  return 25.4;        // inches
+    case 2:  return 304.8;       // feet
+    case 4:  return 1;           // millimeters
+    case 5:  return 10;          // centimeters
+    case 6:  return 1000;        // meters
+    case 10: return 914.4;       // yards
+    case 14: return 100;         // decimeters
+    default: return 1;           // unitless or anything we don't handle → assume mm
+  }
+}
+
+function parseDXF(text) {
+  const parser = new DxfParser();
+  let dxf;
+  try {
+    dxf = parser.parseSync(text);
+  } catch (e) {
+    throw new Error('DXF parser zlyhal: ' + e.message);
+  }
+  const tol = parseFloat(ui.$('curve-tol').value) || 0.05;
+  const rings = [];        // closed polylines (3+ points, treated as polygons)
+  const fragments = [];    // open polylines / lines / arcs that need stitching
+  const blocks = dxf.blocks || {};
+
+  // Identity transform
+  const identity = { a:1, b:0, c:0, d:1, tx:0, ty:0 };
+  collectFromEntities(dxf.entities || [], blocks, identity, rings, fragments, tol, 0);
+
+  // Stitch open fragments into closed loops (matches endpoints within stitchTol).
+  // This is essential for DXFs where letters are composed of disconnected LINE/ARC entities.
+  const stitchTol = Math.max(tol * 4, 0.01);
+  const beforeRings = rings.length;
+  const stitched = stitchFragments(fragments, stitchTol);
+  for (const ring of stitched) {
+    if (ring.length >= 3) rings.push(ring);
+  }
+  // Diagnostic — visible in DevTools Console. Helps debug DXFs where holes go missing
+  // (e.g., a hole drawn as separate LINE entities that didn't stitch back into a loop).
+  console.log(`[DXF] parsed: ${beforeRings} pre-closed rings + ${fragments.length} open fragments → stitched ${stitched.length} more rings (tol=${stitchTol})`);
+  if (fragments.length && stitched.length === 0) {
+    console.warn(`[DXF] ${fragments.length} fragments did NOT stitch into any closed loop — try increasing krivka tolerance.`);
+  }
+
+  // ============================================================
+  // UNIT NORMALIZATION → millimetres
+  // ============================================================
+  // DXF stores raw coordinates plus a $INSUNITS header code identifying the unit
+  // those coordinates are in. The wall thickness / falc / depth UI fields are in mm,
+  // so if the DXF is in cm (common — e.g. AutoCAD default for some setups) every
+  // offset is 10× too aggressive, narrow strokes collapse, and earcut produces
+  // garbage that fills holes. Detect the unit and scale all rings to mm here.
+  const insunits = (dxf.header && (dxf.header.$INSUNITS || dxf.header['$INSUNITS'])) || 0;
+  const scale = dxfUnitToMM(insunits);
+  if (scale !== 1) {
+    console.log(`[DXF] $INSUNITS=${insunits} → scaling coordinates by ×${scale} to convert to mm`);
+    for (const ring of rings) {
+      for (const p of ring) { p[0] *= scale; p[1] *= scale; }
+    }
+  } else {
+    console.log(`[DXF] $INSUNITS=${insunits} → coordinates assumed to already be in mm (no scaling)`);
+  }
+  return rings;
+}
+
+/**
+ * Stitch open polyline fragments (each a list of [x,y] points) into closed loops by
+ * matching nearby endpoints. Returns an array of closed polylines (first ≈ last).
+ *
+ * Strategy:
+ *   1. Treat each fragment as having two endpoints (first, last).
+ *   2. Build a hash by snapped coordinate; greedily attach fragments that share an endpoint.
+ *   3. When a chain's start ≈ end, emit it as a closed ring.
+ *
+ * Tolerance must be loose enough to bridge floating-point drift but tight enough to not
+ * fuse unrelated letter parts. `stitchTol` is set above to 4× curve tolerance.
+ */
+function stitchFragments(fragments, tol) {
+  if (!fragments.length) return [];
+  const closed = [];
+  // Filter trivially-degenerate fragments
+  let frags = fragments.filter(f => f && f.length >= 2);
+  // If a fragment is already closed, move it directly to closed.
+  const stillOpen = [];
+  for (const f of frags) {
+    const a = f[0], b = f[f.length - 1];
+    if (Math.hypot(a[0]-b[0], a[1]-b[1]) <= tol) {
+      // Drop the duplicated last point if any
+      const ring = (Math.hypot(a[0]-b[0], a[1]-b[1]) < 1e-9) ? f.slice(0, -1) : f.slice();
+      if (ring.length >= 3) closed.push(ring);
+    } else {
+      stillOpen.push(f.slice());
+    }
+  }
+  frags = stillOpen;
+
+  while (frags.length) {
+    let chain = frags.pop();
+    let progress = true;
+    while (progress) {
+      progress = false;
+      const head = chain[0];
+      const tail = chain[chain.length - 1];
+      // Closed?
+      if (Math.hypot(head[0]-tail[0], head[1]-tail[1]) <= tol) break;
+
+      // Find a fragment whose endpoint matches our tail (or head) and attach it.
+      let bestIdx = -1, bestKind = '';
+      for (let i = 0; i < frags.length; i++) {
+        const f = frags[i];
+        const a = f[0], b = f[f.length - 1];
+        // Tail matches start of f → append f (skipping its first point)
+        if (Math.hypot(tail[0]-a[0], tail[1]-a[1]) <= tol) { bestIdx = i; bestKind = 'tail-a'; break; }
+        // Tail matches end of f → append reversed f
+        if (Math.hypot(tail[0]-b[0], tail[1]-b[1]) <= tol) { bestIdx = i; bestKind = 'tail-b'; break; }
+        // Head matches end of f → prepend f
+        if (Math.hypot(head[0]-b[0], head[1]-b[1]) <= tol) { bestIdx = i; bestKind = 'head-b'; break; }
+        // Head matches start of f → prepend reversed f
+        if (Math.hypot(head[0]-a[0], head[1]-a[1]) <= tol) { bestIdx = i; bestKind = 'head-a'; break; }
+      }
+      if (bestIdx < 0) break; // no more attachments possible
+
+      const f = frags.splice(bestIdx, 1)[0];
+      if (bestKind === 'tail-a') {
+        chain = chain.concat(f.slice(1));
+      } else if (bestKind === 'tail-b') {
+        chain = chain.concat(f.slice(0, -1).reverse());
+      } else if (bestKind === 'head-b') {
+        chain = f.slice(0, -1).concat(chain);
+      } else if (bestKind === 'head-a') {
+        chain = f.slice(1).reverse().concat(chain);
+      }
+      progress = true;
+    }
+    // Did we close the chain?
+    const h = chain[0], t = chain[chain.length - 1];
+    if (Math.hypot(h[0]-t[0], h[1]-t[1]) <= tol) {
+      // remove duplicate last point if extremely close
+      if (Math.hypot(h[0]-t[0], h[1]-t[1]) < 1e-9) chain = chain.slice(0, -1);
+      if (chain.length >= 3) closed.push(chain);
+    } else {
+      // Open chain that couldn't be closed — silently dropped, but log a warning so the
+      // user understands why a shape may be missing.
+      console.warn('DXF: nezatvorený fragment ('+chain.length+' bodov) – preskakujem.');
+    }
+  }
+  return closed;
+}
+
+function makeTransform(xs, ys, rotDeg, tx, ty, bx, by) {
+  // Block reference transform: translate by (-bx,-by), scale, rotate, then translate by (tx,ty)
+  const sx = (xs == null ? 1 : xs);
+  const sy = (ys == null ? 1 : ys);
+  const r = (rotDeg || 0) * Math.PI / 180;
+  const cs = Math.cos(r), sn = Math.sin(r);
+  // Combined: x' = (sx*cs)*xL + (-sy*sn)*yL  + (tx - cs*sx*bx + sn*sy*by)
+  //           y' = (sx*sn)*xL + ( sy*cs)*yL  + (ty - sn*sx*bx - cs*sy*by)
+  const a = sx * cs, b = -sy * sn;
+  const c = sx * sn, d =  sy * cs;
+  const ttx = (tx || 0) - a * (bx || 0) - b * (by || 0);
+  const tty = (ty || 0) - c * (bx || 0) - d * (by || 0);
+  return { a, b, c, d, tx: ttx, ty: tty };
+}
+
+function composeTransform(p, ch) {
+  // result = p * ch  (apply child first, then parent)
+  return {
+    a: p.a*ch.a + p.b*ch.c,
+    b: p.a*ch.b + p.b*ch.d,
+    c: p.c*ch.a + p.d*ch.c,
+    d: p.c*ch.b + p.d*ch.d,
+    tx: p.a*ch.tx + p.b*ch.ty + p.tx,
+    ty: p.c*ch.tx + p.d*ch.ty + p.ty,
+  };
+}
+
+function applyTransform(t, p) {
+  return [t.a*p[0] + t.b*p[1] + t.tx, t.c*p[0] + t.d*p[1] + t.ty];
+}
+
+function transformPoly(t, poly) {
+  return poly.map(p => applyTransform(t, p));
+}
+
+function collectFromEntities(entities, blocks, transform, rings, fragments, tol, depth) {
+  if (depth > 16) {
+    console.warn('Block recursion depth exceeded, skipping');
+    return;
+  }
+  for (const e of entities) {
+    if (!e || !e.type) continue;
+    try {
+      if (e.type === 'INSERT') {
+        const block = blocks[e.name];
+        if (!block || !block.entities) {
+          console.warn('Block referenced but not found:', e.name);
+          continue;
+        }
+        const bx = (block.position && block.position.x) || 0;
+        const by = (block.position && block.position.y) || 0;
+        const insertX = (e.position && e.position.x) || 0;
+        const insertY = (e.position && e.position.y) || 0;
+        const xs = (e.xScale != null) ? e.xScale : 1;
+        const ys = (e.yScale != null) ? e.yScale : 1;
+        const rot = e.rotation || 0; // dxf-parser: degrees
+        const cols = e.columnCount || 1;
+        const rows = e.rowCount || 1;
+        const colSp = e.columnSpacing || 0;
+        const rowSp = e.rowSpacing || 0;
+        for (let cc = 0; cc < cols; cc++) {
+          for (let rr = 0; rr < rows; rr++) {
+            const tLocal = makeTransform(xs, ys, rot,
+              insertX + cc * colSp,
+              insertY + rr * rowSp,
+              bx, by);
+            const t = composeTransform(transform, tLocal);
+            collectFromEntities(block.entities, blocks, t, rings, fragments, tol, depth + 1);
+          }
+        }
+      } else {
+        // entityToPolylines returns { closed: [...polys], open: [...polys] }
+        const out = entityToPolylines(e, tol);
+        for (const p of out.closed) {
+          if (p.length >= 3) rings.push(transformPoly(transform, p));
+        }
+        for (const p of out.open) {
+          if (p.length >= 2) fragments.push(transformPoly(transform, p));
+        }
+      }
+    } catch (err) {
+      console.warn('skipped entity', e.type, err);
+    }
+  }
+}
+
+function entityToPolylines(e, tol) {
+  // Returns { closed: [...polys], open: [...polys] }.
+  // Closed polylines are treated as ready-made polygons; open ones go through stitching.
+  const empty = { closed: [], open: [] };
+  if (!e || !e.type) return empty;
+  switch (e.type) {
+    case 'LWPOLYLINE':
+    case 'POLYLINE': {
+      const pts = [];
+      const verts = e.vertices || [];
+      const isClosed = !!(e.shape || e.closed);
+      for (let i = 0; i < verts.length; i++) {
+        const v = verts[i];
+        const next = verts[(i+1) % verts.length];
+        pts.push([v.x, v.y]);
+        // bulge => arc segment
+        if (v.bulge && (i < verts.length - 1 || isClosed)) {
+          if (i === verts.length - 1 && !isClosed) continue;
+          const arc = bulgeArc([v.x,v.y], [next.x,next.y], v.bulge, tol);
+          for (const ap of arc) pts.push(ap);
+        }
+      }
+      return isClosed ? { closed: [pts], open: [] } : { closed: [], open: [pts] };
+    }
+    case 'LINE': {
+      // LINE is two endpoints — always treat as an open fragment for stitching.
+      return { closed: [], open: [[[e.vertices[0].x, e.vertices[0].y],
+                                    [e.vertices[1].x, e.vertices[1].y]]] };
+    }
+    case 'CIRCLE': {
+      const r = e.radius;
+      const cx = e.center.x, cy = e.center.y;
+      const n = Math.max(16, Math.ceil(2*Math.PI / Math.acos(1 - tol/r)));
+      const pts = [];
+      for (let i = 0; i < n; i++) {
+        const a = 2*Math.PI*i/n;
+        pts.push([cx + r*Math.cos(a), cy + r*Math.sin(a)]);
+      }
+      return { closed: [pts], open: [] };
+    }
+    case 'ARC': {
+      const cx = e.center.x, cy = e.center.y;
+      const r = e.radius;
+      const a0 = (e.startAngle || 0);
+      let a1 = (e.endAngle || 0);
+      while (a1 < a0) a1 += 2*Math.PI;
+      const span = a1 - a0;
+      const n = Math.max(2, Math.ceil(span / Math.acos(Math.max(-1, 1 - tol/r))));
+      const pts = [];
+      for (let i = 0; i <= n; i++) {
+        const a = a0 + span*i/n;
+        pts.push([cx + r*Math.cos(a), cy + r*Math.sin(a)]);
+      }
+      // ARC is always an open fragment
+      return { closed: [], open: [pts] };
+    }
+    case 'ELLIPSE': {
+      const cx = e.center.x, cy = e.center.y;
+      const mx = e.majorAxisEndPoint.x, my = e.majorAxisEndPoint.y;
+      const rmaj = Math.hypot(mx, my);
+      const rmin = rmaj * e.axisRatio;
+      const rot = Math.atan2(my, mx);
+      const a0 = e.startAngle || 0;
+      let a1 = e.endAngle || (2*Math.PI);
+      while (a1 < a0) a1 += 2*Math.PI;
+      const isFullEllipse = Math.abs((a1 - a0) - 2*Math.PI) < 1e-6;
+      const n = Math.max(24, Math.ceil((a1-a0) / Math.acos(1 - tol/Math.max(rmin, 0.001))));
+      const pts = [];
+      for (let i = 0; i <= n; i++) {
+        const a = a0 + (a1-a0)*i/n;
+        const x = rmaj * Math.cos(a);
+        const y = rmin * Math.sin(a);
+        pts.push([cx + x*Math.cos(rot) - y*Math.sin(rot), cy + x*Math.sin(rot) + y*Math.cos(rot)]);
+      }
+      return isFullEllipse ? { closed: [pts], open: [] } : { closed: [], open: [pts] };
+    }
+    case 'SPLINE': {
+      const cps = (e.controlPoints || []).map(p => [p.x, p.y]);
+      const knots = e.knotValues || [];
+      const degree = e.degreeOfSplineCurve || e.degree || 3;
+      const isClosed = !!(e.closed);
+      let pts;
+      if (cps.length >= degree + 1 && knots.length === cps.length + degree + 1) {
+        let chord = 0;
+        for (let i = 1; i < cps.length; i++) chord += Math.hypot(cps[i][0]-cps[i-1][0], cps[i][1]-cps[i-1][1]);
+        const samples = Math.max(64, Math.min(4096, Math.ceil(chord / Math.max(tol, 0.005))));
+        pts = evalBSpline(cps, knots, degree, samples);
+      } else {
+        pts = (e.fitPoints && e.fitPoints.length) ? e.fitPoints.map(p => [p.x, p.y]) : cps;
+      }
+      // Strip duplicated closing point (B-spline sampling on a clamped/periodic closed
+      // spline lands the last sample at the same xy as the first — leaves a zero-length
+      // edge that breaks miter offset math and other geometric ops).
+      if (pts.length >= 2) {
+        const a = pts[0], b = pts[pts.length - 1];
+        if (Math.hypot(a[0]-b[0], a[1]-b[1]) < 1e-9) pts = pts.slice(0, -1);
+      }
+      return isClosed ? { closed: [pts], open: [] } : { closed: [], open: [pts] };
+    }
+  }
+  return empty;
+}
+
+function bulgeArc(p0, p1, bulge, tol) {
+  // bulge = tan(angle/4) of the arc
+  const dx = p1[0]-p0[0], dy = p1[1]-p0[1];
+  const chord = Math.hypot(dx, dy);
+  const sagitta = (chord/2) * Math.abs(bulge);
+  const r = (chord/2)/Math.sin(2*Math.atan(Math.abs(bulge))) || chord;
+  const sweep = 4*Math.atan(Math.abs(bulge));
+  const dir = bulge > 0 ? 1 : -1;
+  // center = midpoint perpendicular offset
+  const mx = (p0[0]+p1[0])/2, my = (p0[1]+p1[1])/2;
+  const h = Math.sqrt(Math.max(0, r*r - (chord/2)*(chord/2)));
+  const off = (Math.abs(bulge) > 1) ? -h : h;
+  const cx = mx - dir * off * (dy/chord);
+  const cy = my + dir * off * (dx/chord);
+  const a0 = Math.atan2(p0[1]-cy, p0[0]-cx);
+  let a1 = Math.atan2(p1[1]-cy, p1[0]-cx);
+  let s = a1 - a0;
+  if (dir > 0 && s < 0) s += 2*Math.PI;
+  if (dir < 0 && s > 0) s -= 2*Math.PI;
+  const n = Math.max(2, Math.ceil(Math.abs(s) / Math.acos(1 - Math.min(0.99, tol/r))));
+  const pts = [];
+  for (let i = 1; i <= n; i++) {
+    const a = a0 + s*i/n;
+    pts.push([cx + r*Math.cos(a), cy + r*Math.sin(a)]);
+  }
+  // skip the last (will be re-added as next vertex)
+  pts.pop();
+  return pts;
+}
+
+/* B-spline evaluation via de Boor's algorithm.
+   cps: array of [x,y]
+   knots: knot vector (length = cps.length + degree + 1)
+   degree: spline degree (typically 3)
+   samples: number of points to generate along the curve
+*/
+function evalBSpline(cps, knots, degree, samples) {
+  const n = cps.length;
+  const m = knots.length;
+  if (n < degree + 1 || m !== n + degree + 1) {
+    // Malformed; just return control polygon as fallback
+    return cps.slice();
+  }
+  const u0 = knots[degree];
+  const u1 = knots[n];
+  const out = [];
+  for (let s = 0; s <= samples; s++) {
+    const u = u0 + (u1 - u0) * (s / samples);
+    out.push(deBoor(cps, knots, degree, u));
+  }
+  return out;
+}
+
+function deBoor(cps, knots, p, u) {
+  const n = cps.length;
+  // find span k such that knots[k] <= u < knots[k+1], with k in [p, n-1]
+  let k = -1;
+  if (u >= knots[n]) {
+    k = n - 1;
+  } else {
+    for (let i = p; i < n; i++) {
+      if (u >= knots[i] && u < knots[i+1]) { k = i; break; }
+    }
+    if (k < 0) k = p;
+  }
+  // Initialize d[j] = cps[k - p + j], j = 0..p
+  const dx = new Array(p + 1);
+  const dy = new Array(p + 1);
+  for (let j = 0; j <= p; j++) {
+    const idx = k - p + j;
+    const cp = cps[Math.max(0, Math.min(n - 1, idx))];
+    dx[j] = cp[0]; dy[j] = cp[1];
+  }
+  for (let r = 1; r <= p; r++) {
+    for (let j = p; j >= r; j--) {
+      const i = k - p + j;
+      const denom = knots[i + p - r + 1] - knots[i];
+      const alpha = denom < 1e-12 ? 0 : (u - knots[i]) / denom;
+      dx[j] = (1 - alpha) * dx[j-1] + alpha * dx[j];
+      dy[j] = (1 - alpha) * dy[j-1] + alpha * dy[j];
+    }
+  }
+  return [dx[p], dy[p]];
+}
+
+function catmullSmooth(pts, samples) {
+  const out = [];
+  const n = pts.length;
+  if (n < 2) return pts.slice();
+  const closed = (Math.hypot(pts[0][0]-pts[n-1][0], pts[0][1]-pts[n-1][1]) < 1e-6);
+  const get = (i) => {
+    if (closed) return pts[((i % n) + n) % n];
+    return pts[Math.max(0, Math.min(n-1, i))];
+  };
+  for (let i = 0; i < (closed ? n : n-1); i++) {
+    const p0 = get(i-1), p1 = get(i), p2 = get(i+1), p3 = get(i+2);
+    for (let s = 0; s < samples; s++) {
+      const t = s/samples;
+      const t2 = t*t, t3 = t2*t;
+      const x = 0.5 * ((2*p1[0]) + (-p0[0]+p2[0])*t + (2*p0[0]-5*p1[0]+4*p2[0]-p3[0])*t2 + (-p0[0]+3*p1[0]-3*p2[0]+p3[0])*t3);
+      const y = 0.5 * ((2*p1[1]) + (-p0[1]+p2[1])*t + (2*p0[1]-5*p1[1]+4*p2[1]-p3[1])*t2 + (-p0[1]+3*p1[1]-3*p2[1]+p3[1])*t3);
+      out.push([x,y]);
+    }
+  }
+  if (!closed) out.push(pts[n-1]);
+  return out;
+}
+
+/* =====================================================================
+   POLYGON HELPERS
+   ===================================================================== */
+function signedArea(p) {
+  let s = 0;
+  for (let i = 0; i < p.length; i++) {
+    const a = p[i], b = p[(i+1)%p.length];
+    s += (a[0]*b[1] - b[0]*a[1]);
+  }
+  return s/2;
+}
+function isCCW(p) { return signedArea(p) > 0; }
+function reversePoly(p) { return p.slice().reverse(); }
+function ensureCCW(p) { return isCCW(p) ? p : reversePoly(p); }
+function ensureCW(p)  { return isCCW(p) ? reversePoly(p) : p; }
+
+function pointInPoly(pt, poly) {
+  let inside = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const xi = poly[i][0], yi = poly[i][1];
+    const xj = poly[j][0], yj = poly[j][1];
+    const intersect = ((yi > pt[1]) !== (yj > pt[1])) &&
+                      (pt[0] < (xj - xi) * (pt[1] - yi) / (yj - yi + 1e-12) + xi);
+    if (intersect) inside = !inside;
+  }
+  return inside;
+}
+
+function polyBBox(p) {
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  for (const v of p) {
+    if (v[0] < minX) minX = v[0];
+    if (v[1] < minY) minY = v[1];
+    if (v[0] > maxX) maxX = v[0];
+    if (v[1] > maxY) maxY = v[1];
+  }
+  return {minX, minY, maxX, maxY};
+}
+
+/**
+ * Returns a point guaranteed to be strictly INSIDE a simple polygon (not on a vertex
+ * or edge). Algorithm: take the midpoint of the longest edge and step a tiny epsilon
+ * inward along that edge's inward normal. For CCW polygons the inward normal is the
+ * LEFT normal; for CW it's the RIGHT.
+ *
+ * Why we need this: using polys[i][0] as a probe point fails when that vertex lies
+ * exactly on another polygon's edge — e.g., letter outlines where the inner contour
+ * touches the outer at a sharp tip, or any DXF where shapes share endpoints. The
+ * containment test then becomes unstable and the hole gets misclassified.
+ */
+function interiorProbe(poly) {
+  let bestI = 0, bestLen = -1;
+  for (let i = 0; i < poly.length; i++) {
+    const a = poly[i], b = poly[(i + 1) % poly.length];
+    const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    if (len > bestLen) { bestLen = len; bestI = i; }
+  }
+  const a = poly[bestI], b = poly[(bestI + 1) % poly.length];
+  const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
+  const ex = b[0] - a[0], ey = b[1] - a[1];
+  const len = Math.hypot(ex, ey) || 1;
+  const nx = -ey / len, ny = ex / len;            // LEFT normal of edge direction
+  const sign = signedArea(poly) > 0 ? 1 : -1;     // CCW: left normal is inward (+1)
+  const eps = bestLen * 1e-4;
+  return [mx + nx * eps * sign, my + ny * eps * sign];
+}
+
+/** Group polygons into outer/holes. */
+function classifyShapes(polys) {
+  // Filter degenerate
+  polys = polys.filter(p => p.length >= 3 && Math.abs(signedArea(p)) > 1e-6);
+
+  // Robust probe: a guaranteed-interior point per polygon (not a vertex).
+  const probes = polys.map(p => interiorProbe(p));
+
+  const containment = polys.map(() => 0);
+  for (let i = 0; i < polys.length; i++) {
+    for (let j = 0; j < polys.length; j++) {
+      if (i === j) continue;
+      if (pointInPoly(probes[i], polys[j])) containment[i]++;
+    }
+  }
+  // outers: even containment count (0, 2, ...). holes: odd.
+  const shapes = [];
+  for (let i = 0; i < polys.length; i++) {
+    if (containment[i] % 2 === 0) {
+      shapes.push({ outer: ensureCCW(polys[i]), holes: [], _idx: i, _probe: probes[i] });
+    }
+  }
+  for (let i = 0; i < polys.length; i++) {
+    if (containment[i] % 2 === 1) {
+      // find immediate parent: the smallest enclosing outer
+      let best = -1, bestArea = Infinity;
+      for (const s of shapes) {
+        if (pointInPoly(probes[i], s.outer)) {
+          const a = Math.abs(signedArea(s.outer));
+          if (a < bestArea) { bestArea = a; best = shapes.indexOf(s); }
+        }
+      }
+      if (best >= 0) shapes[best].holes.push(ensureCW(polys[i]));
+    }
+  }
+  // Diagnostic — visible in DevTools Console; helps debug DXFs where holes vanish.
+  console.log(`[DXF] classifyShapes: ${polys.length} polygons → ${shapes.length} outer, ${shapes.reduce((s,x)=>s+x.holes.length,0)} holes`);
+  shapes.forEach((s, k) => console.log(`  shape ${k}: outer=${s.outer.length}pts, holes=[${s.holes.map(h=>h.length).join(',')}]`));
+  for (const s of shapes) { delete s._idx; delete s._probe; }
+  return shapes;
+}
+
+/* =====================================================================
+   POLYGON SIMPLIFICATION — collapse near-collinear / near-coincident vertices.
+   Densely-sampled splines produce sequences of points that are nearly
+   collinear with their neighbours. Earcut treats those triplets as
+   degenerate ears and can emit thin slivers that end up sitting inside
+   the polygon's holes — visually, the inner hole appears filled with
+   material. Removing the noise points (any vertex whose turning angle
+   is below `straightAngleDeg`, plus any vertex closer than `minSpacing`
+   to the previously kept one) leaves the curve faithful to the spline
+   while making the boundary clean enough for earcut to triangulate
+   correctly.
+   ===================================================================== */
+function simplifyPolygon(poly, minSpacing, straightAngleDeg) {
+  if (!poly || poly.length < 4) return poly;
+  const cosLimit = Math.cos(straightAngleDeg * Math.PI / 180);
+
+  // We alternate two passes until neither makes any further changes. Pass A
+  // deduplicates vertices that sit too close to their predecessor in the
+  // walk; pass B removes vertices that are nearly collinear with their
+  // neighbours. They feed into each other — pass B can pull two stranded
+  // vertices closer (logically) so pass A can then drop one — so a single
+  // pass of each isn't enough.
+  let pts = poly.slice();
+  for (let outer = 0; outer < 50; outer++) {
+    const before = pts.length;
+
+    // Pass A: spacing dedup. Always keep the first point, walk forward.
+    let next = [pts[0]];
+    for (let i = 1; i < pts.length; i++) {
+      const last = next[next.length - 1];
+      if (Math.hypot(pts[i][0] - last[0], pts[i][1] - last[1]) >= minSpacing) {
+        next.push(pts[i]);
+      }
+    }
+    // Wrap-around: drop tail points too close to the head.
+    while (next.length > 3 &&
+      Math.hypot(next[0][0] - next[next.length - 1][0],
+                 next[0][1] - next[next.length - 1][1]) < minSpacing) {
+      next.pop();
+    }
+    pts = next;
+    if (pts.length < 4) break;
+
+    // Pass B: angle dedup, iterated until stable.
+    let changed = true, iters = 0;
+    while (changed && pts.length > 3 && iters++ < 20) {
+      changed = false;
+      const out = [];
+      for (let i = 0; i < pts.length; i++) {
+        const prev = out.length ? out[out.length - 1] : pts[(i - 1 + pts.length) % pts.length];
+        const curr = pts[i];
+        const nxt  = pts[(i + 1) % pts.length];
+        const v1x = curr[0] - prev[0], v1y = curr[1] - prev[1];
+        const v2x = nxt[0]  - curr[0], v2y = nxt[1]  - curr[1];
+        const l1 = Math.hypot(v1x, v1y), l2 = Math.hypot(v2x, v2y);
+        if (l1 < 1e-9 || l2 < 1e-9) { changed = true; continue; }
+        const dot = (v1x * v2x + v1y * v2y) / (l1 * l2);
+        if (dot >= cosLimit) { changed = true; continue; }
+        out.push(curr);
+      }
+      if (out.length < 3) break;
+      pts = out;
+    }
+
+    if (pts.length === before) break;  // stable — nothing more to do
+  }
+  return pts;
+}
+
+/* =====================================================================
+   POLYGON OFFSET — miter offset "into the material side"
+   For an outer (CCW) polygon: shrinks (boundary moves toward center).
+   For a hole (CW) polygon: expands (boundary moves away from center, into material).
+   In both cases, the boundary moves to the LEFT of edge direction by `dist`.
+
+   At sharp corners where the miter would protrude further than
+   MITER_LIMIT × |dist|, the corner is clipped to keep the result
+   well-behaved. Whether the protrusion is OUTWARD (the polygon spikes
+   away from its own interior) or INWARD (deep into its own interior)
+   depends on BOTH the polygon orientation AND the sign of `dist`:
+   the offset is OUTWARD relative to the polygon when sign(dist) ≠
+   sign(signedArea(poly)).
+
+   At a sharp CONVEX corner:
+     • OUTWARD offset → ROUND cap (arc of radius |dist|). Smooth
+       printed-wall tip with no overhang.
+     • INWARD offset  → BEVEL (two points on offset(e1) and offset(e2)).
+       Guaranteed inside the polygon — won't introduce new
+       self-intersections from a long inward miter.
+   At sharp concave corners we use a plain bevel — the offset edges
+   intersect cleanly there.
+   ===================================================================== */
+function offsetIntoMaterial(poly, dist) {
+  const n = poly.length;
+  if (n < 3) return null;
+  // Polygon orientation: CCW area > 0, CW area < 0. `outwardOffset` is true when
+  // the offset moves the polygon AWAY from its own interior (e.g. CCW + negative
+  // dist, or CW + positive dist). At sharp convex corners this is the case where
+  // a long "spike" should be replaced with a ROUND cap.
+  let polyArea = 0;
+  for (let i = 0; i < n; i++) {
+    const a = poly[i], b = poly[(i + 1) % n];
+    polyArea += a[0] * b[1] - b[0] * a[1];
+  }
+  const ccw = polyArea > 0;
+  const outwardOffset = ccw ? (dist < 0) : (dist > 0);
+
+  const result = [];
+  const MITER_LIMIT = 2.0; // clip any corner whose miter exceeds 2× |dist|
+
+  for (let i = 0; i < n; i++) {
+    const prev = poly[(i - 1 + n) % n];
+    const curr = poly[i];
+    const next = poly[(i + 1) % n];
+
+    let e1x = curr[0] - prev[0], e1y = curr[1] - prev[1];
+    let e2x = next[0] - curr[0], e2y = next[1] - curr[1];
+    const l1 = Math.hypot(e1x, e1y);
+    const l2 = Math.hypot(e2x, e2y);
+    if (l1 < 1e-9 || l2 < 1e-9) {
+      result.push([curr[0], curr[1]]);
+      continue;
+    }
+    e1x /= l1; e1y /= l1;
+    e2x /= l2; e2y /= l2;
+
+    // LEFT normal of edge (rotate edge direction by +90°)
+    const n1x = -e1y, n1y = e1x;
+    const n2x = -e2y, n2y = e2x;
+
+    const mx = n1x + n2x, my = n1y + n2y;
+    const mlen = Math.hypot(mx, my);
+
+    // Convex/concave detection (relative to polygon interior). Cross product of
+    // (e1, e2): for a CCW polygon, positive cross = LEFT turn = convex corner;
+    // for a CW polygon the convention flips. `convex` is true when the corner
+    // bulges OUTWARD (away from the polygon's interior).
+    const cross = e1x * e2y - e1y * e2x;
+    const convex = ccw ? (cross > 0) : (cross < 0);
+
+    if (mlen < 1e-9) {
+      // 180° turn (degenerate) — back-to-back collinear edges. Use a
+      // semicircular round cap pointing in the OUTWARD direction of the offset.
+      const r = Math.abs(dist);
+      const sgn = outwardOffset ? 1 : -1;
+      // For outward offset, the cap arcs along the LEFT-normal of the edges
+      // (away from polygon interior); for inward we cap on the opposite side.
+      const a1 = Math.atan2(n1y * (ccw ? -sgn : sgn), n1x * (ccw ? -sgn : sgn));
+      const segs = 6;
+      for (let s = 0; s <= segs; s++) {
+        const t = s / segs;
+        const a = a1 + Math.PI * t;
+        result.push([curr[0] + Math.cos(a) * r, curr[1] + Math.sin(a) * r]);
+      }
+      continue;
+    }
+
+    const dot = (mx * n1x + my * n1y) / mlen; // cos of half angle between bisector and n1
+    const miterLen = dist / dot;
+    const limit = Math.abs(dist) * MITER_LIMIT;
+
+    // Miter is acceptable when it's short, OR when it's a convex corner with
+    // INWARD offset. The miter limit exists to prevent OUTWARD spikes (which
+    // become external overhangs on the printed wall); a long INWARD miter at
+    // a sharp convex corner just cuts deeper into the polygon's own interior,
+    // which is fine. Falling back to BEVEL here is wrong: at acute corners,
+    // `curr + n1*dist` lies OUTSIDE the polygon entirely (the LEFT normal of
+    // an acute wedge edge points outside the wedge), so a BEVEL fabricates
+    // material on the wrong side of the boundary.
+    const useMiter = Math.abs(miterLen) <= limit || (convex && !outwardOffset);
+
+    if (useMiter) {
+      // Normal miter — single bisector point.
+      result.push([
+        curr[0] + (mx / mlen) * miterLen,
+        curr[1] + (my / mlen) * miterLen
+      ]);
+    } else if (convex && outwardOffset) {
+      // Sharp CONVEX corner with OUTWARD offset → ROUND cap.
+      // The arc has radius |dist|, centered at curr, sweeping from the
+      // outward-pointing offset direction of edge1 to that of edge2.
+      // For CCW polygon, "outward" = -LEFT normal direction (= -n).
+      // For CW polygon,  "outward" = +LEFT normal direction (= +n).
+      const r = Math.abs(dist);
+      const ax = ccw ? -n1x : n1x, ay = ccw ? -n1y : n1y;
+      const bx = ccw ? -n2x : n2x, by = ccw ? -n2y : n2y;
+      const a1 = Math.atan2(ay, ax);
+      const a2 = Math.atan2(by, bx);
+      // Arc must sweep AROUND the convex tip — the SHORT way for CW, the SHORT
+      // way for CCW too. Determined by sign convention of the polygon.
+      let da = a2 - a1;
+      // For convex outer (CCW), the arc goes CCW (positive da). For convex CW
+      // hole tip, the arc goes CW (negative da). Normalize accordingly.
+      if (ccw) {
+        while (da < 0) da += 2 * Math.PI;
+        while (da > 2 * Math.PI) da -= 2 * Math.PI;
+        // Cap to a half-turn — anything more means our convex/outward detection
+        // was wrong and the miter would have been a clean intersection anyway.
+        if (da > Math.PI) da -= 2 * Math.PI;
+      } else {
+        while (da > 0) da -= 2 * Math.PI;
+        while (da < -2 * Math.PI) da += 2 * Math.PI;
+        if (da < -Math.PI) da += 2 * Math.PI;
+      }
+      const nSeg = Math.min(12, Math.max(2, Math.ceil(Math.abs(da) * 6 / Math.PI)));
+      for (let s = 0; s <= nSeg; s++) {
+        const t = s / nSeg;
+        const a = a1 + da * t;
+        result.push([curr[0] + Math.cos(a) * r, curr[1] + Math.sin(a) * r]);
+      }
+    } else {
+      // INWARD-from-polygon spike, OR sharp concave corner → BEVEL.
+      // Two points on the OFFSET edges, each at signed distance `dist` along the
+      // LEFT normal of its respective edge. By construction these points lie ON
+      // the offset edges of e1 and e2, so the chord between them never crosses
+      // unrelated parts of the polygon (the way a long inward miter can).
+      result.push([curr[0] + n1x * dist, curr[1] + n1y * dist]);
+      result.push([curr[0] + n2x * dist, curr[1] + n2y * dist]);
+    }
+  }
+  // Sanity: result must still be a valid polygon
+  if (result.length < 3) return null;
+  return result;
+}
+
+/* =====================================================================
+   MESH BUILDER
+   ===================================================================== */
+
+class MeshBuilder {
+  constructor() {
+    this.positions = [];
+    this.indices = [];
+  }
+  addV(x, y, z) {
+    const i = this.positions.length / 3;
+    this.positions.push(x, y, z);
+    return i;
+  }
+  addTri(a, b, c) {
+    this.indices.push(a, b, c);
+  }
+  toGeometry() {
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(this.positions, 3));
+    g.setIndex(this.indices);
+    g.computeVertexNormals();
+    return g;
+  }
+}
+
+/**
+ * Add a vertical wall along a closed polyline.
+ *  - poly: closed polygon points
+ *  - z0, z1: bottom and top z
+ *  - reverse: true to reverse face orientation (inner walls)
+ */
+function addVerticalWall(mb, poly, z0, z1, reverse=false) {
+  const n = poly.length;
+  for (let i = 0; i < n; i++) {
+    const a = poly[i], b = poly[(i+1)%n];
+    const v0 = mb.addV(a[0], a[1], z0);
+    const v1 = mb.addV(b[0], b[1], z0);
+    const v2 = mb.addV(b[0], b[1], z1);
+    const v3 = mb.addV(a[0], a[1], z1);
+    if (!reverse) {
+      mb.addTri(v0, v1, v2);
+      mb.addTri(v0, v2, v3);
+    } else {
+      mb.addTri(v0, v2, v1);
+      mb.addTri(v0, v3, v2);
+    }
+  }
+}
+
+/**
+ * Add a horizontal annular face between an outer and a single inner ring,
+ * at z. faceUp=true means normal points +Z.
+ * Both polys assumed: outer CCW, inner CW (i.e., inner is a "hole").
+ */
+function addRingFace(mb, outerPoly, innerPoly, z, faceUp) {
+  // earcut wants flat array with hole start indices
+  const flat = [];
+  for (const p of outerPoly) flat.push(p[0], p[1]);
+  const holeStart = outerPoly.length;
+  for (const p of innerPoly) flat.push(p[0], p[1]);
+  const tris = earcut(flat, [holeStart], 2);
+  // map points to vertices
+  const vs = [];
+  for (const p of outerPoly) vs.push(mb.addV(p[0], p[1], z));
+  for (const p of innerPoly) vs.push(mb.addV(p[0], p[1], z));
+  for (let i = 0; i < tris.length; i += 3) {
+    if (faceUp) mb.addTri(vs[tris[i]], vs[tris[i+1]], vs[tris[i+2]]);
+    else        mb.addTri(vs[tris[i]], vs[tris[i+2]], vs[tris[i+1]]);
+  }
+}
+
+/**
+ * Add a horizontal face for an outer with multiple holes at z.
+ * outer CCW, holes CW.
+ */
+function addPolyFace(mb, outer, holes, z, faceUp) {
+  const flat = [];
+  for (const p of outer) flat.push(p[0], p[1]);
+  const holeStarts = [];
+  let off = outer.length;
+  for (const h of holes) {
+    holeStarts.push(off);
+    for (const p of h) flat.push(p[0], p[1]);
+    off += h.length;
+  }
+  const tris = earcut(flat, holeStarts.length ? holeStarts : null, 2);
+  const vs = [];
+  for (const p of outer) vs.push(mb.addV(p[0], p[1], z));
+  for (const h of holes) for (const p of h) vs.push(mb.addV(p[0], p[1], z));
+  for (let i = 0; i < tris.length; i += 3) {
+    if (faceUp) mb.addTri(vs[tris[i]], vs[tris[i+1]], vs[tris[i+2]]);
+    else        mb.addTri(vs[tris[i]], vs[tris[i+2]], vs[tris[i+1]]);
+  }
+}
+
+/**
+ * Build the lightbox geometry for an array of shapes.
+ * Each shape: { outer: CCW, holes: [CW...] }
+ *
+ * MODEL (lip BELOW the rebate — plexi drops in from the top):
+ *   DXF outer/holes = plexi outline (1:1)
+ *   outerOff = wall extends OUTWARD from DXF (overall box outer surface)
+ *   falc     = lip extends INWARD past DXF; lip is BELOW the plexi rebate,
+ *              acting as a stop that catches the plexi from underneath.
+ *
+ * Vertical layout (z increasing upward):
+ *   bottom of model = 0
+ *   floorTop ................ z height of the upper face of the back plate
+ *                              W (open):       no back plate              → floorTop = 0
+ *                              I (solid):      back plate at 0..backThick → floorTop = backThick
+ *                              U (recessed):   back plate at bottomInset..bottomInset+backThick → floorTop = bottomInset+backThick
+ *                              TT (innerShelf): like I, plus inner rim    → floorTop = backThick (rim sits ON it)
+ *   floorTop ................ zShelf  → INNER WALL at lipInnerOuter (LIP, narrower cavity)
+ *   zShelf = zTop - plexi - plexiInset
+ *   zShelf ................. zTop    → INNER WALL at outer/DXF      (REBATE for plexi, possibly recessed)
+ *   plexi sits zShelf..zShelf+plexi (= zTop - plexiInset). plexiInset above plexi is empty cavity within rebate.
+ *
+ * Returns { mainGeom, plexiGeom }
+ */
+function buildLightboxGeometry(shapes, p) {
+  const mb = new MeshBuilder();
+  const plexiMb = new MeshBuilder();
+
+  const bt = p.bottomType || 'open';
+
+  // Bottom of the box (lowest z of the wall):
+  //   - W (open):          0
+  //   - I (solid):         0 (back plate flush with the bottom of the wall)
+  //   - U (recessed):      0 (wall extends down to 0; back plate is INSET upward by bottomInset)
+  //   - TT (innerShelf):   0 (back plate flush; raised rim sits on top inside)
+  const zBoxBot = 0;
+
+  // Top of the wall (independent of bottom variant — depth measured from box bottom).
+  const zTop = zBoxBot + p.depth;
+
+  // Plexi top can be RECESSED below zTop by plexiInset (default 0 = flush with the wall edge).
+  const zPlexiTop = zTop - (p.plexiInset || 0);
+  const zShelf    = zPlexiTop - p.plexi;        // ledge that plexi rests on
+
+  // Floor of the LED cavity (top of the back plate or 0 for open):
+  let floorTop = 0;
+  if (bt === 'solid' || bt === 'innerShelf')  floorTop = p.backThick;
+  else if (bt === 'recessed')                 floorTop = p.bottomInset + p.backThick;
+
+  if (zShelf <= floorTop) {
+    console.warn('Hĺbka boxu je príliš malá oproti hrúbke plexi/dna — lip nemá kde byť.');
+  }
+
+  // Polygon simplification thresholds. Densely-sampled splines need a cleanup
+  // pass before earcut to avoid stray slivers in the inner hole (see
+  // simplifyPolygon comment). 0.02 mm / 0.3° preserves all visible curvature
+  // while removing the noise.
+  const SIMP_SPACING = 0.1;   // 100µm — coarser than any 3D-print resolution
+  const SIMP_ANGLE   = 0.3;   // 0.3° — preserves all visible curvature
+  const simp = (poly) => simplifyPolygon(poly, SIMP_SPACING, SIMP_ANGLE);
+
+  for (const shape of shapes) {
+    // Clean the DXF polygons up front. All offsets and earcut inputs are
+    // derived from these, so a single cleanup here propagates through the
+    // whole pipeline.
+    const outer = simp(shape.outer);  // CCW DXF outline = plexi outer edge = cavity wall ABOVE shelf
+
+    const outerWallOuter = simp(offsetIntoMaterial(outer, -p.outerOff));
+    const lipInnerOuter  = simp(offsetIntoMaterial(outer, p.falc));
+
+    if (!outerWallOuter || outerWallOuter.length < 3) {
+      console.warn('Outer offset spôsobil zlyhanie offsetu, preskakujem tvar');
+      continue;
+    }
+    if (!lipInnerOuter || lipInnerOuter.length < 3) {
+      console.warn('Falc je príliš veľký pre veľkosť tvaru — lip-inner kolaboval. Preskakujem.');
+      continue;
+    }
+
+    // Optional shelf rim (TT): even further inward by shelfW from lipInnerOuter.
+    let shelfInner = null;
+    if (bt === 'innerShelf' && p.shelfW > 0 && p.shelfH > 0) {
+      const shelfRaw = simp(offsetIntoMaterial(outer, p.falc + p.shelfW));
+      if (shelfRaw && shelfRaw.length >= 3 && signedArea(shelfRaw) > 0) {
+        shelfInner = shelfRaw;
+      } else {
+        console.warn('Vnútorný regál (TT) sa nezmestil — preskakujem regál pre tento tvar.');
+      }
+    }
+
+    // Holes (CW): same sign convention works because of orientation.
+    //   -outerOff on CW → SMALLER hole (wall outer surface around hole)
+    //   +falc    on CW → BIGGER  hole (lip inner edge around hole)
+    //
+    // IMPORTANT: do NOT skip a hole if its offset fails or inverts — that would leave
+    // the back plate / floor with no cutout, filling the hole with material. Instead
+    // fall back to the DXF hole itself, which keeps the hole open (just with reduced
+    // or zero wall thickness around it for that hole).
+    const dxfHoles       = [];  // = cavity wall around hole at REBATE level (CW)
+    const outerWallHoles = [];  // smallest hole — outer wall outer surface around hole (CW)
+    const lipInnerHoles  = [];  // biggest hole  — lip inner edge around hole (CW)
+    const shelfInnerHoles = []; // for TT — biggest hole at shelf rim (CW), or null
+    const origHoleArea = (poly) => Math.sign(signedArea(poly));
+    const offsetOK = (raw, originalSign) =>
+      raw && raw.length >= 3 && Math.sign(signedArea(raw)) === originalSign;
+
+    for (const rawHole of shape.holes) {
+      // Same cleanup applied to each hole's DXF polygon — earcut needs this
+      // for the bigger-hole/smaller-hole annulus rings.
+      const hole = simp(rawHole);
+      const sgn = origHoleArea(hole);
+      const hOuterWallRaw = simp(offsetIntoMaterial(hole, -p.outerOff));
+      const hLipInnerRaw  = simp(offsetIntoMaterial(hole, p.falc));
+      const hOuterWall = offsetOK(hOuterWallRaw, sgn) ? hOuterWallRaw : hole;
+      const hLipInner  = offsetOK(hLipInnerRaw,  sgn) ? hLipInnerRaw  : hole;
+      if (hOuterWall === hole || hLipInner === hole) {
+        console.warn('Diera je príliš malá pre tieto offsety — fallback na DXF (bez plnej hrúbky steny okolo diery).');
+      }
+      dxfHoles.push(ensureCW(hole));
+      outerWallHoles.push(ensureCW(hOuterWall));
+      lipInnerHoles.push(ensureCW(hLipInner));
+
+      if (bt === 'innerShelf' && shelfInner && p.shelfW > 0) {
+        const hShelfRaw = simp(offsetIntoMaterial(hole, p.falc + p.shelfW));
+        if (offsetOK(hShelfRaw, sgn)) {
+          shelfInnerHoles.push(ensureCW(hShelfRaw));
+        } else {
+          shelfInnerHoles.push(ensureCW(hLipInner));
+        }
+      } else {
+        shelfInnerHoles.push(null);
+      }
+    }
+
+    // Cable hole (single circular hole at centroid, used for any solid-bottom variant when enabled)
+    const useCable = !!(p.cableOn && bt !== 'open');
+    const cableHole = useCable ? makeCableHole(shape, p.cableDiam) : null;
+
+    // ============================================================
+    //  VERTICAL WALLS
+    // ============================================================
+    // Outer wall outer surface (faces outward), full height from box bottom to top.
+    addVerticalWall(mb, ensureCCW(outerWallOuter), zBoxBot, zTop, false);
+
+    // For U (recessed): below the back plate the cavity is bounded by the OUTER wall
+    // (no lip), then the back plate forms a horizontal step at z=bottomInset, and above
+    // it the lip continues normally. The inner surface below the back plate (at outer/DXF)
+    // is added in the U-specific branch below — NOT here — so we skip it in this section.
+
+    // LIP cavity wall, from floorTop up to zShelf, at lipInnerOuter (faces inward).
+    addVerticalWall(mb, ensureCCW(lipInnerOuter), floorTop, zShelf, true);
+    // REBATE cavity wall, ABOVE shelf, at outer/DXF (faces inward; plexi sits against it)
+    addVerticalWall(mb, ensureCCW(outer), zShelf, zTop, true);
+
+    // For TT inner shelf rim: vertical wall on inside of rim from floorTop up to floorTop+shelfH.
+    if (bt === 'innerShelf' && shelfInner) {
+      addVerticalWall(mb, ensureCCW(shelfInner), floorTop, floorTop + p.shelfH, true);
+    }
+
+    // Around each hole:
+    for (let i = 0; i < dxfHoles.length; i++) {
+      const hOuterWall = outerWallHoles[i];
+      const hCavity    = dxfHoles[i];
+      const hLipInner  = lipInnerHoles[i];
+
+      // Outer wall outer surface around hole (CW; faces hole interior, so reverse=true)
+      addVerticalWall(mb, hOuterWall, zBoxBot, zTop, true);
+
+      // (For U/recessed, the inner surface around hole BELOW the back plate is added in the
+      //  U-specific branch — NOT here.)
+
+      // LIP cavity wall around hole, floorTop..zShelf (CW; faces cavity = away from hole, reverse=false)
+      addVerticalWall(mb, hLipInner, floorTop, zShelf, false);
+      // REBATE cavity wall around hole above shelf (CW; faces cavity, reverse=false)
+      addVerticalWall(mb, hCavity, zShelf, zTop, false);
+
+      // Shelf rim around hole (TT)
+      if (bt === 'innerShelf' && shelfInnerHoles[i]) {
+        addVerticalWall(mb, shelfInnerHoles[i], floorTop, floorTop + p.shelfH, false);
+      }
+    }
+
+    // ============================================================
+    //  TOP FACE (zTop): wall thickness above shelf = outerOff
+    // ============================================================
+    {
+      // Outer-side: annulus from outerWallOuter (CCW big) → outer/DXF (CW smaller)
+      addPolyFace(mb, ensureCCW(outerWallOuter), [ensureCW(outer)], zTop, true);
+      // Hole-side: annulus from hCavity (CCW after flip, bigger hole) → hOuterWall (CW smaller hole)
+      for (let i = 0; i < dxfHoles.length; i++) {
+        addPolyFace(mb, ensureCCW(dxfHoles[i]), [ensureCW(outerWallHoles[i])], zTop, true);
+      }
+    }
+
+    // ============================================================
+    //  SHELF FACE (zShelf): the LEDGE where plexi rests, faces UP
+    //  Outer side: annulus from outer/DXF (CCW big) → lipInnerOuter (CW smaller) — width = falc
+    //  Hole side : annulus from hLipInner (CCW after flip, bigger) → hCavity (CW)  — width = falc
+    // ============================================================
+    {
+      addPolyFace(mb, ensureCCW(outer), [ensureCW(lipInnerOuter)], zShelf, true);
+      for (let i = 0; i < dxfHoles.length; i++) {
+        addPolyFace(mb, ensureCCW(lipInnerHoles[i]), [ensureCW(dxfHoles[i])], zShelf, true);
+      }
+    }
+
+    // ============================================================
+    //  BOTTOM / BACK PLATE
+    // ============================================================
+    if (bt === 'open') {
+      // Open back: bottom-rim annulus, wall thickness here = outerOff + falc
+      // Outer side: outerWallOuter (CCW big) → lipInnerOuter (CW smaller)
+      addPolyFace(mb, ensureCCW(outerWallOuter), [ensureCW(lipInnerOuter)], 0, false);
+      // Hole side: hLipInner (CCW after flip, bigger) → hOuterWall (CW smaller)
+      for (let i = 0; i < dxfHoles.length; i++) {
+        addPolyFace(mb, ensureCCW(lipInnerHoles[i]), [ensureCW(outerWallHoles[i])], 0, false);
+      }
+    } else if (bt === 'solid' || bt === 'innerShelf') {
+      // Back plate at z=0..backThick. Outer surface = outerWallOuter; back is solid except hole cutouts and optional cable hole.
+      const backHoles = outerWallHoles.map(h => ensureCW(h));
+      if (cableHole) backHoles.push(ensureCW(cableHole));
+
+      // Bottom face (z=0), facing DOWN
+      addPolyFace(mb, ensureCCW(outerWallOuter), backHoles, 0, false);
+
+      // Cavity floor at z=backThick (=floorTop), facing UP — between lipInnerOuter and lipInnerHoles (and cable)
+      const floorHoles = lipInnerHoles.map(h => ensureCW(h));
+      if (cableHole) floorHoles.push(ensureCW(cableHole));
+      addPolyFace(mb, ensureCCW(lipInnerOuter), floorHoles, p.backThick, true);
+
+      // Vertical wall continuation through the back plate (outer surface continues; already covered by full-height outer wall above)
+      // But we still need the inner cutouts of the back plate (around each hole + cable):
+      for (let i = 0; i < dxfHoles.length; i++) {
+        addVerticalWall(mb, outerWallHoles[i], 0, p.backThick, true);
+      }
+      if (cableHole) {
+        addVerticalWall(mb, ensureCW(cableHole), 0, p.backThick, true);
+      }
+
+      // Inner step at z=backThick around each hole: from hOuterWall (smaller) up to hLipInner (bigger).
+      // Faces UP (+z). Width = falc.
+      for (let i = 0; i < dxfHoles.length; i++) {
+        addPolyFace(mb, ensureCCW(lipInnerHoles[i]), [ensureCW(outerWallHoles[i])], p.backThick, true);
+      }
+
+      // ---- TT inner shelf (raised rim around the inside, on top of the back plate) ----
+      if (bt === 'innerShelf' && shelfInner && p.shelfH > 0) {
+        const shelfTopZ = p.backThick + p.shelfH;
+        // Top of rim (faces UP): annulus lipInnerOuter (CCW big) → shelfInner (CW smaller)
+        const shelfTopHoles = [ensureCW(shelfInner)];
+        for (let i = 0; i < dxfHoles.length; i++) {
+          // The rim around each hole is between shelfInnerHoles[i] (smaller annulus) and lipInnerHoles[i].
+          // We render top + sides per-hole separately below; here add only the OUTER perimeter top.
+        }
+        addPolyFace(mb, ensureCCW(lipInnerOuter), shelfTopHoles, shelfTopZ, true);
+        // Outer vertical face of the rim (visible inside the cavity), at lipInnerOuter, between p.backThick..shelfTopZ.
+        // Already added above as part of the lip cavity wall (floorTop..zShelf).
+        // No: that wall starts at floorTop=p.backThick and goes UP to zShelf, so the inside-of-cavity is already a tall vertical surface.
+        // The rim's *inner* surface (inside the LED cavity) is shelfInner at floorTop..shelfTopZ — already added above.
+
+        // Per-hole rim top (raised lip around each hole):
+        for (let i = 0; i < dxfHoles.length; i++) {
+          if (!shelfInnerHoles[i]) continue;
+          // Annulus on TOP of rim around hole: from shelfInnerHoles[i] (CCW, bigger after flip) → lipInnerHoles[i] (CW)
+          addPolyFace(mb, ensureCCW(shelfInnerHoles[i]), [ensureCW(lipInnerHoles[i])], shelfTopZ, true);
+        }
+      }
+    } else if (bt === 'recessed') {
+      // U variant — walls extend down to z=0 (full-height outer surface already added).
+      // Below the back plate the wall has thickness = outerOff (NO lip), so:
+      //   outer surface: outerWallOuter         (already added full height above)
+      //   inner surface: outer/DXF              (added below)
+      // Back plate sits at z = bottomInset .. bottomInset+backThick (= floorTop), spanning to outerWallOuter.
+      // Above the back plate, lip starts at lipInnerOuter (already added above).
+
+      // Bottom rim face (z=0), facing DOWN — annulus outerWallOuter → outer/DXF (CW smaller).
+      // This is the visible bottom edge of the U-wall below the back plate.
+      addPolyFace(mb, ensureCCW(outerWallOuter), [ensureCW(outer)], 0, false);
+      // Inner surface of wall stub at outer/DXF (between z=0 and z=bottomInset)
+      addVerticalWall(mb, ensureCCW(outer), zBoxBot, p.bottomInset, true);
+
+      for (let i = 0; i < dxfHoles.length; i++) {
+        // Bottom face around each hole (annulus): from dxfHoles (CCW after flip, bigger) → hOuterWall (CW smaller)
+        addPolyFace(mb, ensureCCW(dxfHoles[i]), [ensureCW(outerWallHoles[i])], 0, false);
+        // Inner surface around hole below back plate (at outer/DXF)
+        addVerticalWall(mb, dxfHoles[i], zBoxBot, p.bottomInset, false);
+      }
+
+      // Back plate at z=bottomInset..floorTop. The slab fills the whole interior
+      // (from outerWallOuter inward), with cutouts only at outerWallHoles (letter-holes
+      // continue through) and the optional cable hole.
+      // Visible UNDERSIDE is only inside the U-cavity = inside outer/DXF, outside dxfHoles.
+
+      // Cable hole acts as a cutout in the underside polyface (both above and below are open there).
+      const undersideHoles = dxfHoles.map(h => ensureCW(h));
+      if (cableHole) undersideHoles.push(ensureCW(cableHole));
+      // Underside of back plate (z=bottomInset), facing DOWN — visible inside the U-cavity.
+      addPolyFace(mb, ensureCCW(outer), undersideHoles, p.bottomInset, false);
+
+      // TOP face of back plate (z=floorTop), facing UP — visible inside the LED cavity.
+      const floorHoles = lipInnerHoles.map(h => ensureCW(h));
+      if (cableHole) floorHoles.push(ensureCW(cableHole));
+      addPolyFace(mb, ensureCCW(lipInnerOuter), floorHoles, floorTop, true);
+
+      // Cable hole vertical wall through the back plate.
+      if (cableHole) {
+        addVerticalWall(mb, ensureCW(cableHole), p.bottomInset, floorTop, true);
+      }
+
+      // Inner step at floorTop around each hole — for parity with the I/innerShelf variants
+      // (this face is technically inside material but matches existing behavior and the
+      // manifold expectations of the existing surfaces around the hole).
+      for (let i = 0; i < dxfHoles.length; i++) {
+        addPolyFace(mb, ensureCCW(lipInnerHoles[i]), [ensureCW(outerWallHoles[i])], floorTop, true);
+      }
+    }
+
+    // ============================================================
+    //  PLEXI MESH (visualization)
+    //  Plexi outline = DXF, optionally shrunk by plexiGap for clearance.
+    //  Sits in the rebate: pLow=zShelf (rests on ledge), pUp=zShelf+plexi=zPlexiTop.
+    //  If plexiInset > 0, plexi top is BELOW zTop (recessed).
+    // ============================================================
+    const gap = p.plexiGap || 0;
+    const plexiOuterPoly = (gap > 0) ? offsetIntoMaterial(outer, gap) : outer;
+    if (plexiOuterPoly && plexiOuterPoly.length >= 3) {
+      const plexiHoleP = (shape.holes || []).map(h => {
+        if (gap > 0) {
+          const grown = offsetIntoMaterial(h, gap);
+          return grown ? ensureCW(grown) : ensureCW(h);
+        }
+        return ensureCW(h);
+      });
+      const pUp  = zPlexiTop;
+      const pLow = zShelf;
+      addPolyFace(plexiMb, ensureCCW(plexiOuterPoly), plexiHoleP, pUp, true);
+      addPolyFace(plexiMb, ensureCCW(plexiOuterPoly), plexiHoleP, pLow, false);
+      addVerticalWall(plexiMb, ensureCCW(plexiOuterPoly), pLow, pUp, false);
+      for (const h of plexiHoleP) addVerticalWall(plexiMb, h, pLow, pUp, false);
+    }
+  }
+
+  return {
+    mainGeom: mb.toGeometry(),
+    plexiGeom: plexiMb.toGeometry()
+  };
+}
+
+/**
+ * Build a separate, insertable bottom plate as a flat free-standing slab.
+ *
+ *   - Outer perimeter at outer/DXF SHRUNK by `bottomClearance` so it fits inside the wall cavity.
+ *   - Hole cutouts at dxfHoles GROWN by `bottomClearance` so they don't cover the inner-hole walls.
+ *   - Slab thickness = backThick.
+ *   - Optional cable hole through the slab.
+ *   - The slab is built at z = 0..backThick so it lies flat for printing.
+ *   - For TT (innerShelf), the rim is part of the WALL, not part of this separate slab.
+ */
+function buildSeparateBottom(shapes, p) {
+  const bb = new MeshBuilder();
+  const cl = Math.max(0, p.bottomClearance || 0);
+  const bt = p.bottomType;
+  if (bt === 'open') return bb.toGeometry();
+
+  const z0 = 0;
+  const z1 = p.backThick;
+
+  // Same cleanup thresholds as buildLightboxGeometry — keeps earcut on the back
+  // plate from emitting slivers inside the inner hole.
+  const simp = (poly) => simplifyPolygon(poly, 0.1, 0.3);
+
+  for (const shape of shapes) {
+    const outer = simp(shape.outer);
+
+    // Plate outer perimeter: shrink outer/DXF inward by clearance.
+    const bpOuter = simp((cl > 0) ? offsetIntoMaterial(outer, cl) : outer);
+    if (!bpOuter || bpOuter.length < 3) {
+      console.warn('Vôľa dna je príliš veľká pre tento tvar — preskakujem dno.');
+      continue;
+    }
+
+    // Plate hole cutouts: grow each hole by clearance (CW + positive dist = bigger hole).
+    const bpHoles = [];
+    for (const rawHole of shape.holes) {
+      const hole = simp(rawHole);
+      const grown = simp((cl > 0) ? offsetIntoMaterial(hole, cl) : hole);
+      if (grown && grown.length >= 3) {
+        bpHoles.push(ensureCW(grown));
+      } else {
+        bpHoles.push(ensureCW(hole));
+      }
+    }
+
+    // Cable hole through the back plate
+    if (p.cableOn) {
+      const ch = makeCableHole(shape, p.cableDiam);
+      if (ch) bpHoles.push(ensureCW(ch));
+    }
+
+    // ----- Slab -----
+    addPolyFace(bb, ensureCCW(bpOuter), bpHoles, z1, true);   // top  (faces +Z)
+    addPolyFace(bb, ensureCCW(bpOuter), bpHoles, z0, false);  // bottom (faces -Z)
+    addVerticalWall(bb, ensureCCW(bpOuter), z0, z1, false);   // outer side wall, faces outward
+    for (const h of bpHoles) {
+      addVerticalWall(bb, h, z0, z1, true);                   // hole side walls, faces into hole
+    }
+  }
+
+  return bb.toGeometry();
+}
+
+function makeCableHole(shape, diam) {
+  // Place at centroid of outer
+  let cx = 0, cy = 0;
+  for (const p of shape.outer) { cx += p[0]; cy += p[1]; }
+  cx /= shape.outer.length;
+  cy /= shape.outer.length;
+  const r = diam / 2;
+  const n = Math.max(24, Math.ceil(2*Math.PI*r / 0.5));
+  const pts = [];
+  for (let i = 0; i < n; i++) {
+    const a = -2*Math.PI*i/n;  // CW
+    pts.push([cx + r*Math.cos(a), cy + r*Math.sin(a)]);
+  }
+  return pts;
+}
+
+/* =====================================================================
+   THREE.JS SCENE
+   ===================================================================== */
+const scene = new THREE.Scene();
+scene.background = null;
+
+const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 5000);
+// Use Z-up convention (3D printer / CAD)
+camera.up.set(0, 0, 1);
+camera.position.set(120, -120, 120);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+ui.$('canvas-wrap').appendChild(renderer.domElement);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+
+// Lights
+const hemi = new THREE.HemisphereLight(0xddeeff, 0x202830, 0.55);
+scene.add(hemi);
+const key = new THREE.DirectionalLight(0xffffff, 0.95);
+key.position.set(60, 80, 100);
+scene.add(key);
+const fill = new THREE.DirectionalLight(0x80c8ff, 0.4);
+fill.position.set(-80, -40, 50);
+scene.add(fill);
+const rim = new THREE.DirectionalLight(0x4dd0e1, 0.6);
+rim.position.set(0, -120, 30);
+scene.add(rim);
+
+// Ground / grid
+const grid = new THREE.GridHelper(500, 50, 0x2a3540, 0x1a2027);
+grid.rotation.x = Math.PI / 2;  // grid in XY plane
+grid.position.z = -0.01;
+scene.add(grid);
+
+// Material for the printed body
+const bodyMat = new THREE.MeshStandardMaterial({
+  color: 0xffffff,
+  metalness: 0.0,
+  roughness: 0.55,
+  flatShading: false,
+});
+const wireMat = new THREE.MeshBasicMaterial({ color: 0x4dd0e1, wireframe: true });
+const plexiMat = new THREE.MeshPhysicalMaterial({
+  color: 0x4dd0e1,
+  metalness: 0.0,
+  roughness: 0.05,
+  transmission: 0.85,
+  thickness: 2,
+  ior: 1.49,
+  attenuationDistance: 50,
+  transparent: true,
+  opacity: 0.55,
+});
+
+let bodyMesh = null, plexiMesh = null, bottomMesh = null;
+
+// Material for the separately-rendered bottom plate (slightly different shade so it stands out)
+const bottomMat = new THREE.MeshPhysicalMaterial({
+  color: 0xc59a52,
+  metalness: 0.05,
+  roughness: 0.65,
+  clearcoat: 0.15,
+  side: THREE.DoubleSide,
+});
+
+function clearMeshes() {
+  if (bodyMesh) { scene.remove(bodyMesh); bodyMesh.geometry.dispose(); bodyMesh = null; }
+  if (plexiMesh) { scene.remove(plexiMesh); plexiMesh.geometry.dispose(); plexiMesh = null; }
+  if (bottomMesh) { scene.remove(bottomMesh); bottomMesh.geometry.dispose(); bottomMesh = null; }
+}
+
+function setMeshes(mainGeom, plexiGeom, bottomGeom) {
+  clearMeshes();
+  bodyMesh = new THREE.Mesh(mainGeom, bodyMat);
+  scene.add(bodyMesh);
+  if (plexiGeom && plexiGeom.attributes.position && plexiGeom.attributes.position.count > 0) {
+    plexiMesh = new THREE.Mesh(plexiGeom, plexiMat);
+    scene.add(plexiMesh);
+  }
+  if (bottomGeom && bottomGeom.attributes.position && bottomGeom.attributes.position.count > 0) {
+    bottomMesh = new THREE.Mesh(bottomGeom, bottomMat);
+    // Show the separate bottom OFFSET to the side so the user can see it next to the wall
+    const wb = new THREE.Box3().setFromObject(bodyMesh);
+    const sz = new THREE.Vector3(); wb.getSize(sz);
+    bottomMesh.position.x = (sz.x * 0.6) + 8;  // place to the right of the body
+    scene.add(bottomMesh);
+  }
+  fitView();
+  updateStats();
+}
+
+function updateStats() {
+  if (!bodyMesh) {
+    ui.$('stats').style.display = 'none';
+    return;
+  }
+  ui.$('stats').style.display = 'grid';
+  const box = new THREE.Box3().setFromObject(bodyMesh);
+  const size = new THREE.Vector3(); box.getSize(size);
+  ui.$('stat-size').textContent = `${size.x.toFixed(1)} × ${size.y.toFixed(1)} × ${size.z.toFixed(1)}`;
+  ui.$('stat-tris').textContent = (bodyMesh.geometry.index.count / 3).toLocaleString('sk');
+  ui.$('stat-shapes').textContent = state.shapes ? state.shapes.length : '—';
+}
+
+function fitView() {
+  if (!bodyMesh) return;
+  // Include the bottom mesh in the fit so it doesn't get clipped when shown
+  const box = new THREE.Box3().setFromObject(bodyMesh);
+  if (bottomMesh) box.expandByObject(bottomMesh);
+  const size = new THREE.Vector3(); box.getSize(size);
+  const center = new THREE.Vector3(); box.getCenter(center);
+  const maxDim = Math.max(size.x, size.y, size.z);
+  const fov = camera.fov * Math.PI / 180;
+  const dist = (maxDim / (2 * Math.tan(fov/2))) * 1.6;
+  camera.position.set(center.x + dist*0.7, center.y - dist*0.7, center.z + dist*0.7);
+  controls.target.copy(center);
+  controls.update();
+}
+
+// view buttons
+ui.$('vw-iso').onclick = () => { setActiveView('vw-iso'); fitView(); };
+ui.$('vw-top').onclick = () => {
+  setActiveView('vw-top');
+  if (!bodyMesh) return;
+  const box = new THREE.Box3().setFromObject(bodyMesh);
+  const center = new THREE.Vector3(); box.getCenter(center);
+  const size = new THREE.Vector3(); box.getSize(size);
+  const d = Math.max(size.x, size.y) * 1.3;
+  camera.position.set(center.x, center.y, center.z + d);
+  controls.target.copy(center);
+  controls.update();
+};
+ui.$('vw-front').onclick = () => {
+  setActiveView('vw-front');
+  if (!bodyMesh) return;
+  const box = new THREE.Box3().setFromObject(bodyMesh);
+  const center = new THREE.Vector3(); box.getCenter(center);
+  const size = new THREE.Vector3(); box.getSize(size);
+  const d = Math.max(size.x, size.z) * 1.4;
+  camera.position.set(center.x, center.y - d, center.z);
+  controls.target.copy(center);
+  controls.update();
+};
+ui.$('vw-fit').onclick = fitView;
+
+function setActiveView(id) {
+  ['vw-iso','vw-top','vw-front'].forEach(x => ui.$(x).classList.remove('active'));
+  ui.$(id).classList.add('active');
+}
+
+ui.$('vw-wireframe').onclick = (e) => {
+  if (!bodyMesh) return;
+  bodyMesh.material = (bodyMesh.material === bodyMat) ? wireMat : bodyMat;
+  e.currentTarget.classList.toggle('active');
+};
+ui.$('vw-plexi').onclick = (e) => {
+  if (!plexiMesh) return;
+  plexiMesh.visible = !plexiMesh.visible;
+  e.currentTarget.classList.toggle('active');
+};
+
+function resize() {
+  const wrap = ui.$('canvas-wrap');
+  const w = wrap.clientWidth, h = wrap.clientHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', resize);
+new ResizeObserver(resize).observe(ui.$('canvas-wrap'));
+resize();
+
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+}
+animate();
+
+/* =====================================================================
+   GENERATE
+   ===================================================================== */
+ui.$('btn-generate').onclick = async () => {
+  if (!state.rawRings) {
+    ui.status('Najprv načítaj DXF.', 'err');
+    return;
+  }
+  ui.busy(true, 'Generujem 3D model…');
+  ui.status('Generujem…', 'work');
+
+  // small delay to let UI update
+  await new Promise(r => setTimeout(r, 30));
+
+  try {
+    const scale = parseFloat(ui.$('scale').value) || 1;
+    state.scale = scale;
+
+    // scale rings
+    const scaledRings = state.rawRings.map(r => r.map(p => [p[0]*scale, p[1]*scale]));
+
+    const shapes = classifyShapes(scaledRings);
+    if (shapes.length === 0) throw new Error('Nedeteguované žiadne uzavreté tvary.');
+    state.shapes = shapes;
+
+    const params = {
+      outerOff: parseFloat(ui.$('wall').value),
+      depth: parseFloat(ui.$('depth').value),
+      plexi: parseFloat(ui.$('plexi').value),
+      falc: parseFloat(ui.$('falc').value),
+      plexiGap: parseFloat(ui.$('plexi-gap').value) || 0,
+      plexiInset: Math.max(0, parseFloat(ui.$('plexi-inset').value) || 0),
+      bottomType: state.bottomType,
+      backThick: parseFloat(ui.$('back-thick').value) || 2,
+      bottomInset: Math.max(0, parseFloat(ui.$('bottom-inset').value) || 0),
+      shelfH: Math.max(0, parseFloat(ui.$('shelf-h').value) || 0),
+      shelfW: Math.max(0, parseFloat(ui.$('shelf-w').value) || 0),
+      cableOn: ui.$('cable-on').checked,
+      cableDiam: parseFloat(ui.$('cable').value) || 10,
+      bottomSeparate: ui.$('bottom-separate').checked,
+      bottomClearance: Math.max(0, parseFloat(ui.$('bottom-clearance').value) || 0),
+    };
+
+    if (!(params.outerOff > 0)) {
+      throw new Error('Vonkajší offset musí byť kladný (> 0).');
+    }
+    if (!(params.falc > 0)) {
+      throw new Error('Šírka falca musí byť kladná (> 0).');
+    }
+    if (!(params.plexi > 0)) {
+      throw new Error('Hrúbka plexi musí byť kladná.');
+    }
+    if (params.plexi + params.plexiInset >= params.depth) {
+      throw new Error('Hrúbka plexi + zapustenie plexi (' + (params.plexi + params.plexiInset).toFixed(1) +
+        ' mm) musí byť menšia ako hĺbka boxu (' + params.depth + ' mm).');
+    }
+    if (params.bottomType === 'recessed' && params.bottomInset <= 0) {
+      throw new Error('Pre zapustené dno (U) musí byť hĺbka zapustenia > 0.');
+    }
+    if (params.bottomType === 'recessed' && (params.bottomInset + params.backThick + params.plexi + params.plexiInset >= params.depth)) {
+      throw new Error('Zapustenie dna (' + params.bottomInset + ') + hrúbka dna + hrúbka plexi + zapustenie plexi presahuje hĺbku boxu.');
+    }
+
+    const { mainGeom, plexiGeom } = buildLightboxGeometry(shapes, params);
+
+    // Build the separate bottom slab if requested (regardless of variant — only depends on checkbox)
+    let bottomGeom = null;
+    if (params.bottomSeparate && params.bottomType !== 'open') {
+      bottomGeom = buildSeparateBottom(shapes, params);
+    }
+
+    // Center in XY, place bottom at z=0
+    const tmp = new THREE.Mesh(mainGeom);
+    const box = new THREE.Box3().setFromObject(tmp);
+    const cx = (box.min.x + box.max.x) / 2;
+    const cy = (box.min.y + box.max.y) / 2;
+    mainGeom.translate(-cx, -cy, 0);
+    if (plexiGeom) plexiGeom.translate(-cx, -cy, 0);
+    if (bottomGeom) bottomGeom.translate(-cx, -cy, 0);
+
+    setMeshes(mainGeom, plexiGeom, bottomGeom);
+    ui.$('vp-empty').style.display = 'none';
+    ui.$('btn-stl').disabled = false;
+    ui.$('btn-stl-bottom').disabled = !bottomGeom;
+    ui.status(`Hotovo · ${shapes.length} tvar(y) · ${(mainGeom.index.count/3).toLocaleString('sk')} trojuholníkov`, 'ok');
+  } catch (err) {
+    console.error(err);
+    ui.status('Chyba: ' + err.message, 'err');
+  } finally {
+    ui.busy(false);
+  }
+};
+
+/* =====================================================================
+   STL EXPORT
+   ===================================================================== */
+function downloadSTL(mesh, suffix, label) {
+  if (!mesh) return;
+  ui.busy(true, 'Vytváram STL…');
+  setTimeout(() => {
+    try {
+      const exporter = new STLExporter();
+      const stl = exporter.parse(mesh, { binary: true });
+      const blob = new Blob([stl], { type: 'application/octet-stream' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const baseName = (state.fileName || 'svetelne-pismeno').replace(/\.dxf$/i, '');
+      a.href = url;
+      a.download = baseName + (suffix || '') + '.stl';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      ui.status((label || 'STL') + ' stiahnuté ✓', 'ok');
+    } catch (e) {
+      console.error(e);
+      ui.status('Chyba pri exporte: ' + e.message, 'err');
+    } finally {
+      ui.busy(false);
+    }
+  }, 50);
+}
+
+ui.$('btn-stl').onclick = () => {
+  // Export the wall body. Note: when "samostatné dno" is checked, this is still the integrated
+  // mesh that includes the back plate baked into the wall. The user typically wants to choose
+  // ONE of: (a) integrated single-piece print → use this STL, ignore the bottom STL; OR
+  // (b) two-piece assembly → use the bottom STL; the wall part can also be printed standalone
+  // since the integrated wall + back plate is the same shape (just glue/discard the back plate
+  // region, or print as-is and use as a closed letter).
+  downloadSTL(bodyMesh, '', 'STL — Stena');
+};
+
+ui.$('btn-stl-bottom').onclick = () => {
+  if (!bottomMesh) {
+    ui.status('Najprv zaškrtni „Tlačiť dno samostatne" a vygeneruj model.', 'err');
+    return;
+  }
+  downloadSTL(bottomMesh, '-dno', 'STL — Dno');
+};
+</script>
+</body>
+</html>
