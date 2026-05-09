@@ -368,10 +368,6 @@ function applyLang(l){
 <nav>
   <div class="nav-inner">
     <div class="nav-left">
-      <div class="lang">
-        <button data-lang="sk" onclick="applyLang('sk')">🇸🇰 SK</button>
-        <button data-lang="en" onclick="applyLang('en')">🇺🇸 EN</button>
-      </div>
       <a href="#" class="logo">
         <img src="ikonka.png" alt="logo">
         <div>
@@ -594,7 +590,7 @@ function applyLang(l){
     <div class="pricing-card reveal">
       <div class="pricing-badge" id="prBadge"></div>
       <div class="price-amount">5€</div>
-      <div class="price-period">/ mesiac</div>
+      <div class="price-period">/ month</div>
       <div class="pricing-divider"></div>
       <div class="pricing-features">
         <div class="pricing-feature" id="pr1"></div>
@@ -642,7 +638,7 @@ function applyLang(l){
 </footer>
 
 <script>
-applyLang('sk');
+applyLang('en');
 
 const obs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
