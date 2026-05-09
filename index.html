@@ -1,580 +1,655 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sk">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>3D Channel Letters</title>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-
 :root{
---bg:#02070d;
---panel:#09131d;
---cyan:#52e2ff;
---text:#e9fbff;
---muted:#8ca6b6;
+  --bg:#02070d;
+  --panel:#09131d;
+  --cyan:#52e2ff;
+  --cyan2:#00c8ff;
+  --text:#e9fbff;
+  --muted:#8ca6b6;
+  --border:rgba(82,226,255,0.1);
+  --glow:rgba(82,226,255,0.35);
 }
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
-
+*{ margin:0; padding:0; box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
 body{
-font-family:Inter,sans-serif;
-background:
-radial-gradient(circle at top, rgba(82,226,255,0.12), transparent 35%),
-linear-gradient(180deg,#02070d,#06111a 50%,#02070d);
-color:var(--text);
-overflow-x:hidden;
+  font-family:Inter,sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(82,226,255,0.1), transparent 35%),
+    linear-gradient(180deg,#02070d,#06111a 50%,#02070d);
+  color:var(--text);
+  overflow-x:hidden;
 }
-
 body::before{
-content:'';
-position:fixed;
-inset:0;
-background-image:
-linear-gradient(rgba(82,226,255,0.04) 1px, transparent 1px),
-linear-gradient(90deg, rgba(82,226,255,0.04) 1px, transparent 1px);
-background-size:70px 70px;
-z-index:-1;
+  content:''; position:fixed; inset:0;
+  background-image:
+    linear-gradient(rgba(82,226,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg,rgba(82,226,255,0.04) 1px, transparent 1px);
+  background-size:70px 70px;
+  z-index:0; pointer-events:none;
 }
-
 nav{
-position:fixed;
-top:0;
-width:100%;
-backdrop-filter:blur(20px);
-background:rgba(2,7,13,0.7);
-border-bottom:1px solid rgba(82,226,255,0.08);
-z-index:1000;
+  position:fixed; top:0; width:100%;
+  backdrop-filter:blur(20px);
+  background:rgba(2,7,13,0.75);
+  border-bottom:1px solid var(--border);
+  z-index:1000;
 }
-
 .nav-inner{
-max-width:1400px;
-margin:auto;
-padding:18px 28px;
-display:flex;
-justify-content:space-between;
-align-items:center;
+  max-width:1400px; margin:auto;
+  padding:16px 28px;
+  display:flex; justify-content:space-between; align-items:center;
 }
-
-.left{
-display:flex;
-align-items:center;
-gap:20px;
-}
-
+.nav-left{ display:flex; align-items:center; gap:18px; }
 .lang{
-display:flex;
-gap:10px;
-padding:10px 14px;
-border-radius:14px;
-background:rgba(255,255,255,0.04);
-border:1px solid rgba(82,226,255,0.12);
+  display:flex; gap:4px; padding:6px 8px;
+  border-radius:12px; background:rgba(255,255,255,0.04);
+  border:1px solid var(--border);
 }
-
 .lang button{
-background:none;
-border:none;
-font-weight:700;
-cursor:pointer;
-font-size:14px;
+  background:none; border:none; font-family:Inter,sans-serif;
+  font-size:13px; font-weight:600; cursor:pointer;
+  padding:5px 10px; border-radius:8px; transition:.2s; color:var(--muted);
 }
-
-.logo{
-display:flex;
-align-items:center;
-gap:16px;
-}
-
-.logo img{
-width:58px;
-height:58px;
-border-radius:18px;
-box-shadow:0 0 25px rgba(82,226,255,0.45);
-}
-
-.logo strong{
-font-size:20px;
-display:block;
-}
-
-.logo span{
-color:var(--muted);
-font-size:13px;
-}
-
-.hero{
-min-height:100vh;
-display:flex;
-align-items:center;
-padding:140px 30px 100px;
-}
-
-.hero-inner{
-max-width:1400px;
-margin:auto;
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:80px;
-align-items:center;
-}
-
-.badge{
-display:inline-block;
-padding:12px 18px;
-border-radius:999px;
-background:rgba(82,226,255,0.08);
-border:1px solid rgba(82,226,255,0.18);
-color:var(--cyan);
-margin-bottom:28px;
-font-size:14px;
-font-weight:700;
-}
-
-.hero h1{
-font-size:82px;
-line-height:0.95;
-margin-bottom:28px;
-font-weight:900;
-letter-spacing:-3px;
-}
-
-.glow{
-color:var(--cyan);
-text-shadow:
-0 0 10px rgba(82,226,255,0.9),
-0 0 30px rgba(82,226,255,0.6);
-}
-
-.hero p{
-font-size:20px;
-line-height:1.8;
-color:var(--muted);
-margin-bottom:40px;
-}
-
-.buttons{
-display:flex;
-gap:18px;
-flex-wrap:wrap;
-}
-
+.lang button.active{ background:rgba(82,226,255,0.12); color:var(--cyan); }
+.lang button:hover{ color:var(--text); }
+.logo{ display:flex; align-items:center; gap:14px; text-decoration:none; }
+.logo img{ width:48px; height:48px; border-radius:14px; box-shadow:0 0 20px var(--glow); }
+.logo strong{ font-size:17px; font-weight:800; display:block; color:var(--text); }
+.logo span{ font-size:12px; color:var(--muted); }
 .btn{
-padding:18px 30px;
-border-radius:18px;
-text-decoration:none;
-font-weight:700;
-display:inline-flex;
-align-items:center;
-gap:12px;
+  padding:12px 22px; border-radius:14px; text-decoration:none;
+  font-family:Inter,sans-serif; font-weight:700; font-size:14px;
+  display:inline-flex; align-items:center; gap:8px;
+  transition:.25s; cursor:pointer; border:none;
 }
-
 .btn-primary{
-background:linear-gradient(135deg,var(--cyan),#00c8ff);
-color:#00131b;
+  background:linear-gradient(135deg,var(--cyan),var(--cyan2));
+  color:#001820; box-shadow:0 4px 20px rgba(82,226,255,0.3);
 }
-
+.btn-primary:hover{ transform:translateY(-2px); box-shadow:0 8px 28px rgba(82,226,255,0.45); }
 .btn-secondary{
-border:1px solid rgba(82,226,255,0.16);
-background:rgba(255,255,255,0.03);
-color:white;
+  border:1px solid rgba(82,226,255,0.18);
+  background:rgba(82,226,255,0.04); color:var(--text);
 }
-
-.preview{
-background:rgba(8,18,30,0.72);
-border:1px solid rgba(82,226,255,0.12);
-border-radius:36px;
-overflow:hidden;
-box-shadow:0 0 50px rgba(82,226,255,0.14);
+.btn-secondary:hover{ background:rgba(82,226,255,0.1); border-color:rgba(82,226,255,0.35); }
+.btn-lg{ padding:16px 28px; font-size:16px; border-radius:16px; }
+.hero{
+  min-height:100vh; display:flex; flex-direction:column; justify-content:center;
+  padding:140px 28px 80px; position:relative; z-index:1;
 }
-
-.preview img{
-width:100%;
-display:block;
-}
-
-section{
-padding:120px 30px;
-}
-
-.container{
-max-width:1400px;
-margin:auto;
-}
-
-.section-title{
-text-align:center;
-margin-bottom:70px;
-}
-
-.section-title h2{
-font-size:58px;
-margin-bottom:20px;
-}
-
-.section-title p{
-color:var(--muted);
-font-size:18px;
-}
-
-.features{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-gap:28px;
-}
-
-.feature{
-padding:36px;
-border-radius:28px;
-background:linear-gradient(180deg,rgba(10,20,32,0.95),rgba(5,12,20,0.95));
-border:1px solid rgba(82,226,255,0.1);
-}
-
-.feature h3{
-font-size:24px;
-margin-bottom:16px;
-}
-
-.feature p{
-color:var(--muted);
-line-height:1.8;
-}
-
-.gallery{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(420px,1fr));
-gap:32px;
-}
-
-.gallery-card{
-overflow:hidden;
-border-radius:28px;
-border:1px solid rgba(82,226,255,0.14);
-background:rgba(8,18,30,0.78);
-box-shadow:0 0 40px rgba(82,226,255,0.08);
-transition:0.4s;
-position:relative;
-}
-
-.gallery-card:hover{
-transform:translateY(-8px);
-}
-
-.gallery-card img{
-width:100%;
-display:block;
-}
-
-.gallery-label{
-position:absolute;
-bottom:18px;
-left:18px;
-padding:10px 16px;
-border-radius:14px;
-background:rgba(0,0,0,0.55);
-font-size:14px;
-font-weight:700;
-}
-
-.pricing{
-max-width:760px;
-margin:auto;
-padding:70px 50px;
-border-radius:40px;
-background:linear-gradient(180deg,rgba(10,20,32,0.98),rgba(5,12,20,0.98));
-border:1px solid rgba(82,226,255,0.14);
-text-align:center;
-}
-
-.price{
-font-size:100px;
-font-weight:900;
-color:var(--cyan);
-}
-
-.price span{
-font-size:28px;
-color:var(--muted);
-}
-
-footer{
-padding:70px 30px;
-text-align:center;
-border-top:1px solid rgba(82,226,255,0.08);
-}
-
-footer img{
-width:80px;
-border-radius:24px;
-margin-bottom:20px;
-}
-
-footer p{
-color:var(--muted);
-}
-
-@media(max-width:1100px){
 .hero-inner{
-grid-template-columns:1fr;
+  max-width:1400px; margin:auto;
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:80px; align-items:center;
 }
-.hero h1{
-font-size:58px;
+.hero-content{ opacity:0; transform:translateY(28px); animation:fadeUp .7s .1s forwards; }
+.hero-visual{ opacity:0; transform:translateY(28px); animation:fadeUp .7s .3s forwards; }
+@keyframes fadeUp{ to{ opacity:1; transform:translateY(0); } }
+.badge{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:9px 16px; border-radius:999px;
+  background:rgba(82,226,255,0.07); border:1px solid rgba(82,226,255,0.2);
+  color:var(--cyan); font-size:13px; font-weight:600; margin-bottom:24px;
 }
-.gallery{
-grid-template-columns:1fr;
+.badge-dot{
+  width:6px; height:6px; border-radius:50%;
+  background:var(--cyan); box-shadow:0 0 8px var(--cyan);
+  animation:pulse 2s infinite;
 }
+@keyframes pulse{ 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.5;transform:scale(1.3);} }
+.hero h1{ font-size:68px; line-height:1; font-weight:900; letter-spacing:-2.5px; margin-bottom:22px; }
+.glow{ color:var(--cyan); text-shadow:0 0 30px rgba(82,226,255,0.7),0 0 70px rgba(82,226,255,0.3); }
+.hero p{ font-size:17px; line-height:1.75; color:var(--muted); margin-bottom:36px; max-width:480px; }
+.hero-buttons{ display:flex; gap:12px; flex-wrap:wrap; }
+.visual-card{
+  border-radius:28px; overflow:hidden;
+  border:1px solid var(--border); background:var(--panel);
+  box-shadow:0 0 60px rgba(82,226,255,0.1),0 30px 80px rgba(0,0,0,0.5);
 }
-
+.visual-card img{ width:100%; display:block; }
+.stats-bar{
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:1px; background:var(--border); border:1px solid var(--border);
+  border-radius:20px; overflow:hidden;
+  max-width:1400px; margin:48px auto 0;
+  opacity:0; animation:fadeUp .7s .55s forwards;
+}
+.stat{ background:var(--panel); padding:26px 24px; text-align:center; }
+.stat strong{ font-size:32px; font-weight:900; color:var(--cyan); display:block; margin-bottom:4px; }
+.stat span{ font-size:13px; color:var(--muted); }
+section{ padding:100px 28px; position:relative; z-index:1; }
+.container{ max-width:1400px; margin:auto; }
+.section-label{
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:11px; font-weight:700; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--cyan); margin-bottom:14px;
+}
+.section-label::before{ content:''; width:18px; height:1px; background:var(--cyan); }
+.section-title{ text-align:center; margin-bottom:56px; }
+.section-title .section-label{ justify-content:center; }
+.section-title h2{ font-size:46px; font-weight:900; letter-spacing:-1.5px; margin-bottom:14px; }
+.section-title p{ color:var(--muted); font-size:16px; }
+.feat-tag{
+  display:inline-block; padding:4px 10px; border-radius:8px;
+  background:rgba(82,226,255,0.07); border:1px solid rgba(82,226,255,0.15);
+  color:var(--cyan); font-size:12px; font-weight:500;
+}
+.feature-card{
+  padding:28px; border-radius:22px;
+  background:linear-gradient(160deg,rgba(10,20,32,.95),rgba(5,12,20,.95));
+  border:1px solid var(--border); transition:.3s; position:relative; overflow:hidden;
+}
+.feature-card::before{
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(circle at 50% 0%,rgba(82,226,255,.06),transparent 60%);
+  opacity:0; transition:.3s;
+}
+.feature-card:hover{ transform:translateY(-5px); border-color:rgba(82,226,255,.25); }
+.feature-card:hover::before{ opacity:1; }
+.feature-icon{
+  width:44px; height:44px; border-radius:12px;
+  background:rgba(82,226,255,.08); border:1px solid rgba(82,226,255,.15);
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px; margin-bottom:16px;
+}
+.feature-card h3{ font-size:17px; font-weight:700; margin-bottom:8px; }
+.feature-card p{ color:var(--muted); font-size:14px; line-height:1.65; }
+.screenshots-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.screenshot-card{
+  border-radius:18px; overflow:hidden;
+  border:1px solid var(--border); background:var(--panel);
+  position:relative; cursor:pointer; transition:.35s;
+}
+.screenshot-card:hover{ transform:translateY(-5px); box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 30px rgba(82,226,255,.1); }
+.screenshot-card img{ width:100%; display:block; }
+.screenshot-overlay{
+  position:absolute; bottom:0; left:0; right:0; padding:18px 20px;
+  background:linear-gradient(0deg,rgba(2,7,13,.92) 0%,transparent 100%);
+}
+.screenshot-label{ font-size:14px; font-weight:700; }
+.screenshot-desc{ font-size:12px; color:var(--muted); margin-top:4px; line-height:1.5; }
+.workflow{
+  background:linear-gradient(135deg,rgba(10,20,32,.8),rgba(5,12,20,.8));
+  border:1px solid var(--border); border-radius:28px; padding:56px;
+  display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:center;
+}
+.workflow h2{ font-size:38px; font-weight:900; letter-spacing:-1px; margin-bottom:32px; }
+.workflow-steps{ display:flex; flex-direction:column; }
+.workflow-step{
+  display:flex; gap:18px; padding:22px 0; border-bottom:1px solid var(--border);
+}
+.workflow-step:last-child{ border-bottom:none; }
+.step-number{
+  width:38px; height:38px; border-radius:11px;
+  background:rgba(82,226,255,.08); border:1px solid rgba(82,226,255,.2);
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:800; color:var(--cyan); flex-shrink:0;
+}
+.step-content h4{ font-size:15px; font-weight:700; margin-bottom:5px; }
+.step-content p{ font-size:13px; color:var(--muted); line-height:1.6; }
+.workflow-visual img{ width:100%; border-radius:18px; border:1px solid var(--border); }
+.pricing-card{
+  max-width:640px; margin:auto; padding:56px 48px;
+  border-radius:28px;
+  background:linear-gradient(160deg,rgba(12,24,38,.98),rgba(6,14,22,.98));
+  border:1px solid rgba(82,226,255,.15); text-align:center;
+  position:relative; overflow:hidden;
+}
+.pricing-card::before{
+  content:''; position:absolute; top:-80px; left:50%; transform:translateX(-50%);
+  width:280px; height:280px;
+  background:radial-gradient(circle,rgba(82,226,255,.07),transparent 70%);
+  pointer-events:none;
+}
+.pricing-badge{
+  display:inline-block; padding:7px 14px; border-radius:999px;
+  background:rgba(82,226,255,.1); border:1px solid rgba(82,226,255,.2);
+  color:var(--cyan); font-size:11px; font-weight:700;
+  letter-spacing:.07em; text-transform:uppercase; margin-bottom:24px;
+}
+.price-amount{ font-size:88px; font-weight:900; color:var(--cyan); line-height:1; text-shadow:0 0 50px rgba(82,226,255,.4); }
+.price-period{ font-size:20px; color:var(--muted); margin-bottom:4px; }
+.pricing-divider{ height:1px; background:var(--border); margin:28px 0; }
+.pricing-features{ display:flex; flex-direction:column; gap:12px; margin-bottom:32px; text-align:left; }
+.pricing-feature{ display:flex; align-items:center; gap:10px; font-size:14px; }
+.pricing-feature::before{
+  content:'✓'; width:22px; height:22px; border-radius:7px;
+  background:rgba(82,226,255,.1); border:1px solid rgba(82,226,255,.2);
+  color:var(--cyan); font-size:12px; font-weight:700;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.download-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; max-width:680px; margin:0 auto; }
+.download-btn{
+  padding:20px 24px; border-radius:18px; border:1px solid var(--border);
+  background:var(--panel); color:var(--text); text-decoration:none;
+  display:flex; align-items:center; gap:14px; transition:.3s;
+}
+.download-btn:hover{
+  border-color:rgba(82,226,255,.3); background:rgba(82,226,255,.05);
+  transform:translateY(-3px); box-shadow:0 12px 36px rgba(0,0,0,.4);
+}
+.download-icon{ font-size:26px; }
+.download-text strong{ font-size:15px; font-weight:700; display:block; margin-bottom:2px; }
+.download-text span{ font-size:12px; color:var(--muted); }
+footer{ padding:56px 28px; border-top:1px solid var(--border); position:relative; z-index:1; }
+.footer-inner{ max-width:1400px; margin:auto; display:flex; justify-content:space-between; align-items:center; }
+.footer-logo{ display:flex; align-items:center; gap:12px; }
+.footer-logo img{ width:40px; border-radius:11px; }
+.footer-logo strong{ font-size:15px; font-weight:700; }
+footer p{ color:var(--muted); font-size:13px; }
+.reveal{ opacity:0; transform:translateY(22px); transition:opacity .65s,transform .65s; }
+.reveal.visible{ opacity:1; transform:translateY(0); }
+@media(max-width:1100px){
+  .hero-inner{ grid-template-columns:1fr; }
+  .hero h1{ font-size:52px; }
+  .workflow{ grid-template-columns:1fr; padding:36px; }
+  .workflow-visual{ display:none; }
+  .footer-inner{ flex-direction:column; gap:16px; text-align:center; }
+  .feat-4col{ grid-template-columns:repeat(2,1fr)!important; }
+}
+@media(max-width:700px){
+  .hero h1{ font-size:38px; }
+  .screenshots-grid{ grid-template-columns:1fr; }
+  .download-grid{ grid-template-columns:1fr; }
+  .stats-bar{ grid-template-columns:1fr; }
+  .pricing-card{ padding:36px 24px; }
+  .price-amount{ font-size:72px; }
+  section{ padding:70px 18px; }
+  .feat-2col{ grid-template-columns:1fr!important; }
+  .feat-4col{ grid-template-columns:1fr!important; }
+}
 </style>
 </head>
-
 <body>
 
 <script>
-
-function setLanguage(lang){
-
-const t = {
-
+const T={
 en:{
-hero:'Generate <span class="glow">3D illuminated</span> letters for advertising',
-text:'Professional software for illuminated advertising letters using 3D printing workflows.',
-features:'Professional Features',
-screens:'Application Screenshots',
-pricing:'Simple Pricing',
-download:'Download the Application'
+  navDl:'Download',logoSub:'Professional illuminated letters',
+  badge:'DXF → STL Professional Workflow',
+  h1:'Generate <span class="glow">3D illuminated</span> letters for advertising',
+  heroP:'Professional software for illuminated advertising letters using 3D printing. From DXF to print-ready STL in seconds.',
+  dlTrial:'⬇ Download Trial',viewFeat:'View Features',
+  stat1:'Realtime Preview',stat2:'Vector Import',stat3:'Print-Ready Export',
+  featLabel:'FEATURES',featH:'Everything you need',featSub:'Six dedicated panels — every parameter a sign maker needs, nothing more.',
+  f1h:'DXF Import',f1p:'Load any vector DXF file. Choose unit scale (mm or inches) and set curve tolerance down to 0.05 mm. App shows file size and detected curve count instantly.',f1t1:'Unit scale',f1t2:'Curve tolerance',f1t3:'Multi-shape',
+  f2h:'Realtime 3D Preview',f2p:'See your letter in 3D instantly. Switch between Iso, Top, Front views. Toggle Wireframe / Acrylic render. Live triangle count, dimensions, shape count.',f2t1:'Iso / Top / Front',f2t2:'Wireframe & Acrylic',f2t3:'Live triangle count',
+  f3h:'Wall Settings',f3p:'Outer wall thickness (2 mm) and box depth (25 mm). Built-in cross-section diagram shows wall, plexiglass, and tolerances.',f3t1:'Wall thickness',f3t2:'Box depth',f3t3:'Cross-section diagram',
+  f4h:'Acrylic & Rebate',f4p:'Acrylic thickness (3 mm), rebate width (1 mm), clearance (0.2 mm), inset below top edge. Perfect press-fit with standard acrylic sheets.',f4t1:'Acrylic thickness',f4t2:'Rebate width',f4t3:'Clearance',
+  f5h:'Back Cover System',f5p:'<b style="color:var(--text)">W – Open</b> (no back), <b style="color:var(--text)">I – Solid</b> (flat back), <b style="color:var(--text)">S – Snap-in</b> (tool-free acrylic assembly). Lip height 6 mm, thickness 1.6 mm, cable hole, clearance 0.3 mm.',f5t1:'Open / Solid / Snap-in',f5t2:'Cable hole',f5t3:'Snap lip geometry',
+  f6h:'Color System',f6p:'8 wall body color presets + custom hex. 8 translucent acrylic presets + custom hex. Opacity slider simulates how the letter looks when lit.',f6t1:'Wall & acrylic colors',f6t2:'Custom hex picker',f6t3:'Opacity simulation',
+  f7h:'Dual STL Export',f7p:'Download two files: <b style="color:var(--text)">Wall STL</b> (letter body with rebate) and <b style="color:var(--text)">Back STL</b> (cover or snap-in lid). Both FDM print-ready, no post-processing needed.',f7t1:'Wall STL',f7t2:'Back STL',f7t3:'FDM-ready',
+  f8h:'Offline License',f8p:'License key stored locally — no account, no server, no data sent. Paste key once, STL export permanently unlocked. Works fully offline.',f8t1:'No account',f8t2:'Works offline',f8t3:'Local storage',
+  scrLabel:'SCREENSHOTS',scrH:'Application Screenshots',scrSub:'Look directly inside the interface — every panel, every parameter.',
+  sc1l:'SOURCE — DXF Import',sc1d:'Load DXF file, set unit scale (mm/in), curve tolerance 0.05 mm. Shows file size and curve count.',
+  sc2l:'WALLS — Thickness & Depth',sc2d:'Outer wall thickness (2 mm), box depth (25 mm). Cross-section diagram shows plexiglass fit and tolerances.',
+  sc3l:'ACRYLIC — Rebate Parameters',sc3d:'Acrylic thickness (3 mm), rebate width (1 mm), clearance (0.2 mm), inset below top edge (0 mm).',
+  sc4l:'BACK — Cover Type',sc4d:'W – Open, I – Solid, S – Snap-in. Lip height 6 mm, thickness 1.6 mm, cable hole option, back-to-wall clearance 0.3 mm.',
+  sc5l:'COLORS — Wall & Acrylic',sc5d:'8 wall color presets + custom hex. 8 translucent acrylic presets + custom hex + opacity slider.',
+  sc6l:'LANGUAGES — EN / SK / DE',sc6d:'App supports English, Slovenčina and Deutsch. Switch anytime from the top-left dropdown.',
+  sc7l:'COLORS — Custom Color Picker',sc7d:'Full spectrum color picker. Any RAL or brand color for wall and acrylic. Preview updates in realtime.',
+  wfLabel:'HOW IT WORKS',wfH:'From DXF to STL in 3 steps',
+  w1h:'Import your DXF file',w1p:'Load vector from any CAD or illustration tool. Set unit scale and curve tolerance. App shows dimensions and shapes instantly.',
+  w2h:'Tune all parameters',w2p:'Adjust wall thickness, box depth, acrylic rebate, back type, snap lip, cable hole, and colors — all with live 3D feedback.',
+  w3h:'Generate & Download STL',w3p:'Hit Generate 3D model, download Wall STL and Back STL separately. FDM print-ready. License verified locally.',
+  prLabel:'PRICING',prH:'Simple Pricing',prBadge:'14-DAY FREE TRIAL',
+  pr1:'Unlimited STL exports',pr2:'Realtime 3D preview',pr3:'All 3 back cover types',pr4:'Custom color system',pr5:'macOS & Windows',pr6:'Offline license — no account',prBtn:'⬇ Start Free Trial',
+  dlLabel:'DOWNLOAD',dlH:'Download the Application',dlSub:'Available for macOS and Windows. No subscription required to try.',
+  dlMac:'Download for macOS',dlMacSub:'macOS 12.0 or later',dlWin:'Download for Windows',dlWinSub:'Windows 10 or later',
+  copy:'© 2026 3D Channel Letters · Made by Miloš Kráľ',
 },
-
 sk:{
-hero:'Generovanie <span class="glow">3D svetelných</span> písmen pre reklamu',
-text:'Profesionálny softvér pre výrobu reklamných svetelných písmen pomocou 3D tlače.',
-features:'Profesionálne funkcie',
-screens:'Screenshoty aplikácie',
-pricing:'Jednoduché predplatné',
-download:'Stiahni si aplikáciu'
+  navDl:'Stiahnuť',logoSub:'Profesionálne svetelné písmená',
+  badge:'DXF → STL Profesionálny workflow',
+  h1:'Generovanie <span class="glow">3D svetelných</span> písmen pre reklamu',
+  heroP:'Profesionálny softvér pre výrobu reklamných svetelných písmen pomocou 3D tlače. Z DXF na tlačiteľný STL za sekundy.',
+  dlTrial:'⬇ Stiahnuť Trial',viewFeat:'Zobraziť funkcie',
+  stat1:'Realtime náhľad',stat2:'Import vektorov',stat3:'Export pre tlač',
+  featLabel:'FUNKCIE',featH:'Všetko čo potrebuješ',featSub:'Šesť panelov — každý parameter, ktorý výrobca reklamných písmen potrebuje.',
+  f1h:'Import DXF',f1p:'Načítanie akéhokoľvek DXF súboru. Výber mierky (mm alebo palce) a tolerancia kriviek až 0,05 mm pre ultra-presnú geometriu. Zobrazuje veľkosť súboru a počet kriviek.',f1t1:'Mierka jednotiek',f1t2:'Tolerancia kriviek',f1t3:'Viac tvarov naraz',
+  f2h:'Realtime 3D náhľad',f2p:'Vidíte písmeno v 3D okamžite pri každej zmene. Pohľady Iso, Zhora, Spredu. Prepínanie medzi Drôtovým modelom a Akrylovým zobrazením. Živý počet trojuholníkov.',f2t1:'Iso / Zhora / Spredu',f2t2:'Drôtový model & Akryl',f2t3:'Živý počet trojuholníkov',
+  f3h:'Nastavenia steny',f3p:'Hrúbka vonkajšej steny (2 mm) a hĺbka boxu (25 mm). Vstavaný diagram prierezu ukazuje uloženie plexiskla a tolerancie.',f3t1:'Hrúbka steny',f3t2:'Hĺbka boxu',f3t3:'Diagram prierezu',
+  f4h:'Akryl a drážka',f4p:'Hrúbka akrylu (3 mm), šírka drážky (1 mm), vôľa (0,2 mm), prepadnutie pod hornú hranu. Presný lisovaný spoj so štandardnými akrylmi.',f4t1:'Hrúbka akrylu',f4t2:'Šírka drážky',f4t3:'Vôľa',
+  f5h:'Systém krytu chrbáta',f5p:'<b style="color:var(--text)">W – Otvorený</b> (bez krytu), <b style="color:var(--text)">I – Plný</b> (plochý chrbát), <b style="color:var(--text)">S – Snap-in</b> (pružná pera, montáž bez nástrojov). Výška pery 6 mm, hrúbka 1,6 mm, otvor pre kábel, vôľa 0,3 mm.',f5t1:'Otvorený / Plný / Snap-in',f5t2:'Otvor pre kábel',f5t3:'Geometria pery',
+  f6h:'Farebný systém',f6p:'8 presetov pre farbu steny + vlastný hex. 8 presetov pre priehľadný akryl + vlastný hex. Posúvač priehľadnosti simuluje nasvietené písmeno.',f6t1:'Farby steny a akrylu',f6t2:'Vlastný hex',f6t3:'Simulácia priehľadnosti',
+  f7h:'Dvojitý STL export',f7p:'Dva samostatné súbory: <b style="color:var(--text)">STL steny</b> (telo s drážkou) a <b style="color:var(--text)">STL chrbáta</b> (kryt alebo snap-in veko). Oba sú pripravené na FDM tlač bez ďalšieho spracovania.',f7t1:'STL steny',f7t2:'STL chrbáta',f7t3:'Pripravené pre FDM',
+  f8h:'Offline licencia',f8p:'Licenčný kľúč uložený lokálne — žiadny účet, žiadny server, žiadne odosielanie dát. Vložte kľúč raz, export STL je natrvalo odomknutý. Funguje plne offline.',f8t1:'Bez účtu',f8t2:'Funguje offline',f8t3:'Lokálne uloženie',
+  scrLabel:'SCREENSHOTY',scrH:'Screenshoty aplikácie',scrSub:'Pozrite sa priamo do rozhrania — každý panel, každý parameter.',
+  sc1l:'SOURCE — Import DXF',sc1d:'Načítanie DXF súboru, mierka (mm/palce), tolerancia kriviek 0,05 mm. Zobrazuje veľkosť súboru a počet kriviek.',
+  sc2l:'STENY — Hrúbka a hĺbka',sc2d:'Hrúbka vonkajšej steny (2 mm), hĺbka boxu (25 mm). Diagram prierezu ukazuje uloženie plexiskla a tolerancie.',
+  sc3l:'AKRYL — Parametre drážky',sc3d:'Hrúbka akrylu (3 mm), šírka drážky (1 mm), vôľa (0,2 mm), prepadnutie pod hornú hranu (0 mm).',
+  sc4l:'CHRBÁT — Výber typu krytu',sc4d:'W – Otvorený, I – Plný, S – Snap-in. Pera 6 mm, hrúbka 1,6 mm, otvor pre kábel, vôľa k stene 0,3 mm.',
+  sc5l:'FARBY — Stena a akryl',sc5d:'8 farebných presetov steny + vlastný hex. 8 presetov akrylu + vlastný hex + posúvač priehľadnosti.',
+  sc6l:'JAZYKY — EN / SK / DE',sc6d:'Aplikácia podporuje angličtinu, slovenčinu a nemčinu. Prepínanie z rozbaľovacieho menu vľavo hore.',
+  sc7l:'FARBY — Vlastný výber farieb',sc7d:'Plný výber farieb so spektrálnou mriežkou. Ľubovoľná farba pre stenu aj akryl. Náhľad sa aktualizuje v reálnom čase.',
+  wfLabel:'AKO TO FUNGUJE',wfH:'Z DXF na STL v 3 krokoch',
+  w1h:'Importujte DXF súbor',w1p:'Načítajte vektor z akéhokoľvek CAD nástroja. Nastavte mierku a toleranciu. Aplikácia okamžite zobrazí rozmery a tvary.',
+  w2h:'Nastavte parametre',w2p:'Upravte hrúbku steny, hĺbku boxu, drážku, typ chrbáta, peru, otvor pre kábel a farby — všetko s živým 3D náhľadom.',
+  w3h:'Generujte a stiahnite STL',w3p:'Kliknite Generovať 3D model, stiahnite STL steny a STL chrbáta. Pripravené na FDM tlač. Licencia overovaná lokálne.',
+  prLabel:'CENA',prH:'Jednoduché predplatné',prBadge:'14-DŇOVÁ BEZPLATNÁ SKÚŠKA',
+  pr1:'Neobmedzený export STL',pr2:'Realtime 3D náhľad',pr3:'Všetky 3 typy krytu',pr4:'Vlastný farebný systém',pr5:'macOS a Windows',pr6:'Offline licencia — bez účtu',prBtn:'⬇ Začať bezplatne',
+  dlLabel:'STIAHNUTIE',dlH:'Stiahnite si aplikáciu',dlSub:'Dostupné pre macOS a Windows. Na vyskúšanie nie je potrebné predplatné.',
+  dlMac:'Stiahnuť pre macOS',dlMacSub:'macOS 12.0 alebo novší',dlWin:'Stiahnuť pre Windows',dlWinSub:'Windows 10 alebo novší',
+  copy:'© 2026 3D Channel Letters · Vytvoril Miloš Kráľ',
+}};
+
+function applyLang(l){
+  document.querySelectorAll('.lang button').forEach(b=>b.classList.toggle('active',b.dataset.lang===l));
+  const d=T[l];
+  const ids=['navDl','logoSub','badge','h1','heroP','dlTrial','viewFeat','stat1','stat2','stat3',
+    'featLabel','featH','featSub',
+    'f1h','f1p','f1t1','f1t2','f1t3','f2h','f2p','f2t1','f2t2','f2t3',
+    'f3h','f3p','f3t1','f3t2','f3t3','f4h','f4p','f4t1','f4t2','f4t3',
+    'f5h','f5p','f5t1','f5t2','f5t3','f6h','f6p','f6t1','f6t2','f6t3',
+    'f7h','f7p','f7t1','f7t2','f7t3','f8h','f8p','f8t1','f8t2','f8t3',
+    'scrLabel','scrH','scrSub',
+    'sc1l','sc1d','sc2l','sc2d','sc3l','sc3d','sc4l','sc4d','sc5l','sc5d','sc6l','sc6d','sc7l','sc7d',
+    'wfLabel','wfH','w1h','w1p','w2h','w2p','w3h','w3p',
+    'prLabel','prH','prBadge','pr1','pr2','pr3','pr4','pr5','pr6','prBtn',
+    'dlLabel','dlH','dlSub','dlMac','dlMacSub','dlWin','dlWinSub','copy'];
+  const htmlIds=['h1','f5p','f7p'];
+  ids.forEach(key=>{
+    const el=document.getElementById(key);
+    if(!el||d[key]==null)return;
+    if(htmlIds.includes(key)) el.innerHTML=d[key]; else el.textContent=d[key];
+  });
 }
-
-};
-
-document.getElementById('hero-title').innerHTML=t[lang].hero;
-document.getElementById('hero-text').innerHTML=t[lang].text;
-document.getElementById('features-title').innerHTML=t[lang].features;
-document.getElementById('screens-title').innerHTML=t[lang].screens;
-document.getElementById('pricing-title').innerHTML=t[lang].pricing;
-document.getElementById('download-title').innerHTML=t[lang].download;
-
-}
-
 </script>
 
+<!-- NAV -->
 <nav>
-
-<div class="nav-inner">
-
-<div class="left">
-
-<div class="lang">
-<button onclick="setLanguage('en')" style="color:white;">🇺🇸 ENG</button>
-<button onclick="setLanguage('sk')" style="color:#8ca6b6;">🇸🇰 SK</button>
-</div>
-
-<div class="logo">
-<img src="ikonka.png">
-
-<div>
-<strong>3D Channel Letters</strong>
-<span>Professional illuminated letters</span>
-</div>
-
-</div>
-
-</div>
-
-<a href="#download" class="btn btn-primary">Download</a>
-
-</div>
-
+  <div class="nav-inner">
+    <div class="nav-left">
+      <div class="lang">
+        <button data-lang="sk" onclick="applyLang('sk')">🇸🇰 SK</button>
+        <button data-lang="en" onclick="applyLang('en')">🇺🇸 EN</button>
+      </div>
+      <a href="#" class="logo">
+        <img src="ikonka.png" alt="logo">
+        <div>
+          <strong>3D Channel Letters</strong>
+          <span id="logoSub"></span>
+        </div>
+      </a>
+    </div>
+    <a href="#download" class="btn btn-primary" id="navDl"></a>
+  </div>
 </nav>
 
+<!-- HERO -->
 <section class="hero">
-
-<div class="hero-inner">
-
-<div>
-
-<div class="badge">
-⚡ DXF → STL Professional Workflow
-</div>
-
-<h1 id="hero-title">
-Generate <span class="glow">3D illuminated</span> letters for advertising
-</h1>
-
-<p id="hero-text">
-Professional software for illuminated advertising letters using 3D printing workflows.
-</p>
-
-<div class="buttons">
-
-<a href="#download" class="btn btn-primary">
-⬇ Download Trial
-</a>
-
-<a href="#features" class="btn btn-secondary">
-▶ View Features
-</a>
-
-</div>
-
-</div>
-
-<div class="preview">
-<img src="Ikonka S.png">
-</div>
-
-</div>
-
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="badge"><span class="badge-dot"></span><span id="badge"></span></div>
+      <h1 id="h1"></h1>
+      <p id="heroP"></p>
+      <div class="hero-buttons">
+        <a href="#download" class="btn btn-primary btn-lg" id="dlTrial"></a>
+        <a href="#features" class="btn btn-secondary btn-lg" id="viewFeat"></a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="visual-card"><img src="Ikonka_S.png" alt="3D Channel Letter"></div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="stats-bar">
+      <div class="stat"><strong>3D</strong><span id="stat1"></span></div>
+      <div class="stat"><strong>DXF</strong><span id="stat2"></span></div>
+      <div class="stat"><strong>STL</strong><span id="stat3"></span></div>
+    </div>
+  </div>
 </section>
 
+<!-- FEATURES -->
 <section id="features">
-
-<div class="container">
-
-<div class="section-title">
-<h2 id="features-title">Professional Features</h2>
-<p>Modern workflow for sign makers and 3D production.</p>
-</div>
-
-<div class="features">
-
-<div class="feature">
-<h3>DXF Import</h3>
-<p>Automatic vector processing and realtime generation.</p>
-</div>
-
-<div class="feature">
-<h3>Realtime 3D Preview</h3>
-<p>Hardware accelerated interactive preview.</p>
-</div>
-
-<div class="feature">
-<h3>Acrylic & Snap-fit</h3>
-<p>Professional production parameters and tolerances.</p>
-</div>
-
-<div class="feature">
-<h3>STL Export</h3>
-<p>Ready-to-print STL export for manufacturing.</p>
-</div>
-
-</div>
-
-</div>
-
+  <div class="container">
+    <div class="section-title reveal">
+      <div class="section-label" id="featLabel"></div>
+      <h2 id="featH"></h2>
+      <p id="featSub"></p>
+    </div>
+    <!-- Row 1: 2 wide -->
+    <div class="feat-2col" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
+      <div class="feature-card reveal" style="display:flex;gap:20px;align-items:flex-start;">
+        <div class="feature-icon" style="flex-shrink:0">📂</div>
+        <div>
+          <h3 id="f1h"></h3><p id="f1p"></p>
+          <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
+            <span class="feat-tag" id="f1t1"></span><span class="feat-tag" id="f1t2"></span><span class="feat-tag" id="f1t3"></span>
+          </div>
+        </div>
+      </div>
+      <div class="feature-card reveal" style="display:flex;gap:20px;align-items:flex-start;">
+        <div class="feature-icon" style="flex-shrink:0">🔮</div>
+        <div>
+          <h3 id="f2h"></h3><p id="f2p"></p>
+          <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
+            <span class="feat-tag" id="f2t1"></span><span class="feat-tag" id="f2t2"></span><span class="feat-tag" id="f2t3"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Row 2: 4 cards -->
+    <div class="feat-4col" style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:20px;">
+      <div class="feature-card reveal">
+        <div class="feature-icon">🧱</div>
+        <h3 id="f3h"></h3><p id="f3p"></p>
+        <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
+          <span class="feat-tag" id="f3t1"></span><span class="feat-tag" id="f3t2"></span><span class="feat-tag" id="f3t3"></span>
+        </div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">💎</div>
+        <h3 id="f4h"></h3><p id="f4p"></p>
+        <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
+          <span class="feat-tag" id="f4t1"></span><span class="feat-tag" id="f4t2"></span><span class="feat-tag" id="f4t3"></span>
+        </div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🔩</div>
+        <h3 id="f5h"></h3><p id="f5p"></p>
+        <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
+          <span class="feat-tag" id="f5t1"></span><span class="feat-tag" id="f5t2"></span><span class="feat-tag" id="f5t3"></span>
+        </div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🎨</div>
+        <h3 id="f6h"></h3><p id="f6p"></p>
+        <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
+          <span class="feat-tag" id="f6t1"></span><span class="feat-tag" id="f6t2"></span><span class="feat-tag" id="f6t3"></span>
+        </div>
+      </div>
+    </div>
+    <!-- Row 3: 2 wide -->
+    <div class="feat-2col" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+      <div class="feature-card reveal" style="display:flex;gap:20px;align-items:flex-start;">
+        <div class="feature-icon" style="flex-shrink:0">📦</div>
+        <div>
+          <h3 id="f7h"></h3><p id="f7p"></p>
+          <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
+            <span class="feat-tag" id="f7t1"></span><span class="feat-tag" id="f7t2"></span><span class="feat-tag" id="f7t3"></span>
+          </div>
+        </div>
+      </div>
+      <div class="feature-card reveal" style="display:flex;gap:20px;align-items:flex-start;">
+        <div class="feature-icon" style="flex-shrink:0">🔑</div>
+        <div>
+          <h3 id="f8h"></h3><p id="f8p"></p>
+          <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
+            <span class="feat-tag" id="f8t1"></span><span class="feat-tag" id="f8t2"></span><span class="feat-tag" id="f8t3"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
+<!-- SCREENSHOTS -->
 <section>
-
-<div class="container">
-
-<div class="section-title">
-<h2 id="screens-title">Application Screenshots</h2>
-<p>Professional realtime workflow for illuminated letter production.</p>
-</div>
-
-<div class="gallery">
-
-<div class="gallery-card">
-<img src="Snímka obrazovky 2026-05-09 o 11.00.42.png">
-<div class="gallery-label">DXF Import</div>
-</div>
-
-<div class="gallery-card">
-<img src="Snímka obrazovky 2026-05-09 o 11.00.54.png">
-<div class="gallery-label">Wall Settings</div>
-</div>
-
-<div class="gallery-card">
-<img src="Snímka obrazovky 2026-05-09 o 11.01.00.png">
-<div class="gallery-label">Acrylic Settings</div>
-</div>
-
-<div class="gallery-card">
-<img src="Snímka obrazovky 2026-05-09 o 11.01.05.png">
-<div class="gallery-label">Back Cover System</div>
-</div>
-
-</div>
-
-</div>
-
+  <div class="container">
+    <div class="section-title reveal">
+      <div class="section-label" id="scrLabel"></div>
+      <h2 id="scrH"></h2>
+      <p id="scrSub"></p>
+    </div>
+    <div class="screenshots-grid">
+      <div class="screenshot-card reveal">
+        <img src="screen1.png" alt="SOURCE">
+        <div class="screenshot-overlay">
+          <div class="screenshot-label" id="sc1l"></div>
+          <div class="screenshot-desc" id="sc1d"></div>
+        </div>
+      </div>
+      <div class="screenshot-card reveal">
+        <img src="screen2.png" alt="WALLS">
+        <div class="screenshot-overlay">
+          <div class="screenshot-label" id="sc2l"></div>
+          <div class="screenshot-desc" id="sc2d"></div>
+        </div>
+      </div>
+      <div class="screenshot-card reveal">
+        <img src="screen3.png" alt="ACRYLIC">
+        <div class="screenshot-overlay">
+          <div class="screenshot-label" id="sc3l"></div>
+          <div class="screenshot-desc" id="sc3d"></div>
+        </div>
+      </div>
+      <div class="screenshot-card reveal">
+        <img src="screen4.png" alt="BACK">
+        <div class="screenshot-overlay">
+          <div class="screenshot-label" id="sc4l"></div>
+          <div class="screenshot-desc" id="sc4d"></div>
+        </div>
+      </div>
+      <div class="screenshot-card reveal">
+        <img src="screen5.png" alt="COLORS">
+        <div class="screenshot-overlay">
+          <div class="screenshot-label" id="sc5l"></div>
+          <div class="screenshot-desc" id="sc5d"></div>
+        </div>
+      </div>
+      <div class="screenshot-card reveal">
+        <img src="screen6.png" alt="LANGUAGES">
+        <div class="screenshot-overlay">
+          <div class="screenshot-label" id="sc6l"></div>
+          <div class="screenshot-desc" id="sc6d"></div>
+        </div>
+      </div>
+      <div class="screenshot-card reveal" style="grid-column:1/-1;">
+        <img src="screen7.png" alt="COLOR PICKER" style="max-height:420px;object-fit:cover;object-position:top;">
+        <div class="screenshot-overlay">
+          <div class="screenshot-label" id="sc7l"></div>
+          <div class="screenshot-desc" id="sc7d"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
+<!-- WORKFLOW -->
 <section>
-
-<div class="container">
-
-<div class="section-title">
-<h2 id="pricing-title">Simple Pricing</h2>
-<p>14-day free trial included</p>
-</div>
-
-<div class="pricing">
-
-<div class="price">
-5€ <span>/ month</span>
-</div>
-
-<p style="margin-top:20px;color:#8ca6b6;">
-Unlimited STL exports and realtime 3D workflow.
-</p>
-
-</div>
-
-</div>
-
+  <div class="container">
+    <div class="workflow reveal">
+      <div>
+        <div class="section-label" id="wfLabel"></div>
+        <h2 id="wfH"></h2>
+        <div class="workflow-steps">
+          <div class="workflow-step">
+            <div class="step-number">01</div>
+            <div class="step-content"><h4 id="w1h"></h4><p id="w1p"></p></div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">02</div>
+            <div class="step-content"><h4 id="w2h"></h4><p id="w2p"></p></div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">03</div>
+            <div class="step-content"><h4 id="w3h"></h4><p id="w3p"></p></div>
+          </div>
+        </div>
+      </div>
+      <div class="workflow-visual">
+        <img src="screen7.png" alt="preview">
+      </div>
+    </div>
+  </div>
 </section>
 
+<!-- PRICING -->
+<section>
+  <div class="container">
+    <div class="section-title reveal">
+      <div class="section-label" id="prLabel"></div>
+      <h2 id="prH"></h2>
+    </div>
+    <div class="pricing-card reveal">
+      <div class="pricing-badge" id="prBadge"></div>
+      <div class="price-amount">5€</div>
+      <div class="price-period">/ mesiac</div>
+      <div class="pricing-divider"></div>
+      <div class="pricing-features">
+        <div class="pricing-feature" id="pr1"></div>
+        <div class="pricing-feature" id="pr2"></div>
+        <div class="pricing-feature" id="pr3"></div>
+        <div class="pricing-feature" id="pr4"></div>
+        <div class="pricing-feature" id="pr5"></div>
+        <div class="pricing-feature" id="pr6"></div>
+      </div>
+      <a href="#download" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;" id="prBtn"></a>
+    </div>
+  </div>
+</section>
+
+<!-- DOWNLOAD -->
 <section id="download">
-
-<div class="container">
-
-<div class="section-title">
-<h2 id="download-title">Download the Application</h2>
-<p>Available for macOS and Windows</p>
-</div>
-
-<div class="buttons" style="justify-content:center;">
-
-<a href="#" class="btn btn-primary">
-🍎 Download for macOS
-</a>
-
-<a href="#" class="btn btn-secondary">
-⊞ Download for Windows
-</a>
-
-</div>
-
-</div>
-
+  <div class="container">
+    <div class="section-title reveal">
+      <div class="section-label" id="dlLabel"></div>
+      <h2 id="dlH"></h2>
+      <p id="dlSub"></p>
+    </div>
+    <div class="download-grid reveal">
+      <a href="#" class="download-btn">
+        <div class="download-icon">🍎</div>
+        <div class="download-text"><strong id="dlMac"></strong><span id="dlMacSub"></span></div>
+      </a>
+      <a href="#" class="download-btn">
+        <div class="download-icon">⊞</div>
+        <div class="download-text"><strong id="dlWin"></strong><span id="dlWinSub"></span></div>
+      </a>
+    </div>
+  </div>
 </section>
 
+<!-- FOOTER -->
 <footer>
-
-<img src="ikonka.png">
-
-<p>
-© 2026 3D Channel Letters
-</p>
-
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <img src="ikonka.png" alt="logo">
+      <strong>3D Channel Letters</strong>
+    </div>
+    <p id="copy"></p>
+  </div>
 </footer>
 
+<script>
+applyLang('sk');
+
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+document.querySelectorAll('.feature-card').forEach((c,i)=>c.style.transitionDelay=(i*.07)+'s');
+document.querySelectorAll('.screenshot-card').forEach((c,i)=>c.style.transitionDelay=(i*.06)+'s');
+</script>
 </body>
 </html>
