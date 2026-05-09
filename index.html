@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D Channel Letters</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+--bg:#02070d;
+--panel:#09131d;
+--cyan:#52e2ff;
+--text:#e9fbff;
+--muted:#8ca6b6;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:Inter,sans-serif;
+background:
+radial-gradient(circle at top, rgba(82,226,255,0.12), transparent 35%),
+linear-gradient(180deg,#02070d,#06111a 50%,#02070d);
+color:var(--text);
+overflow-x:hidden;
+}
+
+body::before{
+content:'';
+position:fixed;
+inset:0;
+background-image:
+linear-gradient(rgba(82,226,255,0.04) 1px, transparent 1px),
+linear-gradient(90deg, rgba(82,226,255,0.04) 1px, transparent 1px);
+background-size:70px 70px;
+z-index:-1;
+}
+
+nav{
+position:fixed;
+top:0;
+width:100%;
+backdrop-filter:blur(20px);
+background:rgba(2,7,13,0.7);
+border-bottom:1px solid rgba(82,226,255,0.08);
+z-index:1000;
+}
+
+.nav-inner{
+max-width:1400px;
+margin:auto;
+padding:18px 28px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.left{
+display:flex;
+align-items:center;
+gap:20px;
+}
+
+.lang{
+display:flex;
+gap:10px;
+padding:10px 14px;
+border-radius:14px;
+background:rgba(255,255,255,0.04);
+border:1px solid rgba(82,226,255,0.12);
+}
+
+.lang button{
+background:none;
+border:none;
+font-weight:700;
+cursor:pointer;
+font-size:14px;
+}
+
+.logo{
+display:flex;
+align-items:center;
+gap:16px;
+}
+
+.logo img{
+width:58px;
+height:58px;
+border-radius:18px;
+box-shadow:0 0 25px rgba(82,226,255,0.45);
+}
+
+.logo strong{
+font-size:20px;
+display:block;
+}
+
+.logo span{
+color:var(--muted);
+font-size:13px;
+}
+
+.hero{
+min-height:100vh;
+display:flex;
+align-items:center;
+padding:140px 30px 100px;
+}
+
+.hero-inner{
+max-width:1400px;
+margin:auto;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:80px;
+align-items:center;
+}
+
+.badge{
+display:inline-block;
+padding:12px 18px;
+border-radius:999px;
+background:rgba(82,226,255,0.08);
+border:1px solid rgba(82,226,255,0.18);
+color:var(--cyan);
+margin-bottom:28px;
+font-size:14px;
+font-weight:700;
+}
+
+.hero h1{
+font-size:82px;
+line-height:0.95;
+margin-bottom:28px;
+font-weight:900;
+letter-spacing:-3px;
+}
+
+.glow{
+color:var(--cyan);
+text-shadow:
+0 0 10px rgba(82,226,255,0.9),
+0 0 30px rgba(82,226,255,0.6);
+}
+
+.hero p{
+font-size:20px;
+line-height:1.8;
+color:var(--muted);
+margin-bottom:40px;
+}
+
+.buttons{
+display:flex;
+gap:18px;
+flex-wrap:wrap;
+}
+
+.btn{
+padding:18px 30px;
+border-radius:18px;
+text-decoration:none;
+font-weight:700;
+display:inline-flex;
+align-items:center;
+gap:12px;
+}
+
+.btn-primary{
+background:linear-gradient(135deg,var(--cyan),#00c8ff);
+color:#00131b;
+}
+
+.btn-secondary{
+border:1px solid rgba(82,226,255,0.16);
+background:rgba(255,255,255,0.03);
+color:white;
+}
+
+.preview{
+background:rgba(8,18,30,0.72);
+border:1px solid rgba(82,226,255,0.12);
+border-radius:36px;
+overflow:hidden;
+box-shadow:0 0 50px rgba(82,226,255,0.14);
+}
+
+.preview img{
+width:100%;
+display:block;
+}
+
+section{
+padding:120px 30px;
+}
+
+.container{
+max-width:1400px;
+margin:auto;
+}
+
+.section-title{
+text-align:center;
+margin-bottom:70px;
+}
+
+.section-title h2{
+font-size:58px;
+margin-bottom:20px;
+}
+
+.section-title p{
+color:var(--muted);
+font-size:18px;
+}
+
+.features{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:28px;
+}
+
+.feature{
+padding:36px;
+border-radius:28px;
+background:linear-gradient(180deg,rgba(10,20,32,0.95),rgba(5,12,20,0.95));
+border:1px solid rgba(82,226,255,0.1);
+}
+
+.feature h3{
+font-size:24px;
+margin-bottom:16px;
+}
+
+.feature p{
+color:var(--muted);
+line-height:1.8;
+}
+
+.gallery{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(420px,1fr));
+gap:32px;
+}
+
+.gallery-card{
+overflow:hidden;
+border-radius:28px;
+border:1px solid rgba(82,226,255,0.14);
+background:rgba(8,18,30,0.78);
+box-shadow:0 0 40px rgba(82,226,255,0.08);
+transition:0.4s;
+position:relative;
+}
+
+.gallery-card:hover{
+transform:translateY(-8px);
+}
+
+.gallery-card img{
+width:100%;
+display:block;
+}
+
+.gallery-label{
+position:absolute;
+bottom:18px;
+left:18px;
+padding:10px 16px;
+border-radius:14px;
+background:rgba(0,0,0,0.55);
+font-size:14px;
+font-weight:700;
+}
+
+.pricing{
+max-width:760px;
+margin:auto;
+padding:70px 50px;
+border-radius:40px;
+background:linear-gradient(180deg,rgba(10,20,32,0.98),rgba(5,12,20,0.98));
+border:1px solid rgba(82,226,255,0.14);
+text-align:center;
+}
+
+.price{
+font-size:100px;
+font-weight:900;
+color:var(--cyan);
+}
+
+.price span{
+font-size:28px;
+color:var(--muted);
+}
+
+footer{
+padding:70px 30px;
+text-align:center;
+border-top:1px solid rgba(82,226,255,0.08);
+}
+
+footer img{
+width:80px;
+border-radius:24px;
+margin-bottom:20px;
+}
+
+footer p{
+color:var(--muted);
+}
+
+@media(max-width:1100px){
+.hero-inner{
+grid-template-columns:1fr;
+}
+.hero h1{
+font-size:58px;
+}
+.gallery{
+grid-template-columns:1fr;
+}
+}
+
+</style>
+</head>
+
+<body>
+
+<script>
+
+function setLanguage(lang){
+
+const t = {
+
+en:{
+hero:'Generate <span class="glow">3D illuminated</span> letters for advertising',
+text:'Professional software for illuminated advertising letters using 3D printing workflows.',
+features:'Professional Features',
+screens:'Application Screenshots',
+pricing:'Simple Pricing',
+download:'Download the Application'
+},
+
+sk:{
+hero:'Generovanie <span class="glow">3D svetelných</span> písmen pre reklamu',
+text:'Profesionálny softvér pre výrobu reklamných svetelných písmen pomocou 3D tlače.',
+features:'Profesionálne funkcie',
+screens:'Screenshoty aplikácie',
+pricing:'Jednoduché predplatné',
+download:'Stiahni si aplikáciu'
+}
+
+};
+
+document.getElementById('hero-title').innerHTML=t[lang].hero;
+document.getElementById('hero-text').innerHTML=t[lang].text;
+document.getElementById('features-title').innerHTML=t[lang].features;
+document.getElementById('screens-title').innerHTML=t[lang].screens;
+document.getElementById('pricing-title').innerHTML=t[lang].pricing;
+document.getElementById('download-title').innerHTML=t[lang].download;
+
+}
+
+</script>
+
+<nav>
+
+<div class="nav-inner">
+
+<div class="left">
+
+<div class="lang">
+<button onclick="setLanguage('en')" style="color:white;">🇺🇸 ENG</button>
+<button onclick="setLanguage('sk')" style="color:#8ca6b6;">🇸🇰 SK</button>
+</div>
+
+<div class="logo">
+<img src="ikonka.png">
+
+<div>
+<strong>3D Channel Letters</strong>
+<span>Professional illuminated letters</span>
+</div>
+
+</div>
+
+</div>
+
+<a href="#download" class="btn btn-primary">Download</a>
+
+</div>
+
+</nav>
+
+<section class="hero">
+
+<div class="hero-inner">
+
+<div>
+
+<div class="badge">
+⚡ DXF → STL Professional Workflow
+</div>
+
+<h1 id="hero-title">
+Generate <span class="glow">3D illuminated</span> letters for advertising
+</h1>
+
+<p id="hero-text">
+Professional software for illuminated advertising letters using 3D printing workflows.
+</p>
+
+<div class="buttons">
+
+<a href="#download" class="btn btn-primary">
+⬇ Download Trial
+</a>
+
+<a href="#features" class="btn btn-secondary">
+▶ View Features
+</a>
+
+</div>
+
+</div>
+
+<div class="preview">
+<img src="Ikonka S.png">
+</div>
+
+</div>
+
+</section>
+
+<section id="features">
+
+<div class="container">
+
+<div class="section-title">
+<h2 id="features-title">Professional Features</h2>
+<p>Modern workflow for sign makers and 3D production.</p>
+</div>
+
+<div class="features">
+
+<div class="feature">
+<h3>DXF Import</h3>
+<p>Automatic vector processing and realtime generation.</p>
+</div>
+
+<div class="feature">
+<h3>Realtime 3D Preview</h3>
+<p>Hardware accelerated interactive preview.</p>
+</div>
+
+<div class="feature">
+<h3>Acrylic & Snap-fit</h3>
+<p>Professional production parameters and tolerances.</p>
+</div>
+
+<div class="feature">
+<h3>STL Export</h3>
+<p>Ready-to-print STL export for manufacturing.</p>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section>
+
+<div class="container">
+
+<div class="section-title">
+<h2 id="screens-title">Application Screenshots</h2>
+<p>Professional realtime workflow for illuminated letter production.</p>
+</div>
+
+<div class="gallery">
+
+<div class="gallery-card">
+<img src="Snímka obrazovky 2026-05-09 o 11.00.42.png">
+<div class="gallery-label">DXF Import</div>
+</div>
+
+<div class="gallery-card">
+<img src="Snímka obrazovky 2026-05-09 o 11.00.54.png">
+<div class="gallery-label">Wall Settings</div>
+</div>
+
+<div class="gallery-card">
+<img src="Snímka obrazovky 2026-05-09 o 11.01.00.png">
+<div class="gallery-label">Acrylic Settings</div>
+</div>
+
+<div class="gallery-card">
+<img src="Snímka obrazovky 2026-05-09 o 11.01.05.png">
+<div class="gallery-label">Back Cover System</div>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section>
+
+<div class="container">
+
+<div class="section-title">
+<h2 id="pricing-title">Simple Pricing</h2>
+<p>14-day free trial included</p>
+</div>
+
+<div class="pricing">
+
+<div class="price">
+5€ <span>/ month</span>
+</div>
+
+<p style="margin-top:20px;color:#8ca6b6;">
+Unlimited STL exports and realtime 3D workflow.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<section id="download">
+
+<div class="container">
+
+<div class="section-title">
+<h2 id="download-title">Download the Application</h2>
+<p>Available for macOS and Windows</p>
+</div>
+
+<div class="buttons" style="justify-content:center;">
+
+<a href="#" class="btn btn-primary">
+🍎 Download for macOS
+</a>
+
+<a href="#" class="btn btn-secondary">
+⊞ Download for Windows
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+<footer>
+
+<img src="ikonka.png">
+
+<p>
+© 2026 3D Channel Letters
+</p>
+
+</footer>
+
+</body>
+</html>
