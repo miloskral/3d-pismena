@@ -1,0 +1,11 @@
+{
+    "name": "3d-pismena",
+    "version": "1.0.0",
+    "private": true,
+    "description": "lumisign3d.com landing page + ChannelLetters trial API",
+    "type": "module",
+    "engines": { "node": ">=18" },
+    "dependencies": {
+          "@vercel/kv": "^3.0.0"
+    }
+}
