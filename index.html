@@ -227,6 +227,73 @@ transform:translateY(-3px); box-shadow:0 12px 36px rgba(0,0,0,.4);
 .download-icon{ font-size:26px; }
 .download-text strong{ font-size:15px; font-weight:700; display:block; margin-bottom:2px; }
 .download-text span{ font-size:12px; color:var(--muted); }
+
+/* Post-download install guide */
+.install-guide{
+  max-width:680px; margin:36px auto 0;
+  padding:28px 30px;
+  background:linear-gradient(160deg,rgba(12,24,38,.85),rgba(6,14,22,.85));
+  border:1px solid rgba(82,226,255,0.18);
+  border-radius:22px;
+}
+.install-guide h3{
+  font-size:17px; font-weight:800; margin-bottom:6px;
+  display:flex; align-items:center; gap:10px;
+}
+.install-guide h3::before{
+  content:'⚠'; color:var(--cyan); font-size:18px;
+}
+.install-guide > p{ font-size:13.5px; color:var(--muted); line-height:1.65; margin-bottom:18px; }
+.install-steps{ counter-reset:step; display:flex; flex-direction:column; gap:14px; }
+.install-step{
+  display:flex; gap:14px; align-items:flex-start; font-size:13.5px;
+}
+.install-step::before{
+  counter-increment:step;
+  content:counter(step);
+  flex-shrink:0;
+  width:26px; height:26px; border-radius:8px;
+  background:rgba(82,226,255,.1); border:1px solid rgba(82,226,255,.25);
+  color:var(--cyan); font-weight:800; font-size:12px;
+  display:flex; align-items:center; justify-content:center;
+}
+.install-step strong{ color:var(--text); }
+.install-step code{
+  display:inline-block; padding:2px 7px; border-radius:5px;
+  background:rgba(82,226,255,.08); color:var(--cyan);
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12.5px;
+}
+.install-divider{
+  margin:22px -30px;
+  border-top:1px dashed var(--border);
+}
+.install-terminal{
+  margin-top:14px;
+}
+.install-terminal-label{
+  font-size:12px; color:var(--muted); margin-bottom:8px;
+}
+.install-code-block{
+  display:flex; gap:0; align-items:stretch;
+  background:#020a12; border:1px solid var(--border); border-radius:10px;
+  overflow:hidden;
+}
+.install-code-block code{
+  flex:1; padding:11px 14px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:12.5px; color:var(--text);
+  white-space:nowrap; overflow-x:auto;
+  background:transparent; border:none;
+}
+.install-copy-btn{
+  background:rgba(82,226,255,.08);
+  border:none; border-left:1px solid var(--border);
+  color:var(--cyan); font-size:11.5px; font-weight:700; padding:0 16px;
+  cursor:pointer; font-family:Inter,sans-serif;
+  transition:background .15s;
+}
+.install-copy-btn:hover{ background:rgba(82,226,255,.18); }
+.install-copy-btn.copied{ background:rgba(102,187,106,.18); color:#66bb6a; }
 footer{ padding:56px 28px; border-top:1px solid var(--border); position:relative; z-index:1; }
 .footer-inner{ max-width:1400px; margin:auto; display:flex; justify-content:space-between; align-items:center; }
 .footer-logo{ display:flex; align-items:center; gap:12px; }
@@ -556,6 +623,29 @@ section{ padding:70px 18px; }
 <span>Coming soon</span>
 </div>
 </a>
+</div>
+
+<!-- Post-download install guide (macOS Gatekeeper bypass) -->
+<div class="install-guide reveal">
+<h3>First launch on macOS</h3>
+<p>The app is not yet code-signed with an Apple Developer ID (notarization coming with the first paid customers). On first launch macOS will block it — this is a one-time bypass:</p>
+
+<div class="install-steps">
+<div class="install-step"><div>Open the downloaded <strong>ChannelLetters-v1.0.15.dmg</strong> and drag <strong>ChannelLetters</strong> into the <strong>Applications</strong> shortcut inside the DMG window.</div></div>
+<div class="install-step"><div>Open the <strong>Applications</strong> folder in Finder and double-click <strong>ChannelLetters</strong>. macOS will say it can't be opened — click <strong>OK</strong>.</div></div>
+<div class="install-step"><div>Open <strong>Apple menu → System Settings → Privacy &amp; Security</strong>. Scroll down — you'll see <em>"ChannelLetters was blocked because it is not from an identified developer"</em>. Click <strong>Open Anyway</strong>.</div></div>
+<div class="install-step"><div>Confirm with Touch ID / password. macOS asks once more — click <strong>Open</strong>. The app launches. From now on you can open it normally with a double-click.</div></div>
+</div>
+
+<div class="install-divider"></div>
+
+<div class="install-terminal">
+<div class="install-terminal-label">Or, in Terminal — one line, takes ~2 seconds:</div>
+<div class="install-code-block">
+<code id="install-cmd">xattr -dr com.apple.quarantine /Applications/ChannelLetters.app</code>
+<button class="install-copy-btn" onclick="(function(b){navigator.clipboard.writeText(document.getElementById('install-cmd').textContent).then(()=>{b.textContent='Copied';b.classList.add('copied');setTimeout(()=>{b.textContent='Copy';b.classList.remove('copied');},1600);})})(this)">Copy</button>
+</div>
+</div>
 </div>
 </div>
 </section>
