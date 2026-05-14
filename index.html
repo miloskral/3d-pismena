@@ -294,6 +294,109 @@ transform:translateY(-3px); box-shadow:0 12px 36px rgba(0,0,0,.4);
 }
 .install-copy-btn:hover{ background:rgba(82,226,255,.18); }
 .install-copy-btn.copied{ background:rgba(102,187,106,.18); color:#66bb6a; }
+
+/* About section */
+.about-grid{ display:grid; grid-template-columns:280px 1fr; gap:50px; align-items:center; max-width:1100px; margin:0 auto; }
+.about-photo{
+  width:100%; aspect-ratio:1; border-radius:24px;
+  background:linear-gradient(160deg,rgba(82,226,255,.12),rgba(82,226,255,.04));
+  border:1px solid rgba(82,226,255,.2);
+  display:flex; align-items:center; justify-content:center;
+  font-size:88px; font-weight:900; color:var(--cyan);
+  text-shadow:0 0 40px rgba(82,226,255,.5);
+  position:relative; overflow:hidden;
+}
+.about-photo::before{
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(circle at 30% 30%,rgba(82,226,255,.15),transparent 60%);
+}
+.about-text h2{ font-size:36px; font-weight:900; letter-spacing:-1px; margin:14px 0 18px; line-height:1.1; }
+.about-text p{ font-size:14.5px; color:var(--muted); line-height:1.75; margin-bottom:12px; }
+.about-contact{
+  margin-top:24px; padding-top:24px; border-top:1px solid var(--border);
+  display:flex; flex-direction:column; gap:9px; font-size:13.5px;
+}
+.about-contact-item{ display:flex; align-items:center; gap:10px; color:var(--text); }
+.about-contact-item .ic{ color:var(--cyan); font-size:15px; width:18px; text-align:center; }
+.about-contact-item a{ color:var(--text); text-decoration:none; border-bottom:1px dashed rgba(82,226,255,.3); }
+.about-contact-item a:hover{ color:var(--cyan); border-bottom-color:var(--cyan); }
+
+/* Dual pricing grid */
+.pricing-grid{
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:24px; max-width:980px; margin:0 auto;
+}
+.pricing-grid .pricing-card{ max-width:none; }
+.pricing-card.highlight{
+  border-color:rgba(82,226,255,.4);
+  box-shadow:0 0 50px rgba(82,226,255,.1);
+}
+.pricing-card.highlight .pricing-badge{
+  background:linear-gradient(135deg,var(--cyan),var(--cyan2));
+  color:#001820; border:none;
+}
+
+/* Buy / How to pay section */
+.buy-steps{
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:20px; max-width:1100px; margin:0 auto;
+}
+.buy-step{
+  padding:28px 24px; border-radius:18px;
+  background:linear-gradient(160deg,rgba(10,20,32,.92),rgba(5,12,20,.92));
+  border:1px solid var(--border);
+  display:flex; flex-direction:column; gap:12px;
+}
+.buy-num{
+  width:38px; height:38px; border-radius:10px;
+  background:rgba(82,226,255,.1); border:1px solid rgba(82,226,255,.25);
+  color:var(--cyan); font-weight:800; font-size:15px;
+  display:flex; align-items:center; justify-content:center;
+}
+.buy-step h4{ font-size:16px; font-weight:700; line-height:1.3; }
+.buy-step p{ font-size:13.5px; color:var(--muted); line-height:1.6; }
+.payment-methods{ display:flex; flex-direction:column; gap:10px; margin-top:8px; }
+.payment-method{
+  padding:11px 13px; border-radius:9px;
+  background:rgba(82,226,255,.05); border:1px solid var(--border);
+  font-size:12.5px; line-height:1.6;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+.payment-method strong{ font-family:Inter,sans-serif; color:var(--cyan); display:block; font-size:11px; text-transform:uppercase; letter-spacing:.08em; margin-bottom:3px; }
+.buy-cta{ margin-top:auto; padding-top:14px; }
+
+/* Terms section */
+#terms{ padding-top:40px; padding-bottom:60px; }
+.terms-card{
+  max-width:880px; margin:0 auto;
+  padding:8px 28px;
+  background:linear-gradient(160deg,rgba(10,20,32,.7),rgba(5,12,20,.7));
+  border:1px solid var(--border);
+  border-radius:18px;
+}
+.terms-card details{ padding:18px 0; }
+.terms-card details + details{ border-top:1px solid var(--border); }
+.terms-card summary{
+  cursor:pointer; list-style:none;
+  font-size:15px; font-weight:700;
+  display:flex; align-items:center; justify-content:space-between;
+  color:var(--text); padding:4px 0;
+}
+.terms-card summary::-webkit-details-marker{ display:none; }
+.terms-card summary::after{ content:'+'; color:var(--cyan); font-size:22px; font-weight:300; transition:transform .2s; }
+.terms-card details[open] summary::after{ transform:rotate(45deg); }
+.terms-card .terms-body{ padding-top:14px; }
+.terms-card .terms-body p{ font-size:13.5px; color:var(--muted); line-height:1.7; margin-bottom:10px; }
+.terms-card .terms-body strong{ color:var(--text); }
+.terms-card .terms-body ol, .terms-card .terms-body ul{ padding-left:22px; color:var(--muted); font-size:13.5px; line-height:1.7; }
+.terms-card .terms-body li{ margin-bottom:6px; }
+
+@media(max-width:900px){
+  .about-grid{ grid-template-columns:1fr; gap:30px; max-width:520px; }
+  .about-photo{ max-width:260px; margin:auto; }
+  .pricing-grid{ grid-template-columns:1fr; }
+  .buy-steps{ grid-template-columns:1fr; max-width:520px; }
+}
 footer{ padding:56px 28px; border-top:1px solid var(--border); position:relative; z-index:1; }
 .footer-inner{ max-width:1400px; margin:auto; display:flex; justify-content:space-between; align-items:center; }
 .footer-logo{ display:flex; align-items:center; gap:12px; }
@@ -575,27 +678,106 @@ section{ padding:70px 18px; }
 </div>
 </section>
 
+<!-- ABOUT -->
+<section id="about">
+<div class="container">
+<div class="section-title reveal">
+<div class="section-label">About</div>
+<h2>Made by a sign maker, for sign makers</h2>
+</div>
+<div class="about-grid reveal">
+<div class="about-photo">A</div>
+<div class="about-text">
+<p><strong style="color:var(--text)">Miloš Kráľ</strong> — based in Slovakia. I run a small sign-making workshop and built <em>3D Channel Letters</em> after spending hundreds of hours hand-converting DXF files into print-ready STLs for illuminated signage.</p>
+<p>The software was originally an internal tool. Customers and friends started asking for it — so here it is, polished and available for a fair price. No subscriptions you'll forget to cancel, no account, no marketing emails.</p>
+<p>If you make signs and run into a quirky DXF or a feature you'd like added, just write me. I personally read every email.</p>
+<div class="about-contact">
+<div class="about-contact-item"><span class="ic">📧</span> <a href="mailto:kralmilos@gmail.com">kralmilos@gmail.com</a></div>
+<div class="about-contact-item"><span class="ic">🇸🇰</span> Slovakia · EU</div>
+<div class="about-contact-item"><span class="ic">⚡</span> Reply within ~24 h on weekdays</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
 <!-- PRICING -->
-<section>
+<section id="pricing">
 <div class="container">
 <div class="section-title reveal">
 <div class="section-label">Pricing</div>
-<h2>Simple Pricing</h2>
+<h2>Two plans, no subscriptions</h2>
+<p>Pay once for the period you want. License keys are activated locally — no account, no tracking.</p>
 </div>
+<div class="pricing-grid">
 <div class="pricing-card reveal">
-<div class="pricing-badge">14-Day Free Trial</div>
+<div class="pricing-badge">Monthly</div>
 <div class="price-amount">5€</div>
 <div class="price-period">/ month</div>
 <div class="pricing-divider"></div>
 <div class="pricing-features">
 <div class="pricing-feature">Unlimited STL exports</div>
-<div class="pricing-feature">Real-time 3D preview</div>
-<div class="pricing-feature">All three back cover types</div>
-<div class="pricing-feature">Full custom color system</div>
-<div class="pricing-feature">macOS &amp; Windows</div>
-<div class="pricing-feature">Online license — no account required</div>
+<div class="pricing-feature">All current features</div>
+<div class="pricing-feature">macOS (Windows coming soon)</div>
+<div class="pricing-feature">Free updates while active</div>
+<div class="pricing-feature">No account required</div>
 </div>
-<a href="#download" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;">⬇ Start Free Trial</a>
+<a href="#buy" class="btn btn-secondary btn-lg" style="width:100%;justify-content:center;">Choose monthly</a>
+</div>
+
+<div class="pricing-card highlight reveal">
+<div class="pricing-badge">Annual · Save 18%</div>
+<div class="price-amount">49€</div>
+<div class="price-period">/ year</div>
+<div class="pricing-divider"></div>
+<div class="pricing-features">
+<div class="pricing-feature">Unlimited STL exports</div>
+<div class="pricing-feature">All current features</div>
+<div class="pricing-feature">macOS (Windows coming soon)</div>
+<div class="pricing-feature">Free updates for the full year</div>
+<div class="pricing-feature">Priority email support</div>
+</div>
+<a href="#buy" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;">Choose annual</a>
+</div>
+</div>
+<p style="text-align:center;color:var(--muted);font-size:13px;margin-top:24px;">14-day free trial included with both plans — no payment required to try.</p>
+</div>
+</section>
+
+<!-- BUY -->
+<section id="buy">
+<div class="container">
+<div class="section-title reveal">
+<div class="section-label">How to buy</div>
+<h2>Three steps from payment to active license</h2>
+</div>
+<div class="buy-steps reveal">
+
+<div class="buy-step">
+<div class="buy-num">1</div>
+<h4>Pay via PayPal or Revolut</h4>
+<p>Send the amount for the plan you chose (5€ monthly or 49€ annual) to one of the accounts below. Mention <em>"ChannelLetters"</em> in the payment reference.</p>
+<div class="payment-methods">
+<div class="payment-method"><strong>PayPal</strong>kralmilos@gmail.com</div>
+<div class="payment-method"><strong>Revolut</strong>@miloskrl<br><span style="color:var(--muted);font-size:11px;font-family:Inter,sans-serif;">or revolut.me/miloskrl</span></div>
+</div>
+</div>
+
+<div class="buy-step">
+<div class="buy-num">2</div>
+<h4>Send me the proof of payment</h4>
+<p>Click the button — it opens a pre-filled email in your mail app. Just confirm your name, plan and send. I reply within 24&nbsp;h on weekdays.</p>
+<div class="buy-cta">
+<a href="mailto:kralmilos@gmail.com?subject=ChannelLetters%20%E2%80%94%20License%20request&amp;body=Hi%20Milo%C5%A1%2C%0A%0AI%27d%20like%20to%20activate%20a%20ChannelLetters%20license.%0A%0AFull%20name%3A%20%0AEmail%3A%20%0APlan%3A%20%5BMonthly%205%E2%82%AC%20%2F%20Annual%2049%E2%82%AC%5D%0APayment%20method%3A%20%5BPayPal%20%2F%20Revolut%5D%0APayment%20date%3A%20%0A%0AThanks%2C%0A" class="btn btn-primary" style="width:100%;justify-content:center;">📧 Send license request</a>
+</div>
+</div>
+
+<div class="buy-step">
+<div class="buy-num">3</div>
+<h4>Receive &amp; activate your key</h4>
+<p>I generate your license key the same day, send it back by email. Open ChannelLetters → click the "I have a license" pill → paste the key → STL export unlocks immediately. The key is stored securely on your Mac.</p>
+</div>
+
 </div>
 </div>
 </section>
@@ -646,6 +828,82 @@ section{ padding:70px 18px; }
 <button class="install-copy-btn" onclick="(function(b){navigator.clipboard.writeText(document.getElementById('install-cmd').textContent).then(()=>{b.textContent='Copied';b.classList.add('copied');setTimeout(()=>{b.textContent='Copy';b.classList.remove('copied');},1600);})})(this)">Copy</button>
 </div>
 </div>
+</div>
+</div>
+</section>
+
+<!-- TERMS -->
+<section id="terms">
+<div class="container">
+<div class="section-title reveal">
+<div class="section-label">Legal</div>
+<h2>License &amp; payment terms</h2>
+<p>Plain-language essentials. Click a heading to expand.</p>
+</div>
+<div class="terms-card reveal">
+
+<details>
+<summary>1. What you're buying</summary>
+<div class="terms-body">
+<p>A non-exclusive, non-transferable license to install and use <strong>ChannelLetters</strong> on the Mac(s) you own and operate. The license is tied to your hardware ID; running the same key on a second machine is allowed for personal continuity (e.g. desktop + laptop you both own), but not for resale or sharing with other persons.</p>
+<p>You may use the STL files the software produces for any purpose — personal, commercial, your customers' jobs — without further royalty.</p>
+</div>
+</details>
+
+<details>
+<summary>2. Trial &amp; refund</summary>
+<div class="terms-body">
+<p>A <strong>14-day free trial</strong> is included before any payment is required, so you can verify the software meets your needs.</p>
+<p>Because of the trial, paid licenses are <strong>non-refundable once activated</strong>. If the key fails to activate on your Mac (hardware mismatch, corrupted email, etc.), I'll issue a replacement key at no charge.</p>
+</div>
+</details>
+
+<details>
+<summary>3. Updates &amp; support</summary>
+<div class="terms-body">
+<p><strong>Monthly plan (5&nbsp;€/month):</strong> all updates released during the paid month are included. Support via email; reply within ~24&nbsp;h on weekdays.</p>
+<p><strong>Annual plan (49&nbsp;€/year):</strong> all updates released during the paid year are included, plus priority email support (same-day reply on weekdays).</p>
+<p>I do my best to keep ChannelLetters working on the current and previous macOS major release.</p>
+</div>
+</details>
+
+<details>
+<summary>4. Renewal</summary>
+<div class="terms-body">
+<p>Licenses are <strong>not auto-renewed</strong> — you'll never be charged unexpectedly. Roughly one week before expiry I send a friendly reminder email; if you choose to renew, send the next payment and I issue a fresh key.</p>
+</div>
+</details>
+
+<details>
+<summary>5. Privacy &amp; data</summary>
+<div class="terms-body">
+<p>ChannelLetters is privacy-respecting by design:</p>
+<ul>
+<li>No account, no password, no marketing emails.</li>
+<li>The only data I receive from you is what you explicitly write in the license-request email.</li>
+<li>The app may briefly contact <code>lumisign3d.com</code> to keep the trial timer honest — no personal identifiers are sent in that ping.</li>
+<li>I do not sell, share, or rent any of your data. GDPR / Slovak personal-data law applies.</li>
+</ul>
+</div>
+</details>
+
+<details>
+<summary>6. Warranty &amp; liability</summary>
+<div class="terms-body">
+<p>The software is provided <strong>"as is"</strong>, without warranty of any kind, express or implied. You're responsible for verifying the STL output meets your printer's and customer's specifications before printing in volume.</p>
+<p>To the extent permitted by law, my total liability for any claim relating to the software is limited to the amount you paid for the current license period. I'm not liable for indirect or consequential damages (lost production time, scrapped prints, etc.).</p>
+</div>
+</details>
+
+<details>
+<summary>7. Termination &amp; governing law</summary>
+<div class="terms-body">
+<p>I may terminate a license if it's shared publicly, resold, or used to attack the service. In all other cases the license stays valid for its paid term.</p>
+<p>This agreement is governed by the law of the <strong>Slovak Republic</strong>. EU consumer protection rules apply where relevant.</p>
+<p>Operated by <strong>Miloš Kráľ</strong>, Slovakia · contact: <a href="mailto:kralmilos@gmail.com" style="color:var(--cyan)">kralmilos@gmail.com</a>.</p>
+</div>
+</details>
+
 </div>
 </div>
 </section>
