@@ -8,88 +8,88 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#02070d;
-  --panel:#09131d;
-  --cyan:#52e2ff;
-  --cyan2:#00c8ff;
-  --text:#e9fbff;
-  --muted:#8ca6b6;
-  --border:rgba(82,226,255,0.1);
-  --glow:rgba(82,226,255,0.35);
+--bg:#02070d;
+--panel:#09131d;
+--cyan:#52e2ff;
+--cyan2:#00c8ff;
+--text:#e9fbff;
+--muted:#8ca6b6;
+--border:rgba(82,226,255,0.1);
+--glow:rgba(82,226,255,0.35);
 }
 *{ margin:0; padding:0; box-sizing:border-box; }
 html{ scroll-behavior:smooth; }
 body{
-  font-family:Inter,sans-serif;
-  background:
-    radial-gradient(circle at top, rgba(82,226,255,0.1), transparent 35%),
-    linear-gradient(180deg,#02070d,#06111a 50%,#02070d);
-  color:var(--text);
-  overflow-x:hidden;
+font-family:Inter,sans-serif;
+background:
+radial-gradient(circle at top, rgba(82,226,255,0.1), transparent 35%),
+linear-gradient(180deg,#02070d,#06111a 50%,#02070d);
+color:var(--text);
+overflow-x:hidden;
 }
 body::before{
-  content:''; position:fixed; inset:0;
-  background-image:
-    linear-gradient(rgba(82,226,255,0.04) 1px, transparent 1px),
-    linear-gradient(90deg,rgba(82,226,255,0.04) 1px, transparent 1px);
-  background-size:70px 70px;
-  z-index:0; pointer-events:none;
+content:''; position:fixed; inset:0;
+background-image:
+linear-gradient(rgba(82,226,255,0.04) 1px, transparent 1px),
+linear-gradient(90deg,rgba(82,226,255,0.04) 1px, transparent 1px);
+background-size:70px 70px;
+z-index:0; pointer-events:none;
 }
 nav{
-  position:fixed; top:0; width:100%;
-  backdrop-filter:blur(20px);
-  background:rgba(2,7,13,0.75);
-  border-bottom:1px solid var(--border);
-  z-index:1000;
+position:fixed; top:0; width:100%;
+backdrop-filter:blur(20px);
+background:rgba(2,7,13,0.75);
+border-bottom:1px solid var(--border);
+z-index:1000;
 }
 .nav-inner{
-  max-width:1400px; margin:auto;
-  padding:16px 28px;
-  display:flex; justify-content:space-between; align-items:center;
+max-width:1400px; margin:auto;
+padding:16px 28px;
+display:flex; justify-content:space-between; align-items:center;
 }
 .logo{ display:flex; align-items:center; gap:14px; text-decoration:none; }
 .logo img{ width:48px; height:48px; border-radius:14px; box-shadow:0 0 20px var(--glow); }
 .logo strong{ font-size:17px; font-weight:800; display:block; color:var(--text); }
 .logo span{ font-size:12px; color:var(--muted); }
 .btn{
-  padding:12px 22px; border-radius:14px; text-decoration:none;
-  font-family:Inter,sans-serif; font-weight:700; font-size:14px;
-  display:inline-flex; align-items:center; gap:8px;
-  transition:.25s; cursor:pointer; border:none;
+padding:12px 22px; border-radius:14px; text-decoration:none;
+font-family:Inter,sans-serif; font-weight:700; font-size:14px;
+display:inline-flex; align-items:center; gap:8px;
+transition:.25s; cursor:pointer; border:none;
 }
 .btn-primary{
-  background:linear-gradient(135deg,var(--cyan),var(--cyan2));
-  color:#001820; box-shadow:0 4px 20px rgba(82,226,255,0.3);
+background:linear-gradient(135deg,var(--cyan),var(--cyan2));
+color:#001820; box-shadow:0 4px 20px rgba(82,226,255,0.3);
 }
 .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 8px 28px rgba(82,226,255,0.45); }
 .btn-secondary{
-  border:1px solid rgba(82,226,255,0.18);
-  background:rgba(82,226,255,0.04); color:var(--text);
+border:1px solid rgba(82,226,255,0.18);
+background:rgba(82,226,255,0.04); color:var(--text);
 }
 .btn-secondary:hover{ background:rgba(82,226,255,0.1); border-color:rgba(82,226,255,0.35); }
 .btn-lg{ padding:16px 28px; font-size:16px; border-radius:16px; }
 .hero{
-  min-height:100vh; display:flex; flex-direction:column; justify-content:center;
-  padding:140px 28px 80px; position:relative; z-index:1;
+min-height:100vh; display:flex; flex-direction:column; justify-content:center;
+padding:140px 28px 80px; position:relative; z-index:1;
 }
 .hero-inner{
-  max-width:1400px; margin:auto;
-  display:grid; grid-template-columns:1fr 1fr;
-  gap:80px; align-items:center;
+max-width:1400px; margin:auto;
+display:grid; grid-template-columns:1fr 1fr;
+gap:80px; align-items:center;
 }
 .hero-content{ opacity:0; transform:translateY(28px); animation:fadeUp .7s .1s forwards; }
 .hero-visual{ opacity:0; transform:translateY(28px); animation:fadeUp .7s .3s forwards; }
 @keyframes fadeUp{ to{ opacity:1; transform:translateY(0); } }
 .badge{
-  display:inline-flex; align-items:center; gap:8px;
-  padding:9px 16px; border-radius:999px;
-  background:rgba(82,226,255,0.07); border:1px solid rgba(82,226,255,0.2);
-  color:var(--cyan); font-size:13px; font-weight:600; margin-bottom:24px;
+display:inline-flex; align-items:center; gap:8px;
+padding:9px 16px; border-radius:999px;
+background:rgba(82,226,255,0.07); border:1px solid rgba(82,226,255,0.2);
+color:var(--cyan); font-size:13px; font-weight:600; margin-bottom:24px;
 }
 .badge-dot{
-  width:6px; height:6px; border-radius:50%;
-  background:var(--cyan); box-shadow:0 0 8px var(--cyan);
-  animation:pulse 2s infinite;
+width:6px; height:6px; border-radius:50%;
+background:var(--cyan); box-shadow:0 0 8px var(--cyan);
+animation:pulse 2s infinite;
 }
 @keyframes pulse{ 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.5;transform:scale(1.3);} }
 .hero h1{ font-size:68px; line-height:1; font-weight:900; letter-spacing:-2.5px; margin-bottom:22px; }
@@ -97,17 +97,17 @@ nav{
 .hero p{ font-size:17px; line-height:1.75; color:var(--muted); margin-bottom:36px; max-width:480px; }
 .hero-buttons{ display:flex; gap:12px; flex-wrap:wrap; }
 .visual-card{
-  border-radius:28px; overflow:hidden;
-  border:1px solid var(--border); background:var(--panel);
-  box-shadow:0 0 60px rgba(82,226,255,0.1),0 30px 80px rgba(0,0,0,0.5);
+border-radius:28px; overflow:hidden;
+border:1px solid var(--border); background:var(--panel);
+box-shadow:0 0 60px rgba(82,226,255,0.1),0 30px 80px rgba(0,0,0,0.5);
 }
 .visual-card img{ width:100%; display:block; }
 .stats-bar{
-  display:grid; grid-template-columns:repeat(3,1fr);
-  gap:1px; background:var(--border); border:1px solid var(--border);
-  border-radius:20px; overflow:hidden;
-  max-width:1400px; margin:48px auto 0;
-  opacity:0; animation:fadeUp .7s .55s forwards;
+display:grid; grid-template-columns:repeat(3,1fr);
+gap:1px; background:var(--border); border:1px solid var(--border);
+border-radius:20px; overflow:hidden;
+max-width:1400px; margin:48px auto 0;
+opacity:0; animation:fadeUp .7s .55s forwards;
 }
 .stat{ background:var(--panel); padding:26px 24px; text-align:center; }
 .stat strong{ font-size:32px; font-weight:900; color:var(--cyan); display:block; margin-bottom:4px; }
@@ -115,9 +115,9 @@ nav{
 section{ padding:100px 28px; position:relative; z-index:1; }
 .container{ max-width:1400px; margin:auto; }
 .section-label{
-  display:inline-flex; align-items:center; gap:8px;
-  font-size:11px; font-weight:700; letter-spacing:.12em;
-  text-transform:uppercase; color:var(--cyan); margin-bottom:14px;
+display:inline-flex; align-items:center; gap:8px;
+font-size:11px; font-weight:700; letter-spacing:.12em;
+text-transform:uppercase; color:var(--cyan); margin-bottom:14px;
 }
 .section-label::before{ content:''; width:18px; height:1px; background:var(--cyan); }
 .section-title{ text-align:center; margin-bottom:56px; }
@@ -125,82 +125,82 @@ section{ padding:100px 28px; position:relative; z-index:1; }
 .section-title h2{ font-size:46px; font-weight:900; letter-spacing:-1.5px; margin-bottom:14px; }
 .section-title p{ color:var(--muted); font-size:16px; }
 .feat-tag{
-  display:inline-block; padding:4px 10px; border-radius:8px;
-  background:rgba(82,226,255,0.07); border:1px solid rgba(82,226,255,0.15);
-  color:var(--cyan); font-size:12px; font-weight:500;
+display:inline-block; padding:4px 10px; border-radius:8px;
+background:rgba(82,226,255,0.07); border:1px solid rgba(82,226,255,0.15);
+color:var(--cyan); font-size:12px; font-weight:500;
 }
 .feature-card{
-  padding:28px; border-radius:22px;
-  background:linear-gradient(160deg,rgba(10,20,32,.95),rgba(5,12,20,.95));
-  border:1px solid var(--border); transition:.3s; position:relative; overflow:hidden;
+padding:28px; border-radius:22px;
+background:linear-gradient(160deg,rgba(10,20,32,.95),rgba(5,12,20,.95));
+border:1px solid var(--border); transition:.3s; position:relative; overflow:hidden;
 }
 .feature-card::before{
-  content:''; position:absolute; inset:0;
-  background:radial-gradient(circle at 50% 0%,rgba(82,226,255,.06),transparent 60%);
-  opacity:0; transition:.3s;
+content:''; position:absolute; inset:0;
+background:radial-gradient(circle at 50% 0%,rgba(82,226,255,.06),transparent 60%);
+opacity:0; transition:.3s;
 }
 .feature-card:hover{ transform:translateY(-5px); border-color:rgba(82,226,255,.25); }
 .feature-card:hover::before{ opacity:1; }
 .feature-icon{
-  width:44px; height:44px; border-radius:12px;
-  background:rgba(82,226,255,.08); border:1px solid rgba(82,226,255,.15);
-  display:flex; align-items:center; justify-content:center;
-  font-size:20px; margin-bottom:16px;
+width:44px; height:44px; border-radius:12px;
+background:rgba(82,226,255,.08); border:1px solid rgba(82,226,255,.15);
+display:flex; align-items:center; justify-content:center;
+font-size:20px; margin-bottom:16px;
 }
 .feature-card h3{ font-size:17px; font-weight:700; margin-bottom:8px; }
 .feature-card p{ color:var(--muted); font-size:14px; line-height:1.65; }
 .screenshots-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
 .screenshot-card{
-  border-radius:18px; overflow:hidden;
-  border:1px solid var(--border); background:var(--panel);
-  position:relative; cursor:pointer; transition:.35s;
+border-radius:18px; overflow:hidden;
+border:1px solid var(--border); background:var(--panel);
+position:relative; cursor:pointer; transition:.35s;
 }
 .screenshot-card:hover{ transform:translateY(-5px); box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 30px rgba(82,226,255,.1); }
 .screenshot-card img{ width:100%; display:block; }
 .screenshot-overlay{
-  position:absolute; bottom:0; left:0; right:0; padding:18px 20px;
-  background:linear-gradient(0deg,rgba(2,7,13,.92) 0%,transparent 100%);
+position:absolute; bottom:0; left:0; right:0; padding:18px 20px;
+background:linear-gradient(0deg,rgba(2,7,13,.92) 0%,transparent 100%);
 }
 .screenshot-label{ font-size:14px; font-weight:700; }
 .screenshot-desc{ font-size:12px; color:var(--muted); margin-top:4px; line-height:1.5; }
 .workflow{
-  background:linear-gradient(135deg,rgba(10,20,32,.8),rgba(5,12,20,.8));
-  border:1px solid var(--border); border-radius:28px; padding:56px;
-  display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:center;
+background:linear-gradient(135deg,rgba(10,20,32,.8),rgba(5,12,20,.8));
+border:1px solid var(--border); border-radius:28px; padding:56px;
+display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:center;
 }
 .workflow h2{ font-size:38px; font-weight:900; letter-spacing:-1px; margin-bottom:32px; }
 .workflow-steps{ display:flex; flex-direction:column; }
 .workflow-step{
-  display:flex; gap:18px; padding:22px 0; border-bottom:1px solid var(--border);
+display:flex; gap:18px; padding:22px 0; border-bottom:1px solid var(--border);
 }
 .workflow-step:last-child{ border-bottom:none; }
 .step-number{
-  width:38px; height:38px; border-radius:11px;
-  background:rgba(82,226,255,.08); border:1px solid rgba(82,226,255,.2);
-  display:flex; align-items:center; justify-content:center;
-  font-size:13px; font-weight:800; color:var(--cyan); flex-shrink:0;
+width:38px; height:38px; border-radius:11px;
+background:rgba(82,226,255,.08); border:1px solid rgba(82,226,255,.2);
+display:flex; align-items:center; justify-content:center;
+font-size:13px; font-weight:800; color:var(--cyan); flex-shrink:0;
 }
 .step-content h4{ font-size:15px; font-weight:700; margin-bottom:5px; }
 .step-content p{ font-size:13px; color:var(--muted); line-height:1.6; }
 .workflow-visual img{ width:100%; border-radius:18px; border:1px solid var(--border); }
 .pricing-card{
-  max-width:640px; margin:auto; padding:56px 48px;
-  border-radius:28px;
-  background:linear-gradient(160deg,rgba(12,24,38,.98),rgba(6,14,22,.98));
-  border:1px solid rgba(82,226,255,.15); text-align:center;
-  position:relative; overflow:hidden;
+max-width:640px; margin:auto; padding:56px 48px;
+border-radius:28px;
+background:linear-gradient(160deg,rgba(12,24,38,.98),rgba(6,14,22,.98));
+border:1px solid rgba(82,226,255,.15); text-align:center;
+position:relative; overflow:hidden;
 }
 .pricing-card::before{
-  content:''; position:absolute; top:-80px; left:50%; transform:translateX(-50%);
-  width:280px; height:280px;
-  background:radial-gradient(circle,rgba(82,226,255,.07),transparent 70%);
-  pointer-events:none;
+content:''; position:absolute; top:-80px; left:50%; transform:translateX(-50%);
+width:280px; height:280px;
+background:radial-gradient(circle,rgba(82,226,255,.07),transparent 70%);
+pointer-events:none;
 }
 .pricing-badge{
-  display:inline-block; padding:7px 14px; border-radius:999px;
-  background:rgba(82,226,255,.1); border:1px solid rgba(82,226,255,.2);
-  color:var(--cyan); font-size:11px; font-weight:700;
-  letter-spacing:.07em; text-transform:uppercase; margin-bottom:24px;
+display:inline-block; padding:7px 14px; border-radius:999px;
+background:rgba(82,226,255,.1); border:1px solid rgba(82,226,255,.2);
+color:var(--cyan); font-size:11px; font-weight:700;
+letter-spacing:.07em; text-transform:uppercase; margin-bottom:24px;
 }
 .price-amount{ font-size:88px; font-weight:900; color:var(--cyan); line-height:1; text-shadow:0 0 50px rgba(82,226,255,.4); }
 .price-period{ font-size:20px; color:var(--muted); margin-bottom:4px; }
@@ -208,21 +208,22 @@ section{ padding:100px 28px; position:relative; z-index:1; }
 .pricing-features{ display:flex; flex-direction:column; gap:12px; margin-bottom:32px; text-align:left; }
 .pricing-feature{ display:flex; align-items:center; gap:10px; font-size:14px; }
 .pricing-feature::before{
-  content:'✓'; width:22px; height:22px; border-radius:7px;
-  background:rgba(82,226,255,.1); border:1px solid rgba(82,226,255,.2);
-  color:var(--cyan); font-size:12px; font-weight:700;
-  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+content:'✓'; width:22px; height:22px; border-radius:7px;
+background:rgba(82,226,255,.1); border:1px solid rgba(82,226,255,.2);
+color:var(--cyan); font-size:12px; font-weight:700;
+display:flex; align-items:center; justify-content:center; flex-shrink:0;
 }
 .download-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; max-width:680px; margin:0 auto; }
 .download-btn{
-  padding:20px 24px; border-radius:18px; border:1px solid var(--border);
-  background:var(--panel); color:var(--text); text-decoration:none;
-  display:flex; align-items:center; gap:14px; transition:.3s;
+padding:20px 24px; border-radius:18px; border:1px solid var(--border);
+background:var(--panel); color:var(--text); text-decoration:none;
+display:flex; align-items:center; gap:14px; transition:.3s;
 }
 .download-btn:hover{
-  border-color:rgba(82,226,255,.3); background:rgba(82,226,255,.05);
-  transform:translateY(-3px); box-shadow:0 12px 36px rgba(0,0,0,.4);
+border-color:rgba(82,226,255,.3); background:rgba(82,226,255,.05);
+transform:translateY(-3px); box-shadow:0 12px 36px rgba(0,0,0,.4);
 }
+.download-btn[aria-disabled="true"]{ opacity:.5; cursor:not-allowed; pointer-events:none; }
 .download-icon{ font-size:26px; }
 .download-text strong{ font-size:15px; font-weight:700; display:block; margin-bottom:2px; }
 .download-text span{ font-size:12px; color:var(--muted); }
@@ -235,23 +236,23 @@ footer p{ color:var(--muted); font-size:13px; }
 .reveal{ opacity:0; transform:translateY(22px); transition:opacity .65s,transform .65s; }
 .reveal.visible{ opacity:1; transform:translateY(0); }
 @media(max-width:1100px){
-  .hero-inner{ grid-template-columns:1fr; }
-  .hero h1{ font-size:52px; }
-  .workflow{ grid-template-columns:1fr; padding:36px; }
-  .workflow-visual{ display:none; }
-  .footer-inner{ flex-direction:column; gap:16px; text-align:center; }
-  .feat-4col{ grid-template-columns:repeat(2,1fr)!important; }
+.hero-inner{ grid-template-columns:1fr; }
+.hero h1{ font-size:52px; }
+.workflow{ grid-template-columns:1fr; padding:36px; }
+.workflow-visual{ display:none; }
+.footer-inner{ flex-direction:column; gap:16px; text-align:center; }
+.feat-4col{ grid-template-columns:repeat(2,1fr)!important; }
 }
 @media(max-width:700px){
-  .hero h1{ font-size:38px; }
-  .screenshots-grid{ grid-template-columns:1fr; }
-  .download-grid{ grid-template-columns:1fr; }
-  .stats-bar{ grid-template-columns:1fr; }
-  .pricing-card{ padding:36px 24px; }
-  .price-amount{ font-size:72px; }
-  section{ padding:70px 18px; }
-  .feat-2col{ grid-template-columns:1fr!important; }
-  .feat-4col{ grid-template-columns:1fr!important; }
+.hero h1{ font-size:38px; }
+.screenshots-grid{ grid-template-columns:1fr; }
+.download-grid{ grid-template-columns:1fr; }
+.stats-bar{ grid-template-columns:1fr; }
+.pricing-card{ padding:36px 24px; }
+.price-amount{ font-size:72px; }
+section{ padding:70px 18px; }
+.feat-2col{ grid-template-columns:1fr!important; }
+.feat-4col{ grid-template-columns:1fr!important; }
 }
 </style>
 </head>
@@ -259,320 +260,320 @@ footer p{ color:var(--muted); font-size:13px; }
 
 <!-- NAV -->
 <nav>
-  <div class="nav-inner">
-    <a href="#" class="logo">
-      <img src="ikonka.png" alt="3D Channel Letters logo">
-      <div>
-        <strong>3D Channel Letters</strong>
-        <span>Professional illuminated letter software</span>
-      </div>
-    </a>
-    <a href="#download" class="btn btn-primary">Download</a>
-  </div>
+<div class="nav-inner">
+<a href="#" class="logo">
+<img src="ikonka.png" alt="3D Channel Letters logo">
+<div>
+<strong>3D Channel Letters</strong>
+<span>Professional illuminated letter software</span>
+</div>
+</a>
+<a href="#download" class="btn btn-primary">Download</a>
+</div>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-inner">
-    <div class="hero-content">
-      <div class="badge"><span class="badge-dot"></span>DXF → STL Professional Workflow</div>
-      <h1>Generate <span class="glow">3D illuminated</span> channel letters for signage</h1>
-      <p>Professional desktop software for producing illuminated advertising letters using 3D printing. Import a DXF file and export a print-ready STL in seconds.</p>
-      <div class="hero-buttons">
-        <a href="#download" class="btn btn-primary btn-lg">⬇ Download Free Trial</a>
-        <a href="#features" class="btn btn-secondary btn-lg">View Features</a>
-      </div>
-    </div>
-    <div class="hero-visual">
-      <div class="visual-card"><img src="Ikonka_S.png" alt="3D illuminated channel letter preview"></div>
-    </div>
-  </div>
-  <div class="container">
-    <div class="stats-bar">
-      <div class="stat"><strong>3D</strong><span>Real-time Preview</span></div>
-      <div class="stat"><strong>DXF</strong><span>Vector Import</span></div>
-      <div class="stat"><strong>STL</strong><span>Print-Ready Export</span></div>
-    </div>
-  </div>
+<div class="hero-inner">
+<div class="hero-content">
+<div class="badge"><span class="badge-dot"></span>DXF → STL Professional Workflow</div>
+<h1>Generate <span class="glow">3D illuminated</span> channel letters for signage</h1>
+<p>Professional desktop software for producing illuminated advertising letters using 3D printing. Import a DXF file and export a print-ready STL in seconds.</p>
+<div class="hero-buttons">
+<a href="#download" class="btn btn-primary btn-lg">⬇ Download Free Trial</a>
+<a href="#features" class="btn btn-secondary btn-lg">View Features</a>
+</div>
+</div>
+<div class="hero-visual">
+<div class="visual-card"><img src="Ikonka_S.png" alt="3D illuminated channel letter preview"></div>
+</div>
+</div>
+<div class="container">
+<div class="stats-bar">
+<div class="stat"><strong>3D</strong><span>Real-time Preview</span></div>
+<div class="stat"><strong>DXF</strong><span>Vector Import</span></div>
+<div class="stat"><strong>STL</strong><span>Print-Ready Export</span></div>
+</div>
+</div>
 </section>
 
 <!-- FEATURES -->
 <section id="features">
-  <div class="container">
-    <div class="section-title reveal">
-      <div class="section-label">Features</div>
-      <h2>Everything you need</h2>
-      <p>Six dedicated panels — every parameter a sign maker needs, nothing more.</p>
-    </div>
+<div class="container">
+<div class="section-title reveal">
+<div class="section-label">Features</div>
+<h2>Everything you need</h2>
+<p>Six dedicated panels — every parameter a sign maker needs, nothing more.</p>
+</div>
 
-    <!-- Row 1 -->
-    <div class="feat-2col" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
-      <div class="feature-card reveal" style="display:flex;gap:20px;align-items:flex-start;">
-        <div class="feature-icon" style="flex-shrink:0">📂</div>
-        <div>
-          <h3>DXF Import</h3>
-          <p>Load any vector DXF file directly from your CAD or illustration tool. Choose unit scale (millimeters or inches) and set curve tolerance down to 0.05 mm for highly precise geometry. The app immediately shows the file size and the number of curves detected.</p>
-          <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
-            <span class="feat-tag">Unit scale</span>
-            <span class="feat-tag">Curve tolerance</span>
-            <span class="feat-tag">Multi-shape support</span>
-          </div>
-        </div>
-      </div>
-      <div class="feature-card reveal" style="display:flex;gap:20px;align-items:flex-start;">
-        <div class="feature-icon" style="flex-shrink:0">🔮</div>
-        <div>
-          <h3>Real-time 3D Preview</h3>
-          <p>See your letter update in 3D as you change any parameter. Switch between Isometric, Top, and Front views. Toggle between Wireframe and Acrylic render modes. The header always displays live triangle count, exact dimensions, and shape count.</p>
-          <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
-            <span class="feat-tag">Iso / Top / Front</span>
-            <span class="feat-tag">Wireframe &amp; Acrylic</span>
-            <span class="feat-tag">Live triangle count</span>
-          </div>
-        </div>
-      </div>
-    </div>
+<!-- Row 1 -->
+<div class="feat-2col" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
+<div class="feature-card reveal" style="display:flex;gap:20px;align-items:flex-start;">
+<div class="feature-icon" style="flex-shrink:0">📂</div>
+<div>
+<h3>DXF Import</h3>
+<p>Load any vector DXF file directly from your CAD or illustration tool. Choose unit scale (millimeters or inches) and set curve tolerance down to 0.05 mm for highly precise geometry. The app immediately shows the file size and the number of curves detected.</p>
+<div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
+<span class="feat-tag">Unit scale</span>
+<span class="feat-tag">Curve tolerance</span>
+<span class="feat-tag">Multi-shape support</span>
+</div>
+</div>
+</div>
+<div class="feature-card reveal" style="display:flex;gap:20px;align-items:flex-start;">
+<div class="feature-icon" style="flex-shrink:0">🔮</div>
+<div>
+<h3>Real-time 3D Preview</h3>
+<p>See your letter update in 3D as you change any parameter. Switch between Isometric, Top, and Front views. Toggle between Wireframe and Acrylic render modes. The header always displays live triangle count, exact dimensions, and shape count.</p>
+<div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
+<span class="feat-tag">Iso / Top / Front</span>
+<span class="feat-tag">Wireframe &amp; Acrylic</span>
+<span class="feat-tag">Live triangle count</span>
+</div>
+</div>
+</div>
+</div>
 
-    <!-- Row 2 -->
-    <div class="feat-4col" style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:20px;">
-      <div class="feature-card reveal">
-        <div class="feature-icon">🧱</div>
-        <h3>Wall Settings</h3>
-        <p>Set the outer wall thickness (default 2 mm) and box depth (default 25 mm). A built-in cross-section diagram shows exactly how the wall, acrylic panel, and tolerances relate to each other.</p>
-        <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
-          <span class="feat-tag">Wall thickness</span>
-          <span class="feat-tag">Box depth</span>
-          <span class="feat-tag">Cross-section diagram</span>
-        </div>
-      </div>
-      <div class="feature-card reveal">
-        <div class="feature-icon">💎</div>
-        <h3>Acrylic &amp; Rebate</h3>
-        <p>Configure acrylic thickness (3 mm), rebate width (1 mm), clearance around the acrylic panel (0.2 mm), and the inset below the top edge. All tolerances are tuned for a precise press-fit with standard acrylic sheet thicknesses.</p>
-        <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
-          <span class="feat-tag">Acrylic thickness</span>
-          <span class="feat-tag">Rebate width</span>
-          <span class="feat-tag">Clearance control</span>
-        </div>
-      </div>
-      <div class="feature-card reveal">
-        <div class="feature-icon">🔩</div>
-        <h3>Back Cover System</h3>
-        <p><strong style="color:var(--text)">W – Open</strong> (no back cover), <strong style="color:var(--text)">I – Solid</strong> (flat closed back), <strong style="color:var(--text)">S – Snap-in</strong> (snap lip for tool-free acrylic installation). Configure snap lip height (6 mm), lip thickness (1.6 mm), an optional cable hole, and back-to-wall clearance (0.3 mm).</p>
-        <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
-          <span class="feat-tag">Open / Solid / Snap-in</span>
-          <span class="feat-tag">Cable hole</span>
-          <span class="feat-tag">Snap lip geometry</span>
-        </div>
-      </div>
-      <div class="feature-card reveal">
-        <div class="feature-icon">🎨</div>
-        <h3>Color System</h3>
-        <p>Choose wall body color and translucent acrylic color independently. Eight presets each, plus a full color picker for any RAL or custom hex value. An opacity slider lets you simulate how the finished letter will look when illuminated.</p>
-        <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
-          <span class="feat-tag">Wall &amp; acrylic colors</span>
-          <span class="feat-tag">Custom hex picker</span>
-          <span class="feat-tag">Opacity simulation</span>
-        </div>
-      </div>
-    </div>
+<!-- Row 2 -->
+<div class="feat-4col" style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:20px;">
+<div class="feature-card reveal">
+<div class="feature-icon">🧱</div>
+<h3>Wall Settings</h3>
+<p>Set the outer wall thickness (default 2 mm) and box depth (default 25 mm). A built-in cross-section diagram shows exactly how the wall, acrylic panel, and tolerances relate to each other.</p>
+<div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
+<span class="feat-tag">Wall thickness</span>
+<span class="feat-tag">Box depth</span>
+<span class="feat-tag">Cross-section diagram</span>
+</div>
+</div>
+<div class="feature-card reveal">
+<div class="feature-icon">💎</div>
+<h3>Acrylic &amp; Rebate</h3>
+<p>Configure acrylic thickness (3 mm), rebate width (1 mm), clearance around the acrylic panel (0.2 mm), and the inset below the top edge. All tolerances are tuned for a precise press-fit with standard acrylic sheet thicknesses.</p>
+<div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
+<span class="feat-tag">Acrylic thickness</span>
+<span class="feat-tag">Rebate width</span>
+<span class="feat-tag">Clearance control</span>
+</div>
+</div>
+<div class="feature-card reveal">
+<div class="feature-icon">🔩</div>
+<h3>Back Cover System</h3>
+<p><strong style="color:var(--text)">W – Open</strong> (no back cover), <strong style="color:var(--text)">I – Solid</strong> (flat closed back), <strong style="color:var(--text)">S – Snap-in</strong> (snap lip for tool-free acrylic installation). Configure snap lip height (6 mm), lip thickness (1.6 mm), an optional cable hole, and back-to-wall clearance (0.3 mm).</p>
+<div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
+<span class="feat-tag">Open / Solid / Snap-in</span>
+<span class="feat-tag">Cable hole</span>
+<span class="feat-tag">Snap lip geometry</span>
+</div>
+</div>
+<div class="feature-card reveal">
+<div class="feature-icon">🎨</div>
+<h3>Color System</h3>
+<p>Choose wall body color and translucent acrylic color independently. Eight presets each, plus a full color picker for any RAL or custom hex value. An opacity slider lets you simulate how the finished letter will look when illuminated.</p>
+<div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
+<span class="feat-tag">Wall &amp; acrylic colors</span>
+<span class="feat-tag">Custom hex picker</span>
+<span class="feat-tag">Opacity simulation</span>
+</div>
+</div>
+</div>
 
-    <!-- Row 3 -->
-    <div class="feat-2col" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
-      <div class="feature-card reveal" style="display:flex;gap:20px;align-items:flex-start;">
-        <div class="feature-icon" style="flex-shrink:0">📦</div>
-        <div>
-          <h3>Dual STL Export</h3>
-          <p>Download two separate files: the <strong style="color:var(--text)">Wall STL</strong> (the letter body with the acrylic rebate) and the <strong style="color:var(--text)">Back STL</strong> (the back cover or snap-in lid). Both files are FDM print-ready — no further preparation in a slicer is required before printing.</p>
-          <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
-            <span class="feat-tag">Wall STL</span>
-            <span class="feat-tag">Back STL</span>
-            <span class="feat-tag">FDM-ready</span>
-          </div>
-        </div>
-      </div>
-      <div class="feature-card reveal" style="display:flex;gap:20px;align-items:flex-start;">
-        <div class="feature-icon" style="flex-shrink:0">🔑</div>
-        <div>
-          <h3>Offline License</h3>
-          <p>Your license key is stored <strong style="color:var(--text)">locally on your machine</strong> — no account required, no server calls, no data sent anywhere. Paste your key once and STL export is permanently unlocked. The app works fully offline, including on air-gapped production computers.</p>
-          <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
-            <span class="feat-tag">No account required</span>
-            <span class="feat-tag">Works offline</span>
-            <span class="feat-tag">Local key storage</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+<!-- Row 3 -->
+<div class="feat-2col" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+<div class="feature-card reveal" style="display:flex;gap:20px;align-items:flex-start;">
+<div class="feature-icon" style="flex-shrink:0">📦</div>
+<div>
+<h3>Dual STL Export</h3>
+<p>Download two separate files: the <strong style="color:var(--text)">Wall STL</strong> (the letter body with the acrylic rebate) and the <strong style="color:var(--text)">Back STL</strong> (the back cover or snap-in lid). Both files are FDM print-ready — no further preparation in a slicer is required before printing.</p>
+<div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
+<span class="feat-tag">Wall STL</span>
+<span class="feat-tag">Back STL</span>
+<span class="feat-tag">FDM-ready</span>
+</div>
+</div>
+</div>
+<div class="feature-card reveal" style="display:flex;gap:20px;align-items:flex-start;">
+<div class="feature-icon" style="flex-shrink:0">🔑</div>
+<div>
+<h3>Online License</h3>
+<p>Your trial is anchored to <strong style="color:var(--text)">our server</strong> so the 14-day window cannot be reset by clearing local storage. Only a SHA-256 hash of your machine ID is sent — no email, no account, no personal data. Once you activate a license key, STL export is unlocked permanently and the key is stored in your local Keychain.</p>
+<div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
+<span class="feat-tag">Anonymous machine hash</span>
+<span class="feat-tag">No account required</span>
+<span class="feat-tag">Server-anchored trial</span>
+</div>
+</div>
+</div>
+</div>
+</div>
 </section>
 
 <!-- SCREENSHOTS -->
 <section>
-  <div class="container">
-    <div class="section-title reveal">
-      <div class="section-label">Screenshots</div>
-      <h2>Application Screenshots</h2>
-      <p>A look inside the interface — every panel, every parameter.</p>
-    </div>
-    <div class="screenshots-grid">
-      <div class="screenshot-card reveal">
-        <img src="screen1.png" alt="SOURCE panel — DXF import">
-        <div class="screenshot-overlay">
-          <div class="screenshot-label">SOURCE — DXF Import</div>
-          <div class="screenshot-desc">Load a DXF file, set unit scale (mm or inches), and configure curve tolerance (0.05 mm). Displays file size and the number of curves detected.</div>
-        </div>
-      </div>
-      <div class="screenshot-card reveal">
-        <img src="screen2.png" alt="WALLS panel — thickness and depth settings">
-        <div class="screenshot-overlay">
-          <div class="screenshot-label">WALLS — Thickness &amp; Depth</div>
-          <div class="screenshot-desc">Outer wall thickness (2 mm) and box depth (25 mm). The built-in cross-section diagram shows the DXF outline, acrylic panel position, and all tolerances.</div>
-        </div>
-      </div>
-      <div class="screenshot-card reveal">
-        <img src="screen3.png" alt="ACRYLIC panel — rebate parameters">
-        <div class="screenshot-overlay">
-          <div class="screenshot-label">ACRYLIC — Rebate Parameters</div>
-          <div class="screenshot-desc">Acrylic thickness (3 mm), rebate width (1 mm), clearance around the acrylic (0.2 mm), and inset below the top edge (0 mm).</div>
-        </div>
-      </div>
-      <div class="screenshot-card reveal">
-        <img src="screen4.png" alt="BACK panel — cover type selection">
-        <div class="screenshot-overlay">
-          <div class="screenshot-label">BACK — Cover Type</div>
-          <div class="screenshot-desc">Three types: W – Open, I – Solid, S – Snap-in. Snap lip height 6 mm, lip thickness 1.6 mm, optional cable hole, back-to-wall clearance 0.3 mm.</div>
-        </div>
-      </div>
-      <div class="screenshot-card reveal">
-        <img src="screen5.png" alt="COLORS panel — wall and acrylic color selection">
-        <div class="screenshot-overlay">
-          <div class="screenshot-label">COLORS — Wall &amp; Acrylic</div>
-          <div class="screenshot-desc">Eight wall color presets plus a custom hex input. Eight translucent acrylic presets plus a custom hex input and an opacity slider.</div>
-        </div>
-      </div>
-      <div class="screenshot-card reveal">
-        <img src="screen6.png" alt="Language selection — English, Slovak, German">
-        <div class="screenshot-overlay">
-          <div class="screenshot-label">LANGUAGES — EN / SK / DE</div>
-          <div class="screenshot-desc">The app is available in English, Slovak, and German. Switch languages at any time from the dropdown in the top-left corner.</div>
-        </div>
-      </div>
-      <div class="screenshot-card reveal" style="grid-column:1/-1;">
-        <img src="screen7.png" alt="Custom color picker with full spectrum grid" style="max-height:420px;object-fit:cover;object-position:top;">
-        <div class="screenshot-overlay">
-          <div class="screenshot-label">COLORS — Custom Color Picker</div>
-          <div class="screenshot-desc">A full-spectrum color picker lets you choose any RAL or brand color for both the wall body and the acrylic panel. The 3D preview updates in real time.</div>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="container">
+<div class="section-title reveal">
+<div class="section-label">Screenshots</div>
+<h2>Application Screenshots</h2>
+<p>A look inside the interface — every panel, every parameter.</p>
+</div>
+<div class="screenshots-grid">
+<div class="screenshot-card reveal">
+<img src="screen1.png" alt="SOURCE panel — DXF import">
+<div class="screenshot-overlay">
+<div class="screenshot-label">SOURCE — DXF Import</div>
+<div class="screenshot-desc">Load a DXF file, set unit scale (mm or inches), and configure curve tolerance (0.05 mm). Displays file size and the number of curves detected.</div>
+</div>
+</div>
+<div class="screenshot-card reveal">
+<img src="screen2.png" alt="WALLS panel — thickness and depth settings">
+<div class="screenshot-overlay">
+<div class="screenshot-label">WALLS — Thickness &amp; Depth</div>
+<div class="screenshot-desc">Outer wall thickness (2 mm) and box depth (25 mm). The built-in cross-section diagram shows the DXF outline, acrylic panel position, and all tolerances.</div>
+</div>
+</div>
+<div class="screenshot-card reveal">
+<img src="screen3.png" alt="ACRYLIC panel — rebate parameters">
+<div class="screenshot-overlay">
+<div class="screenshot-label">ACRYLIC — Rebate Parameters</div>
+<div class="screenshot-desc">Acrylic thickness (3 mm), rebate width (1 mm), clearance around the acrylic (0.2 mm), and inset below the top edge (0 mm).</div>
+</div>
+</div>
+<div class="screenshot-card reveal">
+<img src="screen4.png" alt="BACK panel — cover type selection">
+<div class="screenshot-overlay">
+<div class="screenshot-label">BACK — Cover Type</div>
+<div class="screenshot-desc">Three types: W – Open, I – Solid, S – Snap-in. Snap lip height 6 mm, lip thickness 1.6 mm, optional cable hole, back-to-wall clearance 0.3 mm.</div>
+</div>
+</div>
+<div class="screenshot-card reveal">
+<img src="screen5.png" alt="COLORS panel — wall and acrylic color selection">
+<div class="screenshot-overlay">
+<div class="screenshot-label">COLORS — Wall &amp; Acrylic</div>
+<div class="screenshot-desc">Eight wall color presets plus a custom hex input. Eight translucent acrylic presets plus a custom hex input and an opacity slider.</div>
+</div>
+</div>
+<div class="screenshot-card reveal">
+<img src="screen6.png" alt="Language selection — English, Slovak, German">
+<div class="screenshot-overlay">
+<div class="screenshot-label">LANGUAGES — EN / SK / DE</div>
+<div class="screenshot-desc">The app is available in English, Slovak, and German. Switch languages at any time from the dropdown in the top-left corner.</div>
+</div>
+</div>
+<div class="screenshot-card reveal" style="grid-column:1/-1;">
+<img src="screen7.png" alt="Custom color picker with full spectrum grid" style="max-height:420px;object-fit:cover;object-position:top;">
+<div class="screenshot-overlay">
+<div class="screenshot-label">COLORS — Custom Color Picker</div>
+<div class="screenshot-desc">A full-spectrum color picker lets you choose any RAL or brand color for both the wall body and the acrylic panel. The 3D preview updates in real time.</div>
+</div>
+</div>
+</div>
+</div>
 </section>
 
 <!-- WORKFLOW -->
 <section>
-  <div class="container">
-    <div class="workflow reveal">
-      <div>
-        <div class="section-label">How it works</div>
-        <h2>From DXF to STL in 3 steps</h2>
-        <div class="workflow-steps">
-          <div class="workflow-step">
-            <div class="step-number">01</div>
-            <div class="step-content">
-              <h4>Import your DXF file</h4>
-              <p>Load a vector file from any CAD or illustration tool. Set the unit scale and curve tolerance. The app immediately shows the bounding-box dimensions and the number of shapes detected.</p>
-            </div>
-          </div>
-          <div class="workflow-step">
-            <div class="step-number">02</div>
-            <div class="step-content">
-              <h4>Configure all parameters</h4>
-              <p>Adjust wall thickness, box depth, acrylic rebate, back cover type, snap lip geometry, cable hole, and wall and acrylic colors — all with live 3D feedback in the viewport.</p>
-            </div>
-          </div>
-          <div class="workflow-step">
-            <div class="step-number">03</div>
-            <div class="step-content">
-              <h4>Generate and download the STL files</h4>
-              <p>Click Generate 3D Model, then download the Wall STL and Back STL separately. Both files are ready to slice and print on any FDM printer. The license is verified locally — no internet connection required.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="workflow-visual">
-        <img src="screen7.png" alt="Color customization preview">
-      </div>
-    </div>
-  </div>
+<div class="container">
+<div class="workflow reveal">
+<div>
+<div class="section-label">How it works</div>
+<h2>From DXF to STL in 3 steps</h2>
+<div class="workflow-steps">
+<div class="workflow-step">
+<div class="step-number">01</div>
+<div class="step-content">
+<h4>Import your DXF file</h4>
+<p>Load a vector file from any CAD or illustration tool. Set the unit scale and curve tolerance. The app immediately shows the bounding-box dimensions and the number of shapes detected.</p>
+</div>
+</div>
+<div class="workflow-step">
+<div class="step-number">02</div>
+<div class="step-content">
+<h4>Configure all parameters</h4>
+<p>Adjust wall thickness, box depth, acrylic rebate, back cover type, snap lip geometry, cable hole, and wall and acrylic colors — all with live 3D feedback in the viewport.</p>
+</div>
+</div>
+<div class="workflow-step">
+<div class="step-number">03</div>
+<div class="step-content">
+<h4>Generate and download the STL files</h4>
+<p>Click Generate 3D Model, then download the Wall STL and Back STL separately. Both files are ready to slice and print on any FDM printer. Your trial counts down against our server so you always have an accurate days-left indicator.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="workflow-visual">
+<img src="screen7.png" alt="Color customization preview">
+</div>
+</div>
+</div>
 </section>
 
 <!-- PRICING -->
 <section>
-  <div class="container">
-    <div class="section-title reveal">
-      <div class="section-label">Pricing</div>
-      <h2>Simple Pricing</h2>
-    </div>
-    <div class="pricing-card reveal">
-      <div class="pricing-badge">14-Day Free Trial</div>
-      <div class="price-amount">5€</div>
-      <div class="price-period">/ month</div>
-      <div class="pricing-divider"></div>
-      <div class="pricing-features">
-        <div class="pricing-feature">Unlimited STL exports</div>
-        <div class="pricing-feature">Real-time 3D preview</div>
-        <div class="pricing-feature">All three back cover types</div>
-        <div class="pricing-feature">Full custom color system</div>
-        <div class="pricing-feature">macOS &amp; Windows</div>
-        <div class="pricing-feature">Offline license — no account required</div>
-      </div>
-      <a href="#download" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;">⬇ Start Free Trial</a>
-    </div>
-  </div>
+<div class="container">
+<div class="section-title reveal">
+<div class="section-label">Pricing</div>
+<h2>Simple Pricing</h2>
+</div>
+<div class="pricing-card reveal">
+<div class="pricing-badge">14-Day Free Trial</div>
+<div class="price-amount">5€</div>
+<div class="price-period">/ month</div>
+<div class="pricing-divider"></div>
+<div class="pricing-features">
+<div class="pricing-feature">Unlimited STL exports</div>
+<div class="pricing-feature">Real-time 3D preview</div>
+<div class="pricing-feature">All three back cover types</div>
+<div class="pricing-feature">Full custom color system</div>
+<div class="pricing-feature">macOS &amp; Windows</div>
+<div class="pricing-feature">Online license — no account required</div>
+</div>
+<a href="#download" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;">⬇ Start Free Trial</a>
+</div>
+</div>
 </section>
 
 <!-- DOWNLOAD -->
 <section id="download">
-  <div class="container">
-    <div class="section-title reveal">
-      <div class="section-label">Download</div>
-      <h2>Download the Application</h2>
-      <p>Available for macOS and Windows. No subscription required to try.</p>
-    </div>
-    <div class="download-grid reveal">
-      <a href="#" class="download-btn">
-        <div class="download-icon"><img src="apple.png" alt="Apple" style="width:26px;height:26px;object-fit:contain;"></div>
-        <div class="download-text">
-          <strong>Download for macOS</strong>
-          <span>macOS 12.0 or later</span>
-        </div>
-      </a>
-      <a href="#" class="download-btn">
-        <div class="download-icon">⊞</div>
-        <div class="download-text">
-          <strong>Download for Windows</strong>
-          <span>Windows 10 or later</span>
-        </div>
-      </a>
-    </div>
-  </div>
+<div class="container">
+<div class="section-title reveal">
+<div class="section-label">Download</div>
+<h2>Download the Application</h2>
+<p>Available for macOS. The Windows build is in development. No subscription required to try.</p>
+</div>
+<div class="download-grid reveal">
+<a href="/ChannelLetters-v1.0.15.dmg" class="download-btn" download>
+<div class="download-icon"><img src="apple.png" alt="Apple" style="width:26px;height:26px;object-fit:contain;"></div>
+<div class="download-text">
+<strong>Download for macOS</strong>
+<span>macOS 13.0 or later · v1.0.15 · ~6.5 MB</span>
+</div>
+</a>
+<a href="#" class="download-btn" aria-disabled="true" title="Windows build coming soon">
+<div class="download-icon">⊞</div>
+<div class="download-text">
+<strong>Download for Windows</strong>
+<span>Coming soon</span>
+</div>
+</a>
+</div>
+</div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-inner">
-    <div class="footer-logo">
-      <img src="ikonka.png" alt="3D Channel Letters logo">
-      <strong>3D Channel Letters</strong>
-    </div>
-    <p>© 2026 3D Channel Letters · Made by Miloš Kráľ</p>
-  </div>
+<div class="footer-inner">
+<div class="footer-logo">
+<img src="ikonka.png" alt="3D Channel Letters logo">
+<strong>3D Channel Letters</strong>
+</div>
+<p>© 2026 3D Channel Letters · Made by Miloš Kráľ</p>
+</div>
 </footer>
 
 <script>
 const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.08 });
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 document.querySelectorAll('.feature-card').forEach((c, i) => c.style.transitionDelay = (i * .07) + 's');
