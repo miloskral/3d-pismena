@@ -361,7 +361,16 @@ transform:translateY(-3px); box-shadow:0 12px 36px rgba(0,0,0,.4);
   background:rgba(82,226,255,.05); border:1px solid var(--border);
   font-size:12.5px; line-height:1.6;
   font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  display:flex; align-items:center; gap:14px;
 }
+.payment-method .pm-info{ flex:1; min-width:0; }
+.payment-method .pm-qr{
+  flex:0 0 auto; width:92px; height:92px;
+  background:#fff; border-radius:6px; padding:5px;
+  box-shadow:0 1px 3px rgba(0,0,0,.4);
+  display:block;
+}
+.payment-method .pm-qr img{ width:100%; height:100%; display:block; }
 .payment-method strong{ font-family:Inter,sans-serif; color:var(--cyan); display:block; font-size:11px; text-transform:uppercase; letter-spacing:.08em; margin-bottom:3px; }
 .buy-cta{ margin-top:auto; padding-top:14px; }
 
@@ -758,8 +767,14 @@ section{ padding:70px 18px; }
 <h4>Pay via PayPal or Revolut</h4>
 <p>Send the amount for the plan you chose (5€ monthly or 49€ annual) to one of the accounts below. Mention <em>"ChannelLetters"</em> in the payment reference.</p>
 <div class="payment-methods">
-<div class="payment-method"><strong>PayPal</strong>kralmilos@gmail.com</div>
-<div class="payment-method"><strong>Revolut</strong>@miloskrl<br><span style="color:var(--muted);font-size:11px;font-family:Inter,sans-serif;">or revolut.me/miloskrl</span></div>
+<div class="payment-method">
+  <div class="pm-info"><strong>PayPal</strong><a href="https://paypal.me/miloskral1" target="_blank" rel="noopener" style="color:var(--text);text-decoration:none;border-bottom:1px dashed rgba(82,226,255,.3);">@miloskral1</a><br><span style="color:var(--muted);font-size:11px;font-family:Inter,sans-serif;">paypal.me/miloskral1</span></div>
+  <a class="pm-qr" href="https://paypal.me/miloskral1" target="_blank" rel="noopener" title="Sken QR pre PayPal @miloskral1"><img src="paypal-qr.png" alt="PayPal QR @miloskral1" loading="lazy" decoding="async"></a>
+</div>
+<div class="payment-method">
+  <div class="pm-info"><strong>Revolut</strong><a href="https://revolut.me/milosl11f" target="_blank" rel="noopener" style="color:var(--text);text-decoration:none;border-bottom:1px dashed rgba(82,226,255,.3);">@milosl11f</a><br><span style="color:var(--muted);font-size:11px;font-family:Inter,sans-serif;">revolut.me/milosl11f</span></div>
+  <a class="pm-qr" href="https://revolut.me/milosl11f" target="_blank" rel="noopener" title="Sken QR pre Revolut @milosl11f"><img src="revolut-qr.png" alt="Revolut QR @milosl11f" loading="lazy" decoding="async"></a>
+</div>
 </div>
 </div>
 
