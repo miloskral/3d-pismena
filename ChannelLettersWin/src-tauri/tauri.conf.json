@@ -1,0 +1,52 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "ChannelLetters",
+  "version": "1.0.15",
+  "identifier": "app.channelletters",
+  "build": {
+    "beforeBuildCommand": "",
+    "beforeDevCommand": "",
+    "devUrl": "http://localhost:1430",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [],
+    "security": {
+      "csp": null,
+      "assetProtocol": {
+        "enable": true,
+        "scope": ["**"]
+      }
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis", "msi"],
+    "icon": [
+      "icons/icon.ico"
+    ],
+    "publisher": "Miloš Kráľ",
+    "copyright": "© 2026 Miloš Kráľ",
+    "category": "DeveloperTool",
+    "shortDescription": "DXF to STL for illuminated channel letters",
+    "longDescription": "ChannelLetters converts DXF letter outlines into 3D-printable STL files with channel walls, snap rings and back plates for illuminated signage.",
+    "resources": [],
+    "windows": {
+      "certificateThumbprint": null,
+      "digestAlgorithm": "sha256",
+      "timestampUrl": "",
+      "tsp": false,
+      "webviewInstallMode": {
+        "type": "embedBootstrapper",
+        "silent": true
+      },
+      "nsis": {
+        "displayLanguageSelector": false,
+        "languages": ["English", "Slovak"],
+        "installerIcon": "icons/icon.ico",
+        "installMode": "perUser"
+      }
+    }
+  }
+}
