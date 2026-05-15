@@ -1,0 +1,7 @@
+/src-tauri/target/
+/src-tauri/Cargo.lock
+/src-tauri/gen/
+/src-tauri/resources/channel-letters.enc
+/src-tauri/icons/icon.ico
+node_modules/
+.DS_Store
