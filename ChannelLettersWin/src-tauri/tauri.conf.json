@@ -42,10 +42,7 @@
         "silent": true
       },
       "nsis": {
-        "displayLanguageSelector": false,
-        "languages": ["English", "Slovak"],
-        "installerIcon": "icons/icon.ico",
-        "installMode": "perUser"
+        "installMode": "currentUser"
       }
     }
   }
