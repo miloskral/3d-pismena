@@ -1,0 +1,104 @@
+name: Build ChannelLetters for Windows
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'ChannelLettersWin/**'
+      - '.github/workflows/build-windows.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write    # so the workflow can attach the .exe to a release
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          targets: x86_64-pc-windows-msvc
+
+      - name: Cache cargo registry & build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ChannelLettersWin/src-tauri/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('ChannelLettersWin/src-tauri/Cargo.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Install Tauri CLI
+        run: cargo install tauri-cli --version "^2.0.0" --locked
+
+      - name: Install ImageMagick (for icon conversion)
+        run: choco install imagemagick.app -y --no-progress
+
+      - name: Generate .ico icon + logo.png from existing repo icon
+        shell: pwsh
+        run: |
+          # Source PNG: prefer ChannelLettersWin/icon-source.png if committed,
+          # otherwise fall back to "Ikonka S.png" at repo root (already present).
+          $src = "ChannelLettersWin/icon-source.png"
+          if (-not (Test-Path $src)) { $src = "Ikonka S.png" }
+          if (-not (Test-Path $src)) {
+            Write-Error "No icon source found"; exit 1
+          }
+          $dstIco = "ChannelLettersWin/src-tauri/icons/icon.ico"
+          New-Item -ItemType Directory -Force -Path (Split-Path $dstIco) | Out-Null
+          magick "$src" -define icon:auto-resize=16,32,48,64,128,256 "$dstIco"
+          $dstLogo = "ChannelLettersWin/src-tauri/resources/logo.png"
+          New-Item -ItemType Directory -Force -Path (Split-Path $dstLogo) | Out-Null
+          magick "$src" -resize 64x64 "$dstLogo"
+
+      - name: Build Tauri app (Release, NSIS + MSI)
+        working-directory: ChannelLettersWin
+        run: cargo tauri build --target x86_64-pc-windows-msvc
+
+      - name: Locate produced installers
+        id: locate
+        shell: pwsh
+        run: |
+          $bundleDir = "ChannelLettersWin/src-tauri/target/x86_64-pc-windows-msvc/release/bundle"
+          $exe = Get-ChildItem -Path "$bundleDir/nsis" -Filter "*.exe" -ErrorAction SilentlyContinue | Select-Object -First 1
+          $msi = Get-ChildItem -Path "$bundleDir/msi"  -Filter "*.msi" -ErrorAction SilentlyContinue | Select-Object -First 1
+          if (-not $exe) { Write-Error "NSIS .exe not found under $bundleDir/nsis"; exit 1 }
+          "EXE=$($exe.FullName)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          if ($msi) { "MSI=$($msi.FullName)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append }
+          Write-Host "Built: $($exe.FullName)"
+          if ($msi) { Write-Host "Built: $($msi.FullName)" }
+
+      - name: Upload installer as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ChannelLetters-windows
+          path: |
+            ChannelLettersWin/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe
+            ChannelLettersWin/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/msi/*.msi
+
+      # Optional: when pushed to main, also attach to a draft GitHub release.
+      - name: Attach to draft release
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: win-v${{ github.run_number }}
+          name: Windows build v${{ github.run_number }}
+          draft: true
+          files: |
+            ChannelLettersWin/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe
+            ChannelLettersWin/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/msi/*.msi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
