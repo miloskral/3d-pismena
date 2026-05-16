@@ -10,7 +10,7 @@ mod trial;
 use std::sync::Arc;
 
 use tauri::menu::{Menu, MenuItem, PredefinedMenuItem, Submenu};
-use tauri::{Emitter, Manager};
+use tauri::{Emitter, Listener};
 use tauri_plugin_clipboard_manager::ClipboardExt;
 
 const APP_VERSION: &str = env!("CARGO_PKG_VERSION");
