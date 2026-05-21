@@ -253,6 +253,147 @@ footer p{ color:var(--muted); font-size:13px; }
   .feat-2col{ grid-template-columns:1fr!important; }
   .feat-4col{ grid-template-columns:1fr!important; }
 }
+
+/* ===== NAV LINKS ===== */
+.nav-links{ display:flex; align-items:center; gap:28px; }
+.nav-links a.nav-link{
+  color:var(--muted); font-size:14px; font-weight:500;
+  text-decoration:none; transition:color .2s;
+}
+.nav-links a.nav-link:hover{ color:var(--text); }
+@media(max-width:700px){
+  .nav-links a.nav-link{ display:none; }
+}
+
+/* ===== LEGAL SECTION ===== */
+.legal-section{
+  background:
+    radial-gradient(800px 400px at 50% 0%, rgba(82,226,255,.04), transparent 60%),
+    rgba(82,226,255,.015);
+  border-top:1px solid var(--border);
+}
+.legal-updated{
+  text-align:center;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:12px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--muted); margin-bottom:48px;
+}
+.legal-toc{
+  max-width:900px; margin:0 auto 56px;
+  display:grid; grid-template-columns:repeat(4,1fr); gap:12px;
+}
+.legal-toc a{
+  padding:16px 18px; border-radius:14px;
+  background:linear-gradient(160deg,rgba(10,20,32,.6),rgba(5,12,20,.6));
+  border:1px solid var(--border);
+  text-decoration:none; color:var(--text);
+  font-size:13px; font-weight:600; text-align:center;
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+  transition:.25s;
+}
+.legal-toc a:hover{
+  border-color:rgba(82,226,255,.3);
+  background:rgba(82,226,255,.06);
+  transform:translateY(-2px);
+}
+.legal-toc .toc-num{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:10px; color:var(--cyan); letter-spacing:.15em;
+}
+.legal-grid{ max-width:840px; margin:0 auto; }
+.legal-card{
+  background:linear-gradient(160deg,rgba(10,20,32,.95),rgba(5,12,20,.95));
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:40px 44px;
+  margin-bottom:20px;
+  scroll-margin-top:90px;
+  position:relative; overflow:hidden;
+}
+.legal-card::before{
+  content:''; position:absolute; top:0; left:40px; right:40px; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(82,226,255,.4),transparent);
+}
+.legal-card h3{
+  font-size:26px; font-weight:800; letter-spacing:-.6px;
+  margin-bottom:6px;
+  display:flex; align-items:baseline; gap:14px;
+}
+.legal-card h3 .legal-num{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:13px; font-weight:600; color:var(--cyan);
+}
+.legal-card .legal-sub{
+  color:var(--muted); font-size:14px; margin-bottom:24px;
+}
+.legal-card h4{
+  font-size:14px; font-weight:700; margin:24px 0 8px;
+  color:var(--text);
+  display:flex; align-items:center; gap:10px;
+}
+.legal-card h4::before{
+  content:''; width:5px; height:5px; border-radius:50%;
+  background:var(--cyan); box-shadow:0 0 8px var(--cyan);
+}
+.legal-card p, .legal-card li{
+  color:var(--muted); font-size:14.5px; line-height:1.75;
+}
+.legal-card p{ margin-bottom:10px; }
+.legal-card strong{ color:var(--text); font-weight:600; }
+.legal-card ul{ padding-left:0; margin:8px 0 12px; list-style:none; }
+.legal-card ul li{
+  padding:4px 0 4px 22px; position:relative;
+}
+.legal-card ul li::before{
+  content:''; position:absolute; left:0; top:14px;
+  width:10px; height:1px; background:var(--cyan); opacity:.6;
+}
+.legal-card a{ color:var(--cyan); text-decoration:none; }
+.legal-card a:hover{ text-decoration:underline; }
+.legal-callout{
+  background:rgba(82,226,255,.05);
+  border:1px solid rgba(82,226,255,.18);
+  border-left:3px solid var(--cyan);
+  border-radius:10px;
+  padding:14px 18px;
+  margin:16px 0;
+  font-size:14px;
+  color:var(--text);
+}
+.legal-callout strong{ color:var(--cyan); }
+.legal-meta{
+  display:grid; grid-template-columns:repeat(2,1fr);
+  gap:10px 24px; margin-top:14px;
+  padding:14px 18px;
+  background:rgba(0,0,0,.25);
+  border:1px solid var(--border);
+  border-radius:10px;
+}
+.legal-meta div{
+  font-size:13px; color:var(--muted);
+}
+.legal-meta div strong{
+  display:block; font-size:11px; color:var(--cyan);
+  text-transform:uppercase; letter-spacing:.1em; margin-bottom:2px;
+  font-weight:700;
+}
+.footer-links{
+  display:flex; gap:22px; font-size:13px;
+}
+.footer-links a{
+  color:var(--muted); text-decoration:none; transition:color .2s;
+}
+.footer-links a:hover{ color:var(--cyan); }
+@media(max-width:1100px){
+  .footer-bottom{ flex-direction:column; gap:12px; text-align:center; }
+  .footer-links{ justify-content:center; flex-wrap:wrap; }
+}
+@media(max-width:700px){
+  .legal-toc{ grid-template-columns:repeat(2,1fr); }
+  .legal-card{ padding:28px 24px; }
+  .legal-card h3{ font-size:22px; }
+  .legal-meta{ grid-template-columns:1fr; }
+}
 </style>
 </head>
 <body>
@@ -267,7 +408,11 @@ footer p{ color:var(--muted); font-size:13px; }
         <span>Professional illuminated letter software</span>
       </div>
     </a>
-    <a href="#download" class="btn btn-primary">Download</a>
+    <div class="nav-links">
+      <a href="#features" class="nav-link">Features</a>
+      <a href="#legal" class="nav-link">Terms</a>
+      <a href="#download" class="btn btn-primary">Download</a>
+    </div>
   </div>
 </nav>
 
@@ -552,7 +697,6 @@ footer p{ color:var(--muted); font-size:13px; }
     <p style="text-align:center;color:var(--muted);font-size:15px;line-height:1.7;max-width:560px;margin:32px auto 0;">
       This app is a solo project built with care. If you find it useful and decide to subscribe, it means a lot — your support allows me to keep improving the app and adding new features over time.
     </p>
-    </div>
   </div>
 </section>
 
@@ -608,35 +752,246 @@ footer p{ color:var(--muted); font-size:13px; }
       <p style="font-size:12px;color:var(--muted);margin-top:12px;">Opens your email app with a pre-filled message — paste your Hardware ID and attach payment proof.</p>
     </div>
 
-    <!-- QR CODES -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:700px;margin:0 auto;" class="reveal">
-      <div style="background:linear-gradient(160deg,rgba(10,20,32,.95),rgba(5,12,20,.95));border:1px solid var(--border);border-radius:24px;padding:32px;text-align:center;">
-        <div style="font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);margin-bottom:16px;">PayPal</div>
-        <img src="qr_paypal.jpeg" alt="PayPal QR code" style="width:180px;height:180px;object-fit:cover;border-radius:12px;display:block;margin:0 auto 16px;">
-        <div style="font-size:15px;font-weight:700;margin-bottom:4px;">@miloskral1</div>
-        <div style="font-size:13px;color:var(--muted);">Scan to pay via PayPal</div>
-      </div>
-      <div style="background:linear-gradient(160deg,rgba(10,20,32,.95),rgba(5,12,20,.95));border:1px solid var(--border);border-radius:24px;padding:32px;text-align:center;">
-        <div style="font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);margin-bottom:16px;">Revolut</div>
-        <img src="qr_revolut.jpeg" alt="Revolut QR code" style="width:180px;height:180px;object-fit:cover;border-radius:12px;display:block;margin:0 auto 16px;">
-        <div style="font-size:15px;font-weight:700;margin-bottom:4px;">@milosl11f</div>
-        <div style="font-size:13px;color:var(--muted);">Scan to pay via Revolut</div>
-      </div>
+    <!-- PAYMENT BUTTONS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:640px;margin:0 auto;" class="reveal">
+      <a href="https://paypal.me/miloskral1/5EUR" target="_blank" rel="noopener" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:28px 20px;background:linear-gradient(160deg,rgba(0,48,135,0.18),rgba(0,156,222,0.08));border:1px solid rgba(0,156,222,0.35);border-radius:16px;text-decoration:none;color:#fff;transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;">
+        <div style="font-size:13px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;">Option 1</div>
+        <div style="font-size:24px;font-weight:700;color:#fff;">Pay with PayPal</div>
+        <div style="font-size:14px;color:var(--muted);">@miloskral1 &middot; €5.00</div>
+        <div style="margin-top:6px;padding:10px 22px;background:#0070ba;color:#fff;border-radius:999px;font-weight:600;font-size:14px;">Open PayPal →</div>
+      </a>
+      <a href="https://revolut.me/milosl11f/5EUR" target="_blank" rel="noopener" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:28px 20px;background:linear-gradient(160deg,rgba(20,20,30,0.6),rgba(40,40,55,0.3));border:1px solid rgba(255,255,255,0.18);border-radius:16px;text-decoration:none;color:#fff;transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;">
+        <div style="font-size:13px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;">Option 2</div>
+        <div style="font-size:24px;font-weight:700;color:#fff;">Pay with Revolut</div>
+        <div style="font-size:14px;color:var(--muted);">@milosl11f &middot; €5.00</div>
+        <div style="margin-top:6px;padding:10px 22px;background:#fff;color:#000;border-radius:999px;font-weight:600;font-size:14px;">Open Revolut →</div>
+      </a>
     </div>
 
-    <p style="text-align:center;color:var(--muted);font-size:13px;margin-top:24px;max-width:560px;margin-left:auto;margin-right:auto;">
-      Price: €5 / month &nbsp;·&nbsp; 14-day free trial included &nbsp;·&nbsp; Not satisfied within the first 14 days? Contact me for a full refund — no questions asked.
+    <p style="text-align:center;color:var(--muted);font-size:13px;margin-top:24px;max-width:620px;margin-left:auto;margin-right:auto;line-height:1.7;">
+      Price: €5 / month &nbsp;·&nbsp; 14-day free trial included &nbsp;·&nbsp; Try the software fully during the trial — once you pay, the subscription is non-refundable.
     </p>
+
+    <div class="reveal" style="max-width:620px;margin:18px auto 0;padding:14px 18px;background:rgba(82,226,255,.05);border:1px solid rgba(82,226,255,.18);border-left:3px solid var(--cyan);border-radius:10px;">
+      <p style="font-size:12.5px;color:var(--muted);line-height:1.65;margin:0;">
+        <strong style="color:var(--text);">Before you pay:</strong> by sending the €5 payment and requesting your license key, you expressly agree that the digital service begins immediately and you waive the EU 14-day right of withdrawal under Art. 16(m) of Directive 2011/83/EU. The free trial preceding payment is provided so you can fully evaluate the Software before committing. See <a href="#legal-refund" style="color:var(--cyan);text-decoration:none;">Trial &amp; No-Refund Policy</a> for details.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LEGAL ============ -->
+<section id="legal" class="legal-section">
+  <div class="container">
+    <div class="section-title reveal">
+      <div class="section-label">Legal</div>
+      <h2>Terms &amp; Policies</h2>
+      <p>Clear, plain-language terms covering the trial, subscription, license, and privacy.</p>
+    </div>
+
+    <div class="legal-updated reveal">Last updated: 22 May 2026</div>
+
+    <div class="legal-toc reveal">
+      <a href="#legal-terms"><span class="toc-num">01</span>Terms of Service</a>
+      <a href="#legal-refund"><span class="toc-num">02</span>Trial &amp; No Refunds</a>
+      <a href="#legal-license"><span class="toc-num">03</span>License Terms</a>
+      <a href="#legal-privacy"><span class="toc-num">04</span>Privacy Policy</a>
+    </div>
+
+    <div class="legal-grid">
+
+      <!-- 01 TERMS OF SERVICE -->
+      <article id="legal-terms" class="legal-card reveal">
+        <h3><span class="legal-num">01</span>Terms of Service</h3>
+        <p class="legal-sub">These terms govern your use of 3D Channel Letters (the “Software”), a desktop application for macOS that generates 3D-printable STL files from DXF vector input for the production of illuminated channel letters. By downloading, installing, or using the Software, you agree to these terms.</p>
+
+        <h4>Provider</h4>
+        <p>The Software is developed and provided by <strong>Miloš Kráľ</strong>, an individual sole developer based in the Slovak Republic, European Union.</p>
+        <div class="legal-meta">
+          <div><strong>Contact</strong><a href="mailto:kralmilos@gmail.com">kralmilos@gmail.com</a></div>
+          <div><strong>Response time</strong>Typically within 24 hours</div>
+        </div>
+
+        <h4>What the Software does</h4>
+        <p>The Software imports a DXF vector file, generates a 3D model of an illuminated channel letter according to the parameters you set (wall thickness, box depth, acrylic rebate, back cover type, colours), and exports two STL files (Wall and Back) that are ready to slice and print on a standard FDM 3D printer.</p>
+
+        <h4>Subscription &amp; trial</h4>
+        <p>The Software is offered as a paid monthly subscription at <strong>€5 / month</strong>. A <strong>14-day free trial</strong> is included with <strong>full, unrestricted functionality</strong> — including unlimited STL export — starting from the moment you install the Software. After 14 days, the application remains usable, but STL export is locked until a valid license key (issued after payment) is activated.</p>
+
+        <h4>Manual payment &amp; activation</h4>
+        <p>Payment is processed manually via PayPal (<strong>@miloskral1</strong>) or Revolut (<strong>@milosl11f</strong>). After your payment is received and your Mac Hardware ID is verified, a personal license key is issued by email to the address you used to contact me, typically within <strong>24 hours</strong>. The license key unlocks STL export on the specific machine identified by the Hardware ID you provided.</p>
+
+        <h4>Renewals &amp; cancellation</h4>
+        <div class="legal-callout">
+          <strong>No auto-renewal.</strong> There is no recurring charge and no stored payment method. Each monthly period requires a new manual €5 payment. To stop the subscription, simply don’t send the next payment — no cancellation form, no email required.
+        </div>
+
+        <h4>Acceptable use</h4>
+        <p>You may use the Software for personal or commercial work, including producing STL files for client projects and selling the printed letters. You may not:</p>
+        <ul>
+          <li>Redistribute, resell, or sublicense the Software itself</li>
+          <li>Share, publish, or transfer your license key to another person or machine</li>
+          <li>Reverse-engineer, decompile, or attempt to bypass the licensing mechanism</li>
+          <li>Use the Software to produce content that is illegal in your jurisdiction</li>
+        </ul>
+
+        <h4>Ownership of STL output</h4>
+        <p>All STL files generated by the Software belong to you. You may use, print, sell, and distribute the resulting letters and signage without any royalty, attribution, or further permission from the developer.</p>
+
+        <h4>Warranty &amp; liability</h4>
+        <p>The Software is provided <strong>“as is”</strong>, without warranty of any kind, express or implied. The 14-day free trial gives you full opportunity to test the Software end-to-end — including STL export and an actual test print — against your own DXF files and printing setup before paying. <strong>You are responsible for verifying STL output before printing or production.</strong> Paid subscriptions are non-refundable (see <a href="#legal-refund">Trial &amp; No-Refund Policy</a>). To the maximum extent permitted by law, the developer is not liable for material costs, printer wear, lost production time, lost client work, or any indirect, incidental, or consequential damages arising from the use of the Software. Total liability under any claim is limited to the amount you paid for the Software in the preceding twelve months.</p>
+
+        <h4>Changes to these terms</h4>
+        <p>These terms may be updated to reflect changes to the Software, pricing, or applicable law. The current version is always published on this page with the “Last updated” date shown above. Material changes will also be communicated by email to active subscribers. Continued use of the Software after a change takes effect means you accept the revised terms.</p>
+
+        <h4>Governing law &amp; jurisdiction</h4>
+        <p>These terms are governed by the laws of the <strong>Slovak Republic</strong>. Any disputes arising from or related to the Software will be resolved by the competent courts of the Slovak Republic, without prejudice to mandatory consumer protection rights you may have under the law of your country of residence within the European Union.</p>
+      </article>
+
+      <!-- 02 TRIAL & NO REFUNDS -->
+      <article id="legal-refund" class="legal-card reveal">
+        <h3><span class="legal-num">02</span>Trial &amp; No-Refund Policy</h3>
+        <p class="legal-sub">The 14-day free trial <em>is</em> the money-back guarantee. Once you choose to subscribe, the payment is final.</p>
+
+        <h4>How it works</h4>
+        <div class="legal-callout">
+          <strong>Try before you pay.</strong> The Software runs with full functionality for <strong>14 days</strong> at no cost. During the 14 days the trial is identical to the paid version — STL export included, with no watermarks, no quotas, and no nag screens. After day 14, only STL export is disabled; every other feature — DXF import, 3D preview, all wall, acrylic and back-cover settings, all colour options — works exactly the same as in the paid version. Spend those 14 days deciding whether the Software fits your workflow.
+        </div>
+
+        <h4>Why there are no refunds after payment</h4>
+        <p>The free trial gives you everything you need to evaluate the Software <strong>before</strong> you send any money. If it doesn’t suit you, simply don’t pay and the trial expires on its own — nothing more is required from you and nothing is owed.</p>
+        <p>If you do choose to send the €5 payment and request your license key, you are confirming that you have tried the Software and are satisfied with how it works. <strong>For this reason, paid subscriptions are non-refundable.</strong> This applies to every monthly period, including the first one.</p>
+
+        <h4>The Software is provided “as is”</h4>
+        <p>While every effort is made to produce accurate, print-ready geometry, the Software is provided <strong>“as is”</strong> without warranty of any kind. You are responsible for verifying every STL output before printing or production. The developer does not guarantee that the Software will be free of bugs, errors, or limitations in every possible DXF input or print configuration. <strong>No refunds are issued for software bugs, missing features, geometry that doesn’t suit a particular use case, or any other reason of dissatisfaction after payment.</strong></p>
+
+        <h4>EU consumer right of withdrawal — important</h4>
+        <p>If you are a consumer resident in the European Union, you would normally have a 14-day right of withdrawal under Directive 2011/83/EU for digital services. However, that right <strong>does not apply</strong> if you have:</p>
+        <ul>
+          <li>Given your <strong>express prior consent</strong> for the digital service to begin being supplied immediately, and</li>
+          <li>Acknowledged that, by doing so, you <strong>lose the right of withdrawal</strong> once performance has begun.</li>
+        </ul>
+        <div class="legal-callout">
+          <strong>By sending payment and requesting your license key,</strong> you expressly consent to immediate delivery of the digital service (the license key + paid-tier features) and acknowledge that you thereby lose the EU statutory 14-day right of withdrawal under Art. 16(m) of Directive 2011/83/EU. The 14-day free trial preceding payment is provided precisely so that you can evaluate the Software before making this commitment.
+        </div>
+
+        <h4>How to stop paying</h4>
+        <p>Subscriptions are paid one month at a time and there is <strong>no auto-renewal</strong>. If you decide the Software is no longer worth €5 / month — for any reason — simply don’t send the next payment. Your access to STL export will lapse at the end of the current paid period. No notice, no cancellation form, no email required.</p>
+
+        <h4>Narrow exceptions</h4>
+        <p>The no-refund rule has two narrow exceptions, handled in good faith on a case-by-case basis:</p>
+        <ul>
+          <li><strong>Duplicate or accidental payments</strong> — if you accidentally pay twice for the same month, the duplicate amount is refunded in full within 5 business days.</li>
+          <li><strong>License never delivered</strong> — if more than 7 days pass after your payment without a license key being delivered to you (and you have provided a valid Hardware ID), you are entitled to a full refund of that month’s payment.</li>
+        </ul>
+        <p>To raise either of these, email <a href="mailto:kralmilos@gmail.com">kralmilos@gmail.com</a> with the payment details and any supporting screenshots.</p>
+      </article>
+
+      <!-- 03 LICENSE TERMS -->
+      <article id="legal-license" class="legal-card reveal">
+        <h3><span class="legal-num">03</span>License Terms</h3>
+        <p class="legal-sub">What the license grants, what it doesn’t, and how the offline activation works.</p>
+
+        <h4>Grant of license</h4>
+        <p>Subject to your active subscription, you are granted a <strong>non-exclusive, non-transferable, revocable license</strong> to install and use the Software for personal or commercial purposes on the single Mac whose Hardware ID was used to generate your license key.</p>
+
+        <h4>One license = one machine</h4>
+        <div class="legal-callout">
+          The license key is cryptographically bound to your <strong>Mac Hardware ID</strong> and will not unlock STL export on any other computer. If you change machines, contact <a href="mailto:kralmilos@gmail.com">kralmilos@gmail.com</a> with your new Hardware ID and proof of your previous license — a replacement key will be issued free of charge for the remainder of your subscription period.
+        </div>
+
+        <h4>Offline activation</h4>
+        <p>Your license key is stored <strong>locally on your machine</strong>. The Software:</p>
+        <ul>
+          <li>Does not require an account, login, or registration</li>
+          <li>Does not “phone home” or contact any licensing server</li>
+          <li>Works fully offline, including on air-gapped production computers</li>
+          <li>Does not transmit your Hardware ID, license key, or any other data anywhere once activated</li>
+        </ul>
+
+        <h4>Restrictions</h4>
+        <p>You may not:</p>
+        <ul>
+          <li>Share, publish, sell, lease, or sublicense the license key</li>
+          <li>Use the same license key on multiple machines simultaneously</li>
+          <li>Modify, reverse-engineer, decompile, or disassemble the Software</li>
+          <li>Remove or alter any copyright, trademark, or licensing notices</li>
+        </ul>
+
+        <h4>Termination</h4>
+        <p>The license terminates automatically if you breach these terms. On termination you must stop using the Software and delete it from your machine. The developer reserves the right to revoke any license key found to have been shared, leaked, or fraudulently obtained.</p>
+
+        <h4>Updates</h4>
+        <p>Software updates released during your active subscription are included at no extra cost. Major new versions may, at the developer’s discretion, require a separate purchase — this will always be announced in advance to active subscribers.</p>
+
+        <h4>App signing &amp; integrity</h4>
+        <p>The macOS build is <strong>Apple-signed and notarized</strong>. Always download the Software from <a href="https://www.lumisign3d.com">www.lumisign3d.com</a> — versions distributed elsewhere are unauthorized and may be tampered with.</p>
+      </article>
+
+      <!-- 04 PRIVACY POLICY -->
+      <article id="legal-privacy" class="legal-card reveal">
+        <h3><span class="legal-num">04</span>Privacy Policy</h3>
+        <p class="legal-sub">The shortest privacy policy you’ll read this year, because almost nothing is collected.</p>
+
+        <h4>What the Software collects</h4>
+        <div class="legal-callout">
+          <strong>Nothing.</strong> The desktop Software does not collect, transmit, or store any personal data, telemetry, usage analytics, or crash reports. It runs entirely on your machine and does not make any network requests.
+        </div>
+
+        <h4>What this website collects</h4>
+        <p>This website (<a href="https://www.lumisign3d.com">www.lumisign3d.com</a>) is a static page. It does not use cookies, analytics scripts, tracking pixels, or third-party advertising networks. Standard server access logs (IP address, user-agent, page requested, timestamp) may be kept by the hosting provider for a short period for security and abuse prevention purposes — these are not used for tracking or profiling.</p>
+
+        <h4>What I collect when you subscribe</h4>
+        <p>When you request a license key, I receive and store the following, solely to fulfil the subscription:</p>
+        <ul>
+          <li><strong>Your email address</strong> — to send your license key and respond to support requests</li>
+          <li><strong>Your Mac Hardware ID</strong> — to generate a license key bound to your machine</li>
+          <li><strong>Payment confirmation</strong> — a screenshot or note showing PayPal/Revolut payment</li>
+        </ul>
+        <p>This information is stored in a private spreadsheet and email inbox. It is never shared, sold, or transferred to any third party, except where strictly required by law.</p>
+
+        <h4>Payment data</h4>
+        <p>Payments are processed by <strong>PayPal</strong> and <strong>Revolut</strong> as independent payment providers. I receive only the information they choose to display about the transaction (sender name, amount, transaction ID, message). I do not see or store your card number, bank account details, or any other financial credentials. Their respective privacy policies apply to the payment itself.</p>
+
+        <h4>Your rights (GDPR)</h4>
+        <p>If you are in the European Union, you have the right under the General Data Protection Regulation (GDPR) to:</p>
+        <ul>
+          <li>Request a copy of the personal data I hold about you</li>
+          <li>Request correction of inaccurate data</li>
+          <li>Request deletion of your data (right to be forgotten)</li>
+          <li>Object to processing or request restriction</li>
+          <li>Lodge a complaint with your national data protection authority — in Slovakia, that is the <em>Úrad na ochranu osobných údajov SR</em></li>
+        </ul>
+        <p>To exercise any of these rights, email <a href="mailto:kralmilos@gmail.com">kralmilos@gmail.com</a>. Requests are answered within 30 days.</p>
+
+        <h4>Data retention</h4>
+        <p>License records (email, Hardware ID, payment confirmation) are kept for as long as your subscription is active, plus a period required for accounting and tax purposes under Slovak law (typically 10 years for invoicing records). After that, the data is deleted.</p>
+
+        <h4>Changes to this policy</h4>
+        <p>If this privacy policy changes, the “Last updated” date at the top of this section will reflect the new version, and active subscribers will be notified by email of any material changes.</p>
+      </article>
+
+    </div>
   </div>
 </section>
 
 <!-- FOOTER -->
+<footer>
   <div class="footer-inner">
     <div class="footer-logo">
       <img src="ikonka.png" alt="3D Channel Letters logo">
       <strong>3D Channel Letters</strong>
     </div>
-    <p>© 2026 3D Channel Letters · Made by Miloš Kráľ</p>
+    <div class="footer-bottom" style="display:flex;align-items:center;gap:32px;">
+      <div class="footer-links">
+        <a href="#legal-terms">Terms of Service</a>
+        <a href="#legal-refund">Trial &amp; Refunds</a>
+        <a href="#legal-license">License</a>
+        <a href="#legal-privacy">Privacy</a>
+        <a href="mailto:kralmilos@gmail.com">Contact</a>
+      </div>
+      <p>© 2026 3D Channel Letters · Made by Miloš Kráľ</p>
+    </div>
   </div>
 </footer>
 
