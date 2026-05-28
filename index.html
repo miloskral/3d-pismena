@@ -707,7 +707,7 @@ footer p{ color:var(--muted); font-size:13px; }
         <div class="pricing-feature">Real-time 3D preview</div>
         <div class="pricing-feature">All six base types · STL per object</div>
         <div class="pricing-feature">Full custom color system (wall · acrylic · base)</div>
-        <div class="pricing-feature">macOS</div>
+        <div class="pricing-feature">macOS &amp; Windows</div>
         <div class="pricing-feature">Offline license — no account required</div>
       </div>
       <a href="#download" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;">⬇ Start Free Trial</a>
@@ -721,9 +721,9 @@ footer p{ color:var(--muted); font-size:13px; }
     <div class="section-title reveal">
       <div class="section-label">Download</div>
       <h2>Download the Application</h2>
-      <p>Available for macOS. Includes a 14-day free trial — no account required.</p>
+      <p>Available for macOS and Windows. Includes a 14-day free trial — no account required.</p>
     </div>
-    <div class="download-grid reveal" style="grid-template-columns:1fr;max-width:340px;">
+    <div class="download-grid reveal" style="max-width:720px;">
       <a href="ChannelLetters-v1.0.20.dmg" class="download-btn">
         <div class="download-icon"><img src="apple.png" alt="Apple" style="width:26px;height:26px;object-fit:contain;"></div>
         <div class="download-text">
@@ -731,6 +731,32 @@ footer p{ color:var(--muted); font-size:13px; }
           <span>Apple-signed &amp; notarized · macOS 12.0 or later</span>
         </div>
       </a>
+      <a href="ChannelLetters-windows.zip" class="download-btn">
+        <div class="download-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="color:var(--cyan);"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/></svg>
+        </div>
+        <div class="download-text">
+          <strong>Download for Windows</strong>
+          <span>x64 setup · Windows 10 / 11 · See install notes below</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- Windows install notes -->
+    <div class="reveal" style="max-width:720px;margin:32px auto 0;background:linear-gradient(160deg,rgba(10,20,32,.95),rgba(5,12,20,.95));border:1px solid var(--border);border-radius:20px;padding:28px 32px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <div style="width:34px;height:34px;border-radius:10px;background:rgba(82,226,255,.08);border:1px solid rgba(82,226,255,.2);display:flex;align-items:center;justify-content:center;color:var(--cyan);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/></svg>
+        </div>
+        <strong style="font-size:17px;color:var(--text);">Windows installation notes</strong>
+      </div>
+      <p style="font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:14px;">The Windows build is not yet signed with a code-signing certificate, so Windows SmartScreen and Defender will warn you on first launch. The installer is safe — these steps unblock it:</p>
+      <ol style="font-size:14px;color:var(--muted);line-height:1.8;padding-left:22px;">
+        <li><strong style="color:var(--text);">After downloading</strong>, extract the ZIP, then right-click <code style="background:rgba(82,226,255,.08);padding:2px 7px;border-radius:6px;color:var(--cyan);font-size:13px;">ChannelLetters_1.0.20_x64-setup.exe</code> → <strong style="color:var(--text);">Properties</strong> → at the bottom tick <strong style="color:var(--text);">Unblock</strong> → OK. Then double-click to run.</li>
+        <li>If you see <strong style="color:var(--text);">"Windows protected your PC"</strong>: click <strong style="color:var(--text);">More info</strong> → <strong style="color:var(--text);">Run anyway</strong>.</li>
+        <li>If Defender still flags the file: open <strong style="color:var(--text);">Settings → Virus &amp; threat protection → Manage settings → Add or remove exclusions</strong> and add the folder where you install the app.</li>
+      </ol>
+      <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-top:14px;font-style:italic;">A signed Windows build is in the works — these warnings will disappear once the certificate is in place.</p>
     </div>
     <p style="text-align:center;color:var(--muted);font-size:15px;line-height:1.7;max-width:560px;margin:32px auto 0;">
       This app is a solo project built with care. If you find it useful and decide to subscribe, it means a lot — your support allows me to keep improving the app and adding new features over time.
@@ -825,7 +851,7 @@ footer p{ color:var(--muted); font-size:13px; }
       <!-- 01 TERMS OF SERVICE -->
       <article id="legal-terms" class="legal-card reveal">
         <h3><span class="legal-num">01</span>Terms of Service</h3>
-        <p class="legal-sub">These terms govern your use of 3D Channel Letters (the “Software”), a desktop application for macOS that generates 3D-printable STL files from DXF or SVG vector input for the production of illuminated channel letters. By downloading, installing, or using the Software, you agree to these terms.</p>
+        <p class="legal-sub">These terms govern your use of 3D Channel Letters (the “Software”), a desktop application for macOS and Windows that generates 3D-printable STL files from DXF or SVG vector input for the production of illuminated channel letters. By downloading, installing, or using the Software, you agree to these terms.</p>
 
         <h4>Provider</h4>
         <p>The Software is developed and provided by <strong>Miloš Kráľ</strong>, an individual sole developer based in the Slovak Republic, European Union.</p>
