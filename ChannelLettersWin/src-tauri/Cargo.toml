@@ -1,6 +1,6 @@
 [package]
 name = "channelletters"
-version = "1.0.15"
+version = "1.0.26"
 description = "ChannelLetters — DXF to STL for illuminated channel letters"
 authors = ["Miloš Kráľ <kralmilos@gmail.com>"]
 edition = "2021"
