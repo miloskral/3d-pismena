@@ -394,6 +394,28 @@ footer p{ color:var(--muted); font-size:13px; }
   .legal-card h3{ font-size:22px; }
   .legal-meta{ grid-template-columns:1fr; }
 }
+
+.visit-counter{
+  display:inline-flex; align-items:center; gap:10px;
+  padding:7px 14px; border-radius:999px;
+  background:rgba(82,226,255,.06);
+  border:1px solid rgba(82,226,255,.18);
+  font-size:12px; color:var(--muted); font-weight:600;
+  letter-spacing:.4px;
+}
+.visit-counter .visit-dot{
+  width:7px; height:7px; border-radius:50%;
+  background:var(--cyan); box-shadow:0 0 8px var(--cyan);
+  animation:visit-pulse 2s ease-in-out infinite;
+}
+.visit-counter img{ height:18px; vertical-align:middle; display:block; }
+@keyframes visit-pulse{
+  0%,100%{ opacity:1; transform:scale(1); }
+  50%{ opacity:.5; transform:scale(.85); }
+}
+@media(max-width:720px){
+  .visit-counter{ font-size:11px; padding:6px 11px; }
+}
 </style>
 </head>
 <body>
@@ -1029,6 +1051,11 @@ footer p{ color:var(--muted); font-size:13px; }
     <div class="footer-logo">
       <img src="ikonka.png" alt="3D Channel Letters logo">
       <strong>3D Channel Letters</strong>
+    </div>
+    <div class="visit-counter" title="Total visits to lumisign3d.com">
+      <span class="visit-dot"></span>
+      <span>Visitors</span>
+      <img src="https://hits.sh/lumisign3d.com.svg?style=flat-square&label=&color=52e2ff&labelColor=09131d" alt="Visit count">
     </div>
     <div class="footer-bottom" style="display:flex;align-items:center;gap:32px;">
       <div class="footer-links">
