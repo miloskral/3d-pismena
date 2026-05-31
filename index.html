@@ -408,7 +408,7 @@ footer p{ color:var(--muted); font-size:13px; }
   background:var(--cyan); box-shadow:0 0 8px var(--cyan);
   animation:visit-pulse 2s ease-in-out infinite;
 }
-.visit-counter img{ height:18px; vertical-align:middle; display:block; }
+.visit-counter .visit-count{ color:var(--cyan); font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:.5px; }
 @keyframes visit-pulse{
   0%,100%{ opacity:1; transform:scale(1); }
   50%{ opacity:.5; transform:scale(.85); }
@@ -1052,10 +1052,10 @@ footer p{ color:var(--muted); font-size:13px; }
       <img src="ikonka.png" alt="3D Channel Letters logo">
       <strong>3D Channel Letters</strong>
     </div>
-    <div class="visit-counter" title="Total visits to lumisign3d.com">
+    <div class="visit-counter" id="visitCounter" title="Unique visitors to lumisign3d.com" style="display:none;">
       <span class="visit-dot"></span>
       <span>Visitors</span>
-      <img src="https://hits.sh/lumisign3d.com.svg?style=flat-square&label=&color=52e2ff&labelColor=09131d" alt="Visit count">
+      <span class="visit-count" id="visitCount">--</span>
     </div>
     <div class="footer-bottom" style="display:flex;align-items:center;gap:32px;">
       <div class="footer-links">
@@ -1080,6 +1080,32 @@ const obs = new IntersectionObserver(entries => {
 }, { threshold: 0.08 });
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 document.querySelectorAll('.feature-card').forEach((c, i) => c.style.transitionDelay = (i * .07) + 's');
+
+/* ---------- Visit counter (once per browser per day) ---------- */
+(function(){
+  const NS = 'lumisign3d';
+  const NAME = 'visits';
+  const STORAGE_KEY = 'lumisign_visit_counted';
+  const today = new Date().toISOString().slice(0, 10);
+  const alreadyCountedToday = localStorage.getItem(STORAGE_KEY) === today;
+  const endpoint = alreadyCountedToday
+    ? `https://api.counterapi.dev/v1/${NS}/${NAME}`
+    : `https://api.counterapi.dev/v1/${NS}/${NAME}/up`;
+
+  fetch(endpoint, { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(data => {
+      const count = (data && (data.count ?? data.value)) || 0;
+      const el = document.getElementById('visitCount');
+      const wrap = document.getElementById('visitCounter');
+      if (!el || !wrap) return;
+      el.textContent = count.toLocaleString('en-US');
+      wrap.style.display = 'inline-flex';
+      if (!alreadyCountedToday) localStorage.setItem(STORAGE_KEY, today);
+    })
+    .catch(() => { /* silently hide on failure */ });
+})();
+
 document.querySelectorAll('.screenshot-card').forEach((c, i) => c.style.transitionDelay = (i * .06) + 's');
 </script>
 </body>
