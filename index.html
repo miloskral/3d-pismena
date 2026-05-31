@@ -1081,18 +1081,16 @@ const obs = new IntersectionObserver(entries => {
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 document.querySelectorAll('.feature-card').forEach((c, i) => c.style.transitionDelay = (i * .07) + 's');
 
-/* ---------- Visit counter (cached, refresh-safe) ---------- */
+/* ---------- Visit counter (shared total via /api/visits + Vercel KV) ---------- */
 (function(){
-  const NS = 'lumisign3d';
-  const NAME = 'visits';
-  const STORAGE_KEY = 'lumisign_visit_v2';
+  const STORAGE_KEY = 'lumisign_visit_v3';
   const today = new Date().toISOString().slice(0, 10);
 
   const wrap = document.getElementById('visitCounter');
   const el = document.getElementById('visitCount');
   if (!wrap || !el) return;
 
-  // Read cached count (if any) and show it immediately so the badge never disappears.
+  // Show last known value instantly so the badge never flickers.
   let cached = null;
   try { cached = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); } catch(e) {}
   if (cached && typeof cached.count === 'number') {
@@ -1100,21 +1098,21 @@ document.querySelectorAll('.feature-card').forEach((c, i) => c.style.transitionD
     wrap.style.display = 'inline-flex';
   }
 
-  const alreadyCountedToday = cached && cached.date === today;
+  // Count this visitor at most once per day; otherwise just read the shared total.
+  const countedToday = cached && cached.date === today;
+  const url = '/api/visits' + (countedToday ? '' : '?hit=1');
 
-  // Only hit the API on the first view of the day, to avoid inflating the count on refreshes.
-  if (!alreadyCountedToday) {
-    fetch(`https://api.counterapi.dev/v1/${NS}/${NAME}/up`, { cache: 'no-store' })
-      .then(r => r.ok ? r.json() : Promise.reject())
-      .then(data => {
-        const count = data && (data.count ?? data.value);
-        if (typeof count !== 'number') return;
-        el.textContent = count.toLocaleString('en-US');
-        wrap.style.display = 'inline-flex';
-        try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ count, date: today })); } catch(e) {}
-      })
-      .catch(() => { /* keep cached value visible if there was one */ });
-  }
+  // ALWAYS fetch the shared total from the server, so every device shows the same number.
+  fetch(url, { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(data => {
+      const count = data && data.count;
+      if (typeof count !== 'number') return;
+      el.textContent = count.toLocaleString('en-US');
+      wrap.style.display = 'inline-flex';
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ count, date: today })); } catch(e) {}
+    })
+    .catch(() => { /* keep cached value visible if there was one */ });
 })();
 
 document.querySelectorAll('.screenshot-card').forEach((c, i) => c.style.transitionDelay = (i * .06) + 's');
