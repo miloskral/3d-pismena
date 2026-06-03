@@ -832,6 +832,22 @@ footer p{ color:var(--muted); font-size:13px; }
 
     </div>
 
+    <!-- PAYMENT BUTTONS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:640px;margin:0 auto 40px;" class="reveal">
+      <a href="https://paypal.me/miloskral1/5EUR" target="_blank" rel="noopener" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:28px 20px;background:linear-gradient(160deg,rgba(0,48,135,0.18),rgba(0,156,222,0.08));border:1px solid rgba(0,156,222,0.35);border-radius:16px;text-decoration:none;color:#fff;transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;">
+        <div style="font-size:13px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;">Option 1</div>
+        <div style="font-size:24px;font-weight:700;color:#fff;">Pay with PayPal</div>
+        <div style="font-size:14px;color:var(--muted);">@miloskral1 &middot; €5.00</div>
+        <div style="margin-top:6px;padding:10px 22px;background:#0070ba;color:#fff;border-radius:999px;font-weight:600;font-size:14px;">Open PayPal →</div>
+      </a>
+      <a href="https://revolut.me/milosl11f/5EUR" target="_blank" rel="noopener" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:28px 20px;background:linear-gradient(160deg,rgba(20,20,30,0.6),rgba(40,40,55,0.3));border:1px solid rgba(255,255,255,0.18);border-radius:16px;text-decoration:none;color:#fff;transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;">
+        <div style="font-size:13px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;">Option 2</div>
+        <div style="font-size:24px;font-weight:700;color:#fff;">Pay with Revolut</div>
+        <div style="font-size:14px;color:var(--muted);">@milosl11f &middot; €5.00</div>
+        <div style="margin-top:6px;padding:10px 22px;background:#fff;color:#000;border-radius:999px;font-weight:600;font-size:14px;">Open Revolut →</div>
+      </a>
+    </div>
+
     <!-- EMAIL BUTTON -->
     <div style="text-align:center;margin-bottom:48px;" class="reveal">
       <a href="mailto:kralmilos@gmail.com?subject=License%20Key%20Request%20%E2%80%94%203D%20Channel%20Letters&body=Hi%20Milos%2C%0A%0AI%20would%20like%20to%20request%20a%20license%20key%20for%203D%20Channel%20Letters.%0A%0AMy%20Mac%20Hardware%20ID%3A%20%5BPASTE%20YOUR%20HARDWARE%20ID%20HERE%5D%0A%0APayment%20confirmation%3A%20%5BATTACH%20SCREENSHOT%5D%0A%0AThank%20you!" class="btn btn-primary btn-lg">✉ Send License Request</a>
@@ -1081,16 +1097,18 @@ const obs = new IntersectionObserver(entries => {
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 document.querySelectorAll('.feature-card').forEach((c, i) => c.style.transitionDelay = (i * .07) + 's');
 
-/* ---------- Visit counter (shared total via /api/visits + Vercel KV) ---------- */
+/* ---------- Visit counter (cached, refresh-safe) ---------- */
 (function(){
-  const STORAGE_KEY = 'lumisign_visit_v3';
+  const NS = 'lumisign3d';
+  const NAME = 'visits';
+  const STORAGE_KEY = 'lumisign_visit_v2';
   const today = new Date().toISOString().slice(0, 10);
 
   const wrap = document.getElementById('visitCounter');
   const el = document.getElementById('visitCount');
   if (!wrap || !el) return;
 
-  // Show last known value instantly so the badge never flickers.
+  // Read cached count (if any) and show it immediately so the badge never disappears.
   let cached = null;
   try { cached = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); } catch(e) {}
   if (cached && typeof cached.count === 'number') {
@@ -1098,21 +1116,21 @@ document.querySelectorAll('.feature-card').forEach((c, i) => c.style.transitionD
     wrap.style.display = 'inline-flex';
   }
 
-  // Count this visitor at most once per day; otherwise just read the shared total.
-  const countedToday = cached && cached.date === today;
-  const url = '/api/visits' + (countedToday ? '' : '?hit=1');
+  const alreadyCountedToday = cached && cached.date === today;
 
-  // ALWAYS fetch the shared total from the server, so every device shows the same number.
-  fetch(url, { cache: 'no-store' })
-    .then(r => r.ok ? r.json() : Promise.reject())
-    .then(data => {
-      const count = data && data.count;
-      if (typeof count !== 'number') return;
-      el.textContent = count.toLocaleString('en-US');
-      wrap.style.display = 'inline-flex';
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ count, date: today })); } catch(e) {}
-    })
-    .catch(() => { /* keep cached value visible if there was one */ });
+  // Only hit the API on the first view of the day, to avoid inflating the count on refreshes.
+  if (!alreadyCountedToday) {
+    fetch(`https://api.counterapi.dev/v1/${NS}/${NAME}/up`, { cache: 'no-store' })
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(data => {
+        const count = data && (data.count ?? data.value);
+        if (typeof count !== 'number') return;
+        el.textContent = count.toLocaleString('en-US');
+        wrap.style.display = 'inline-flex';
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ count, date: today })); } catch(e) {}
+      })
+      .catch(() => { /* keep cached value visible if there was one */ });
+  }
 })();
 
 document.querySelectorAll('.screenshot-card').forEach((c, i) => c.style.transitionDelay = (i * .06) + 's');
