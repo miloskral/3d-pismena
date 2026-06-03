@@ -1101,6 +1101,7 @@ document.querySelectorAll('.feature-card').forEach((c, i) => c.style.transitionD
 (function(){
   const NS = 'lumisign3d';
   const NAME = 'visits';
+  const BASELINE = 100;  // pre-counter visitors, added to API count
   const STORAGE_KEY = 'lumisign_visit_v2';
   const today = new Date().toISOString().slice(0, 10);
 
@@ -1112,7 +1113,7 @@ document.querySelectorAll('.feature-card').forEach((c, i) => c.style.transitionD
   let cached = null;
   try { cached = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); } catch(e) {}
   if (cached && typeof cached.count === 'number') {
-    el.textContent = cached.count.toLocaleString('en-US');
+    el.textContent = (cached.count + BASELINE).toLocaleString('en-US');
     wrap.style.display = 'inline-flex';
   }
 
@@ -1125,7 +1126,7 @@ document.querySelectorAll('.feature-card').forEach((c, i) => c.style.transitionD
       .then(data => {
         const count = data && (data.count ?? data.value);
         if (typeof count !== 'number') return;
-        el.textContent = count.toLocaleString('en-US');
+        el.textContent = (count + BASELINE).toLocaleString('en-US');
         wrap.style.display = 'inline-flex';
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ count, date: today })); } catch(e) {}
       })
