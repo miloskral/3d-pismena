@@ -99,28 +99,34 @@ fn main() {
             }
         })
         .setup(move |app| {
-            // Build the application menu.  The "Copy this PC's Hardware ID"
-            // item is the Windows mirror of the macOS App.swift entry — it
-            // lets the buyer copy their MachineGuid to the clipboard before
-            // emailing it to us for license generation.
+            // v1.0.29 — menu sa nastaví ako predtým (zachovaná funkčnosť +
+            // keyboard shortcuts), ale samotný menu bar je pri štarte
+            // SCHOVANÝ (`hide_menu()` nižšie). Funkcie zostávajú prístupné:
+            //   • Ctrl+Shift+L  → Enter License Key
+            //   • Ctrl+Shift+I  → Copy this PC's Hardware ID
+            //   • Alt           → dočasne zobrazí menu bar (Windows konvencia)
+            // Title bar s "ChannelLetters" zostáva (natívny Windows), sivý
+            // dvojitý pás pod ním zmizne.
             let hw_for_menu = hw_uuid.clone();
 
-            let copy_hwid =
-                MenuItem::with_id(app, "copy-hwid", "Copy this PC's Hardware ID", true, None::<&str>)?;
-            let enter_license =
-                MenuItem::with_id(app, "enter-license", "Enter License Key…", true, Some("CmdOrCtrl+Shift+L"))?;
-            let about =
-                MenuItem::with_id(app, "about", "About ChannelLetters", true, None::<&str>)?;
-            let separator = PredefinedMenuItem::separator(app)?;
+            let copy_hwid = MenuItem::with_id(
+                app,
+                "copy-hwid",
+                "Copy this PC's Hardware ID",
+                true,
+                Some("CmdOrCtrl+Shift+I"),
+            )?;
+            let enter_license = MenuItem::with_id(
+                app,
+                "enter-license",
+                "Enter License Key…",
+                true,
+                Some("CmdOrCtrl+Shift+L"),
+            )?;
+            let about = MenuItem::with_id(app, "about", "About ChannelLetters", true, None::<&str>)?;
             let quit = PredefinedMenuItem::quit(app, Some("Quit"))?;
 
-            let app_menu = Submenu::with_items(
-                app,
-                "ChannelLetters",
-                true,
-                &[&about, &separator, &enter_license, &copy_hwid, &separator, &quit],
-            )?;
-            let menu = Menu::with_items(app, &[&app_menu])?;
+            let menu = Menu::with_items(app, &[&enter_license, &copy_hwid, &about, &quit])?;
             app.set_menu(menu)?;
 
             // Build the main window with our custom protocol.
@@ -134,6 +140,9 @@ fn main() {
                 .initialization_script(&init_script)
                 .initialization_script(dl_bridge)
                 .build()?;
+
+            // v1.0.29 — schovaj menu bar (Alt ho znova zobrazí).
+            let _ = win.hide_menu();
 
             // Wire menu actions.
             let hw_clone = hw_for_menu.clone();
