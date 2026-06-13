@@ -7,8 +7,13 @@
 
 import { kv } from '@vercel/kv';
 
-// Carried over from the previous counter (counterapi.dev) on 2026-05-31.
-const BASE = 40;
+// Baseline for first-run seed (and the floor below which the counter is
+// auto-reset, so a re-platform from counterapi.dev → Vercel KV doesn't make
+// the displayed number drop). On 2026-05-31 we migrated from counterapi.dev;
+// on 2026-06-13 we unified the homepage onto this endpoint and re-baselined
+// to 418 (= the value the old counterapi.dev-based counter was showing on
+// the day of the cut-over, so visitors don't see a regression).
+const BASE = 418;
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -24,7 +29,10 @@ export default async function handler(req, res) {
   const key = 'visits:total';
   try {
     let count = await kv.get(key);
-    if (typeof count !== 'number') {     // first run: seed with carried-over total
+    if (typeof count !== 'number' || count < BASE) {
+      // First run, or BASE was bumped (e.g. cut-over from another counter
+      // backend). Seed/floor the stored value so the displayed number can
+      // never go BACKWARDS — visitors expect monotonic growth.
       count = BASE;
       await kv.set(key, count);
     }
