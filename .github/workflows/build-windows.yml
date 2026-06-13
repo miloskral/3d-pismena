@@ -47,20 +47,45 @@ jobs:
       - name: Install ImageMagick (for icon conversion)
         run: choco install imagemagick.app -y --no-progress
 
-      # The cargo target/ folder is cached between runs, which means stale
-      # installer EXEs from previous versions (e.g. ChannelLetters_1.0.30_x64-setup.exe)
-      # accumulate in bundle/nsis/. The upload step globs *.exe so old files
-      # leak into the artifact ZIP. Wipe bundle/ before each build so only the
-      # installer for THIS commit's version ends up in the artifact.
-      - name: Clean stale installers from cache
+      # The cargo target/ folder is cached between runs. Two things go stale:
+      #
+      # 1. bundle/nsis/*.exe — old installer EXEs accumulate; the upload step
+      #    globs *.exe so old versions leak into the artifact ZIP.
+      #
+      # 2. target/release/channelletters.exe (and incremental/) — cargo's
+      #    incremental compiler tracks source file mtimes, but actions/cache@v4
+      #    restores all files with the SAME mtime, so cargo thinks the source
+      #    hasn't changed and reuses the cached binary. That binary has the
+      #    OLD .enc bundle baked in via include_bytes!, so even though the
+      #    new .enc is on disk, the user sees v1.0.31 (or whatever the
+      #    cached build was). Wipe these so cargo recompiles fresh.
+      - name: Clean stale build artifacts from cache
         shell: pwsh
         run: |
-          $bundleDir = "ChannelLettersWin/src-tauri/target/x86_64-pc-windows-msvc/release/bundle"
+          $targetDir = "ChannelLettersWin/src-tauri/target/x86_64-pc-windows-msvc/release"
+          $bundleDir = "$targetDir/bundle"
           if (Test-Path $bundleDir) {
             Remove-Item -Recurse -Force $bundleDir
-            Write-Host "Removed stale $bundleDir from cache"
-          } else {
-            Write-Host "No stale bundle/ to clean (fresh runner)"
+            Write-Host "Removed stale bundle/"
+          }
+          # Force a fresh compile of the channelletters crate so the new
+          # channel-letters.enc is re-embedded via include_bytes!.
+          $exePath = "$targetDir/channelletters.exe"
+          if (Test-Path $exePath) {
+            Remove-Item -Force $exePath
+            Write-Host "Removed cached channelletters.exe"
+          }
+          $depsDir = "$targetDir/deps"
+          if (Test-Path $depsDir) {
+            Get-ChildItem -Path $depsDir -Filter "channelletters*" -ErrorAction SilentlyContinue | ForEach-Object {
+              Remove-Item -Force $_.FullName
+              Write-Host "Removed cached dep $($_.Name)"
+            }
+          }
+          $incDir = "$targetDir/incremental"
+          if (Test-Path $incDir) {
+            Remove-Item -Recurse -Force $incDir
+            Write-Host "Removed incremental/ cache"
           }
 
       - name: Generate .ico icon + logo.png from existing repo icon
