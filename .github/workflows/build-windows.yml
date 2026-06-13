@@ -47,6 +47,22 @@ jobs:
       - name: Install ImageMagick (for icon conversion)
         run: choco install imagemagick.app -y --no-progress
 
+      # The cargo target/ folder is cached between runs, which means stale
+      # installer EXEs from previous versions (e.g. ChannelLetters_1.0.30_x64-setup.exe)
+      # accumulate in bundle/nsis/. The upload step globs *.exe so old files
+      # leak into the artifact ZIP. Wipe bundle/ before each build so only the
+      # installer for THIS commit's version ends up in the artifact.
+      - name: Clean stale installers from cache
+        shell: pwsh
+        run: |
+          $bundleDir = "ChannelLettersWin/src-tauri/target/x86_64-pc-windows-msvc/release/bundle"
+          if (Test-Path $bundleDir) {
+            Remove-Item -Recurse -Force $bundleDir
+            Write-Host "Removed stale $bundleDir from cache"
+          } else {
+            Write-Host "No stale bundle/ to clean (fresh runner)"
+          }
+
       - name: Generate .ico icon + logo.png from existing repo icon
         shell: pwsh
         run: |
@@ -64,7 +80,7 @@ jobs:
           New-Item -ItemType Directory -Force -Path (Split-Path $dstLogo) | Out-Null
           magick "$src" -resize 64x64 "$dstLogo"
 
-      - name: Build Tauri app (Release, NSIS + MSI)
+      - name: Build Tauri app (Release, NSIS)
         working-directory: ChannelLettersWin
         run: cargo tauri build --target x86_64-pc-windows-msvc
 
@@ -85,9 +101,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ChannelLetters-windows
-          path: |
-            ChannelLettersWin/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe
-            ChannelLettersWin/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/msi/*.msi
+          path: ChannelLettersWin/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe
 
       # Optional: when pushed to main, also attach to a draft GitHub release.
       - name: Attach to draft release
@@ -97,8 +111,6 @@ jobs:
           tag_name: win-v${{ github.run_number }}
           name: Windows build v${{ github.run_number }}
           draft: true
-          files: |
-            ChannelLettersWin/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe
-            ChannelLettersWin/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/msi/*.msi
+          files: ChannelLettersWin/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
