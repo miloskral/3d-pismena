@@ -416,6 +416,45 @@ footer p{ color:var(--muted); font-size:13px; }
 @media(max-width:720px){
   .visit-counter{ font-size:11px; padding:6px 11px; }
 }
+
+/* ===== LANGUAGE SWITCHER ===== */
+.lang-switch{ position:relative; }
+.lang-btn{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:9px 13px; border-radius:12px; cursor:pointer;
+  background:rgba(82,226,255,0.04); border:1px solid rgba(82,226,255,0.18);
+  color:var(--text); font-family:Inter,sans-serif; font-size:13px; font-weight:600;
+  transition:.2s;
+}
+.lang-btn:hover{ background:rgba(82,226,255,0.1); border-color:rgba(82,226,255,0.35); }
+.lang-btn .lang-flag{ font-size:15px; line-height:1; }
+.lang-btn .lang-caret{ font-size:9px; color:var(--muted); transition:transform .2s; }
+.lang-switch.open .lang-btn .lang-caret{ transform:rotate(180deg); }
+.lang-menu{
+  position:absolute; top:calc(100% + 8px); right:0;
+  min-width:190px; max-height:70vh; overflow-y:auto;
+  background:rgba(4,11,18,0.97); backdrop-filter:blur(20px);
+  border:1px solid var(--border); border-radius:14px;
+  box-shadow:0 20px 50px rgba(0,0,0,.55),0 0 24px rgba(82,226,255,.08);
+  padding:6px; z-index:2000;
+  opacity:0; visibility:hidden; transform:translateY(-6px); transition:.18s;
+}
+.lang-switch.open .lang-menu{ opacity:1; visibility:visible; transform:translateY(0); }
+.lang-opt{
+  display:flex; align-items:center; gap:11px; width:100%;
+  padding:10px 12px; border-radius:10px; cursor:pointer;
+  background:none; border:none; text-align:left;
+  color:var(--muted); font-family:Inter,sans-serif; font-size:14px; font-weight:500;
+  transition:.15s;
+}
+.lang-opt:hover{ background:rgba(82,226,255,0.07); color:var(--text); }
+.lang-opt.active{ color:var(--cyan); background:rgba(82,226,255,0.06); }
+.lang-opt .lang-flag{ font-size:17px; line-height:1; }
+.lang-opt .lang-check{ margin-left:auto; color:var(--cyan); font-size:12px; opacity:0; }
+.lang-opt.active .lang-check{ opacity:1; }
+@media(max-width:700px){
+  .lang-btn .lang-name{ display:none; }
+}
 </style>
 </head>
 <body>
@@ -427,16 +466,24 @@ footer p{ color:var(--muted); font-size:13px; }
       <img src="ikonka.png" alt="3D Channel Letters logo">
       <div>
         <strong>3D Channel Letters</strong>
-        <span>Professional illuminated letter software</span>
+        <span data-i18n="nav.tagline">Professional illuminated letter software</span>
       </div>
     </a>
     <div class="nav-links">
-      <a href="#features" class="nav-link">Features</a>
-      <a href="#legal" class="nav-link">Terms</a>
+      <a href="#features" class="nav-link" data-i18n="nav.features">Features</a>
+      <a href="#legal" class="nav-link" data-i18n="nav.terms">Terms</a>
       <a href="https://www.instagram.com/channelletters.app/" target="_blank" rel="noopener" class="nav-link" title="Instagram @channelletters.app" style="display:inline-flex;align-items:center;gap:6px;">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
       </a>
-      <a href="#download" class="btn btn-primary">Download</a>
+      <div class="lang-switch" id="langSwitch">
+        <button class="lang-btn" id="langBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Select language">
+          <span class="lang-flag" id="langCurrentFlag">🇬🇧</span>
+          <span class="lang-name" id="langCurrentName">EN</span>
+          <span class="lang-caret">▼</span>
+        </button>
+        <div class="lang-menu" id="langMenu" role="menu"></div>
+      </div>
+      <a href="#download" class="btn btn-primary" data-i18n="nav.download">Download</a>
     </div>
   </div>
 </nav>
@@ -445,12 +492,12 @@ footer p{ color:var(--muted); font-size:13px; }
 <section class="hero">
   <div class="hero-inner">
     <div class="hero-content">
-      <div class="badge"><span class="badge-dot"></span>v1.0.30 · Bug fixes & stability improvements</div>
-      <h1>Generate <span class="glow">3D illuminated</span> channel letters for signage</h1>
-      <p>Professional desktop software for producing illuminated advertising letters using 3D printing. Import a <strong style="color:var(--text)">DXF or SVG</strong> file and export a print-ready STL in seconds.</p>
+      <div class="badge"><span class="badge-dot"></span><span data-i18n="hero.badge">v1.0.31 · Added languages</span></div>
+      <h1 data-i18n="hero.h1">Generate <span class="glow">3D illuminated</span> channel letters for signage</h1>
+      <p data-i18n="hero.p">Professional desktop software for producing illuminated advertising letters using 3D printing. Import a <strong style="color:var(--text)">DXF or SVG</strong> file and export a print-ready STL in seconds.</p>
       <div class="hero-buttons">
-        <a href="#download" class="btn btn-primary btn-lg">⬇ Download Free Trial</a>
-        <a href="#features" class="btn btn-secondary btn-lg">View Features</a>
+        <a href="#download" class="btn btn-primary btn-lg" data-i18n="hero.btn1">⬇ Download Free Trial</a>
+        <a href="#features" class="btn btn-secondary btn-lg" data-i18n="hero.btn2">View Features</a>
       </div>
     </div>
     <div class="hero-visual">
@@ -459,9 +506,9 @@ footer p{ color:var(--muted); font-size:13px; }
   </div>
   <div class="container">
     <div class="stats-bar">
-      <div class="stat"><strong>3D</strong><span>Real-time Preview</span></div>
-      <div class="stat"><strong>DXF + SVG</strong><span>Vector Import</span></div>
-      <div class="stat"><strong>STL</strong><span>Print-Ready Export</span></div>
+      <div class="stat"><strong>3D</strong><span data-i18n="hero.stat1">Real-time Preview</span></div>
+      <div class="stat"><strong>DXF + SVG</strong><span data-i18n="hero.stat2">Vector Import</span></div>
+      <div class="stat"><strong>STL</strong><span data-i18n="hero.stat3">Print-Ready Export</span></div>
     </div>
   </div>
 </section>
@@ -473,14 +520,14 @@ footer p{ color:var(--muted); font-size:13px; }
       <div style="display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap;">
         <div style="flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:8px 16px;border-radius:999px;background:var(--cyan);color:#001820;font-weight:900;font-size:13px;letter-spacing:.05em;box-shadow:0 0 24px rgba(82,226,255,0.5);">
           <span style="width:8px;height:8px;border-radius:50%;background:#001820;animation:pulse 2s infinite;"></span>
-          Available since v1.0.20
+          <span data-i18n="new.since">Available since v1.0.20</span>
         </div>
         <div style="flex:1 1 320px;">
-          <h3 style="font-size:24px;font-weight:900;letter-spacing:-0.5px;margin-bottom:8px;">Latest features</h3>
-          <p style="color:var(--muted);font-size:15px;line-height:1.65;">The current feature set — six back types, a <strong style="color:var(--text)">Solid front</strong> mode for painted letters, <strong style="color:var(--text)">SVG import</strong> alongside DXF, an automatic <strong style="color:var(--text)">DXF validator</strong>, an interactive <strong style="color:var(--text)">orientation cube</strong> and <strong style="color:var(--text)">explode view</strong>, a third color group for the back, and one-click <strong style="color:var(--text)">STL per object</strong> export.</p>
+          <h3 style="font-size:24px;font-weight:900;letter-spacing:-0.5px;margin-bottom:8px;" data-i18n="new.title">Latest features</h3>
+          <p style="color:var(--muted);font-size:15px;line-height:1.65;" data-i18n="new.desc">The current feature set — six back types, a <strong style="color:var(--text)">Solid front</strong> mode for painted letters, <strong style="color:var(--text)">SVG import</strong> alongside DXF, an automatic <strong style="color:var(--text)">DXF validator</strong>, an interactive <strong style="color:var(--text)">orientation cube</strong> and <strong style="color:var(--text)">explode view</strong>, a third color group for the back, and one-click <strong style="color:var(--text)">STL per object</strong> export.</p>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:24px;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:24px;" data-i18n="new.chips">
         <div style="padding:10px 14px;border-radius:12px;background:rgba(82,226,255,0.06);border:1px solid rgba(82,226,255,0.18);font-size:13px;font-weight:600;color:var(--text);">+ DXF &amp; SVG import</div>
         <div style="padding:10px 14px;border-radius:12px;background:rgba(82,226,255,0.06);border:1px solid rgba(82,226,255,0.18);font-size:13px;font-weight:600;color:var(--text);">+ DXF validator</div>
         <div style="padding:10px 14px;border-radius:12px;background:rgba(82,226,255,0.06);border:1px solid rgba(82,226,255,0.18);font-size:13px;font-weight:600;color:var(--text);">+ Wall inward mode</div>
@@ -499,9 +546,9 @@ footer p{ color:var(--muted); font-size:13px; }
 <section id="features">
   <div class="container">
     <div class="section-title reveal">
-      <div class="section-label">Features</div>
-      <h2>Everything you need</h2>
-      <p>Five dedicated panels — every parameter a sign maker needs, nothing more.</p>
+      <div class="section-label" data-i18n="feat.label">Features</div>
+      <h2 data-i18n="feat.title">Everything you need</h2>
+      <p data-i18n="feat.sub">Five dedicated panels — every parameter a sign maker needs, nothing more.</p>
     </div>
 
     <!-- Row 1 -->
@@ -509,9 +556,9 @@ footer p{ color:var(--muted); font-size:13px; }
       <div class="feature-card reveal" style="display:flex;gap:20px;align-items:flex-start;">
         <div class="feature-icon" style="flex-shrink:0">📂</div>
         <div>
-          <h3>DXF &amp; SVG Import</h3>
-          <p>Load any vector <strong style="color:var(--text)">DXF or SVG</strong> file directly from your CAD or illustration tool. Choose unit scale (millimeters or inches) and set curve tolerance down to 0.05 mm for highly precise geometry. A built-in <strong style="color:var(--text)">DXF validator</strong> automatically detects open contours, micro-segments and other potential issues — every problem is listed with severity (error / warning / info) so you can fix the source file before printing.</p>
-          <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
+          <h3 data-i18n="f1.t">DXF &amp; SVG Import</h3>
+          <p data-i18n="f1.d">Load any vector <strong style="color:var(--text)">DXF or SVG</strong> file directly from your CAD or illustration tool. Choose unit scale (millimeters or inches) and set curve tolerance down to 0.05 mm for highly precise geometry. A built-in <strong style="color:var(--text)">DXF validator</strong> automatically detects open contours, micro-segments and other potential issues — every problem is listed with severity (error / warning / info) so you can fix the source file before printing.</p>
+          <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;" data-i18n="f1.tags">
             <span class="feat-tag">DXF + SVG</span>
             <span class="feat-tag">Unit scale</span>
             <span class="feat-tag">Curve tolerance</span>
@@ -522,9 +569,9 @@ footer p{ color:var(--muted); font-size:13px; }
       <div class="feature-card reveal" style="display:flex;gap:20px;align-items:flex-start;">
         <div class="feature-icon" style="flex-shrink:0">🔮</div>
         <div>
-          <h3>Real-time 3D Preview</h3>
-          <p>The model regenerates <strong style="color:var(--text)">automatically</strong> as soon as you change any parameter — no Generate button to press. An interactive <strong style="color:var(--text)">orientation cube</strong> lets you snap to any standard view with a single click and fit the model to the viewport on double-click. An <strong style="color:var(--text)">explode slider</strong> separates the acrylic and base from the wall so you can inspect how the parts fit together, and you can toggle visibility of walls, acrylic and base independently.</p>
-          <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
+          <h3 data-i18n="f2.t">Real-time 3D Preview</h3>
+          <p data-i18n="f2.d">The model regenerates <strong style="color:var(--text)">automatically</strong> as soon as you change any parameter — no Generate button to press. An interactive <strong style="color:var(--text)">orientation cube</strong> lets you snap to any standard view with a single click and fit the model to the viewport on double-click. An <strong style="color:var(--text)">explode slider</strong> separates the acrylic and base from the wall so you can inspect how the parts fit together, and you can toggle visibility of walls, acrylic and base independently.</p>
+          <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;" data-i18n="f2.tags">
             <span class="feat-tag">Auto-regenerate</span>
             <span class="feat-tag">Orientation cube</span>
             <span class="feat-tag">Explode view</span>
@@ -539,9 +586,9 @@ footer p{ color:var(--muted); font-size:13px; }
     <div class="feat-4col" style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:20px;">
       <div class="feature-card reveal">
         <div class="feature-icon">🧱</div>
-        <h3>Wall Settings</h3>
-        <p>Set the outer wall thickness (default 2 mm) and box depth (default 25 mm). Switch to <strong style="color:var(--text)">Wall inward</strong> mode to make the outer surface of the wall flush with the acrylic outline — ideal when the DXF already represents the finished letter shape. A built-in cross-section diagram shows exactly how the wall, acrylic and tolerances relate to each other.</p>
-        <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
+        <h3 data-i18n="f3.t">Wall Settings</h3>
+        <p data-i18n="f3.d">Set the outer wall thickness (default 2 mm) and box depth (default 25 mm). Switch to <strong style="color:var(--text)">Wall inward</strong> mode to make the outer surface of the wall flush with the acrylic outline — ideal when the DXF already represents the finished letter shape. A built-in cross-section diagram shows exactly how the wall, acrylic and tolerances relate to each other.</p>
+        <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;" data-i18n="f3.tags">
           <span class="feat-tag">Wall thickness</span>
           <span class="feat-tag">Box depth</span>
           <span class="feat-tag">Wall inward mode</span>
@@ -550,9 +597,9 @@ footer p{ color:var(--muted); font-size:13px; }
       </div>
       <div class="feature-card reveal">
         <div class="feature-icon">💎</div>
-        <h3>Acrylic &amp; Rebate</h3>
-        <p>Configure acrylic thickness (3 mm), rebate width (2 mm), clearance around the acrylic (0.2 mm) and inset below the top edge. Or switch on <strong style="color:var(--text)">Solid front (no acrylic)</strong> to produce a fully printed letter — ideal for painted or lacquered signage.</p>
-        <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
+        <h3 data-i18n="f4.t">Acrylic &amp; Rebate</h3>
+        <p data-i18n="f4.d">Configure acrylic thickness (3 mm), rebate width (2 mm), clearance around the acrylic (0.2 mm) and inset below the top edge. Or switch on <strong style="color:var(--text)">Solid front (no acrylic)</strong> to produce a fully printed letter — ideal for painted or lacquered signage.</p>
+        <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;" data-i18n="f4.tags">
           <span class="feat-tag">Acrylic thickness</span>
           <span class="feat-tag">Rebate width</span>
           <span class="feat-tag">Clearance control</span>
@@ -561,9 +608,9 @@ footer p{ color:var(--muted); font-size:13px; }
       </div>
       <div class="feature-card reveal">
         <div class="feature-icon">🔩</div>
-        <h3>Base System — 6 types</h3>
-        <p><strong style="color:var(--text)">W – Open</strong>, <strong style="color:var(--text)">I – Solid</strong>, <strong style="color:var(--text)">S – Snap-in</strong>, <strong style="color:var(--text)">G – Groove</strong> (U-channel with inner + outer lip), <strong style="color:var(--text)">V – Insert</strong> (inner lip, wall slides in from below) and <strong style="color:var(--text)">F – Falc / Rebate</strong> (flat plate seated in a recess at the bottom of the wall). Tune lip heights, lip thickness, rebate depth and back-to-wall clearance. Enable <strong style="color:var(--text)">Print base separately</strong> to export the base as a third independent STL.</p>
-        <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
+        <h3 data-i18n="f5.t">Base System — 6 types</h3>
+        <p data-i18n="f5.d"><strong style="color:var(--text)">W – Open</strong>, <strong style="color:var(--text)">I – Solid</strong>, <strong style="color:var(--text)">S – Snap-in</strong>, <strong style="color:var(--text)">G – Groove</strong> (U-channel with inner + outer lip), <strong style="color:var(--text)">V – Insert</strong> (inner lip, wall slides in from below) and <strong style="color:var(--text)">F – Falc / Rebate</strong> (flat plate seated in a recess at the bottom of the wall). Tune lip heights, lip thickness, rebate depth and back-to-wall clearance. Enable <strong style="color:var(--text)">Print base separately</strong> to export the base as a third independent STL.</p>
+        <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;" data-i18n="f5.tags">
           <span class="feat-tag">W / I / S / G / V / F</span>
           <span class="feat-tag">Groove + Insert + Falc</span>
           <span class="feat-tag">Print base separately</span>
@@ -571,9 +618,9 @@ footer p{ color:var(--muted); font-size:13px; }
       </div>
       <div class="feature-card reveal">
         <div class="feature-icon">🎨</div>
-        <h3>Color System</h3>
-        <p>Three independent color groups — <strong style="color:var(--text)">Wall</strong>, <strong style="color:var(--text)">Acrylic</strong> and <strong style="color:var(--text)">Base</strong>. Eight presets in each group plus a full color picker for any RAL or custom hex value. An opacity slider lets you simulate how the finished letter will look when illuminated.</p>
-        <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
+        <h3 data-i18n="f6.t">Color System</h3>
+        <p data-i18n="f6.d">Three independent color groups — <strong style="color:var(--text)">Wall</strong>, <strong style="color:var(--text)">Acrylic</strong> and <strong style="color:var(--text)">Base</strong>. Eight presets in each group plus a full color picker for any RAL or custom hex value. An opacity slider lets you simulate how the finished letter will look when illuminated.</p>
+        <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;" data-i18n="f6.tags">
           <span class="feat-tag">Wall · Acrylic · Base</span>
           <span class="feat-tag">Custom hex picker</span>
           <span class="feat-tag">Opacity simulation</span>
@@ -586,9 +633,9 @@ footer p{ color:var(--muted); font-size:13px; }
       <div class="feature-card reveal" style="display:flex;gap:20px;align-items:flex-start;">
         <div class="feature-icon" style="flex-shrink:0">📦</div>
         <div>
-          <h3>Triple STL Export</h3>
-          <p>Export <strong style="color:var(--text)">Wall STL</strong> and <strong style="color:var(--text)">Back STL</strong> (when the back is printed separately), plus a one-click <strong style="color:var(--text)">STL per object</strong> that splits a multi-shape DXF into one print-ready file per letter. Every file is FDM-ready — no extra preparation in a slicer is required.</p>
-          <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
+          <h3 data-i18n="f7.t">Triple STL Export</h3>
+          <p data-i18n="f7.d">Export <strong style="color:var(--text)">Wall STL</strong> and <strong style="color:var(--text)">Back STL</strong> (when the back is printed separately), plus a one-click <strong style="color:var(--text)">STL per object</strong> that splits a multi-shape DXF into one print-ready file per letter. Every file is FDM-ready — no extra preparation in a slicer is required.</p>
+          <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;" data-i18n="f7.tags">
             <span class="feat-tag">Wall STL</span>
             <span class="feat-tag">Back STL</span>
             <span class="feat-tag">STL per object</span>
@@ -599,9 +646,9 @@ footer p{ color:var(--muted); font-size:13px; }
       <div class="feature-card reveal" style="display:flex;gap:20px;align-items:flex-start;">
         <div class="feature-icon" style="flex-shrink:0">🔑</div>
         <div>
-          <h3>Offline License</h3>
-          <p>Your license key is stored <strong style="color:var(--text)">locally on your machine</strong> — no account required, no server calls, no data sent anywhere. Paste your key once and STL export is permanently unlocked. The app works fully offline, including on air-gapped production computers.</p>
-          <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;">
+          <h3 data-i18n="f8.t">Offline License</h3>
+          <p data-i18n="f8.d">Your license key is stored <strong style="color:var(--text)">locally on your machine</strong> — no account required, no server calls, no data sent anywhere. Paste your key once and STL export is permanently unlocked. The app works fully offline, including on air-gapped production computers.</p>
+          <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;" data-i18n="f8.tags">
             <span class="feat-tag">No account required</span>
             <span class="feat-tag">Works offline</span>
             <span class="feat-tag">Local key storage</span>
@@ -616,58 +663,58 @@ footer p{ color:var(--muted); font-size:13px; }
 <section>
   <div class="container">
     <div class="section-title reveal">
-      <div class="section-label">Screenshots</div>
-      <h2>Application Screenshots</h2>
-      <p>A look inside the interface — every panel, every parameter.</p>
+      <div class="section-label" data-i18n="shot.label">Screenshots</div>
+      <h2 data-i18n="shot.title">Application Screenshots</h2>
+      <p data-i18n="shot.sub">A look inside the interface — every panel, every parameter.</p>
     </div>
     <div class="screenshots-grid">
       <div class="screenshot-card reveal">
         <img src="screen1.png" alt="SOURCE panel — DXF and SVG import">
         <div class="screenshot-overlay">
-          <div class="screenshot-label">SOURCE — DXF / SVG Import</div>
-          <div class="screenshot-desc">Load any DXF or SVG vector file with one click. The header instantly shows file size and the number of curves detected. Choose unit scale (mm or inches) and tune curve tolerance for the level of precision your geometry needs.</div>
+          <div class="screenshot-label" data-i18n="s1.l">SOURCE — DXF / SVG Import</div>
+          <div class="screenshot-desc" data-i18n="s1.d">Load any DXF or SVG vector file with one click. The header instantly shows file size and the number of curves detected. Choose unit scale (mm or inches) and tune curve tolerance for the level of precision your geometry needs.</div>
         </div>
       </div>
       <div class="screenshot-card reveal">
         <img src="screen2.png" alt="WALLS panel — thickness and depth settings">
         <div class="screenshot-overlay">
-          <div class="screenshot-label">WALLS — Thickness, Depth &amp; Wall Inward</div>
-          <div class="screenshot-desc">Set outer wall thickness and box depth. The built-in cross-section diagram shows exactly how the wall, acrylic and tolerances relate. Switch on <strong style="color:var(--text)">Wall inward (flush with acrylic)</strong> when the DXF already represents the finished letter outline.</div>
+          <div class="screenshot-label" data-i18n="s2.l">WALLS — Thickness, Depth &amp; Wall Inward</div>
+          <div class="screenshot-desc" data-i18n="s2.d">Set outer wall thickness and box depth. The built-in cross-section diagram shows exactly how the wall, acrylic and tolerances relate. Switch on <strong style="color:var(--text)">Wall inward (flush with acrylic)</strong> when the DXF already represents the finished letter outline.</div>
         </div>
       </div>
       <div class="screenshot-card reveal">
         <img src="screen3.png" alt="ACRYLIC panel — rebate parameters">
         <div class="screenshot-overlay">
-          <div class="screenshot-label">ACRYLIC — Rebate &amp; Solid Front</div>
-          <div class="screenshot-desc">Acrylic thickness (3 mm), rebate width (2 mm), clearance around the acrylic (0.2 mm) and inset below the top edge. Or enable <strong style="color:var(--text)">Solid front (no acrylic)</strong> for fully printed letters meant to be painted or lacquered.</div>
+          <div class="screenshot-label" data-i18n="s3.l">ACRYLIC — Rebate &amp; Solid Front</div>
+          <div class="screenshot-desc" data-i18n="s3.d">Acrylic thickness (3 mm), rebate width (2 mm), clearance around the acrylic (0.2 mm) and inset below the top edge. Or enable <strong style="color:var(--text)">Solid front (no acrylic)</strong> for fully printed letters meant to be painted or lacquered.</div>
         </div>
       </div>
       <div class="screenshot-card reveal">
         <img src="screen4.png" alt="BACK panel — cover type selection">
         <div class="screenshot-overlay">
-          <div class="screenshot-label">BACK — 6 types &amp; Explode View</div>
-          <div class="screenshot-desc">Six back types in a single picker: W – Open, I – Solid, S – Snap-in, G – Groove, V – Insert, F – Falc. Tune back thickness, snap-lip height &amp; thickness, and back-to-wall clearance. Use the <strong style="color:var(--text)">Explode</strong> slider to separate parts and inspect the fit before printing.</div>
+          <div class="screenshot-label" data-i18n="s4.l">BACK — 6 types &amp; Explode View</div>
+          <div class="screenshot-desc" data-i18n="s4.d">Six back types in a single picker: W – Open, I – Solid, S – Snap-in, G – Groove, V – Insert, F – Falc. Tune back thickness, snap-lip height &amp; thickness, and back-to-wall clearance. Use the <strong style="color:var(--text)">Explode</strong> slider to separate parts and inspect the fit before printing.</div>
         </div>
       </div>
       <div class="screenshot-card reveal">
         <img src="screen5.png" alt="COLORS panel — wall and acrylic color selection">
         <div class="screenshot-overlay">
-          <div class="screenshot-label">COLORS — Wall · Acrylic · Base</div>
-          <div class="screenshot-desc">Three independent color groups — wall body, translucent acrylic and the back/base. Eight presets in each group plus a full custom-color picker. Show / hide Walls, Acrylic and Base individually in the preview using the <strong style="color:var(--text)">Show</strong> toggles.</div>
+          <div class="screenshot-label" data-i18n="s5.l">COLORS — Wall · Acrylic · Base</div>
+          <div class="screenshot-desc" data-i18n="s5.d">Three independent color groups — wall body, translucent acrylic and the back/base. Eight presets in each group plus a full custom-color picker. Show / hide Walls, Acrylic and Base individually in the preview using the <strong style="color:var(--text)">Show</strong> toggles.</div>
         </div>
       </div>
       <div class="screenshot-card reveal">
-        <img src="screen6.png" alt="Language selection — English, Slovak, German">
+        <img src="screen6.png" alt="Language selection — 11 languages including English, Slovak, German, Czech, Polish, Spanish, Chinese, Russian, French, Italian and Hungarian">
         <div class="screenshot-overlay">
-          <div class="screenshot-label">VIEWPORT — Explode View</div>
-          <div class="screenshot-desc">The <strong style="color:var(--text)">Explode</strong> slider separates the wall, acrylic and back so you can visually verify how the parts fit. An interactive <strong style="color:var(--text)">orientation cube</strong> in the corner snaps to any standard view with a single click — and double-click fits the model to the viewport.</div>
+          <div class="screenshot-label" data-i18n="s6.l">VIEWPORT — Explode View</div>
+          <div class="screenshot-desc" data-i18n="s6.d">The <strong style="color:var(--text)">Explode</strong> slider separates the wall, acrylic and back so you can visually verify how the parts fit. An interactive <strong style="color:var(--text)">orientation cube</strong> in the corner snaps to any standard view with a single click — and double-click fits the model to the viewport.</div>
         </div>
       </div>
       <div class="screenshot-card reveal" style="grid-column:1/-1;">
         <img src="screen7.png" alt="Custom color picker with full spectrum grid" style="max-height:420px;object-fit:cover;object-position:top;">
         <div class="screenshot-overlay">
-          <div class="screenshot-label">LANGUAGES — EN / SK / DE</div>
-          <div class="screenshot-desc">The app is available in <strong style="color:var(--text)">English</strong>, <strong style="color:var(--text)">Slovenčina</strong> and <strong style="color:var(--text)">Deutsch</strong>. Switch languages at any time from the flag dropdown in the top-left corner — every label, tooltip and message follows.</div>
+          <div class="screenshot-label" data-i18n="s7.l">LANGUAGES — 11 LANGUAGES</div>
+          <div class="screenshot-desc" data-i18n="s7.d">The app is available in <strong style="color:var(--text)">English</strong>, <strong style="color:var(--text)">Slovenčina</strong>, <strong style="color:var(--text)">Deutsch</strong>, <strong style="color:var(--text)">Čeština</strong>, <strong style="color:var(--text)">Polski</strong>, <strong style="color:var(--text)">Español</strong>, <strong style="color:var(--text)">中文</strong>, <strong style="color:var(--text)">Русский</strong>, <strong style="color:var(--text)">Français</strong>, <strong style="color:var(--text)">Italiano</strong> and <strong style="color:var(--text)">Magyar</strong>. Switch languages at any time from the flag dropdown in the top-left corner — every label, tooltip and message follows.</div>
         </div>
       </div>
     </div>
@@ -679,28 +726,28 @@ footer p{ color:var(--muted); font-size:13px; }
   <div class="container">
     <div class="workflow reveal">
       <div>
-        <div class="section-label">How it works</div>
-        <h2>From DXF or SVG to STL in 3 steps</h2>
+        <div class="section-label" data-i18n="flow.label">How it works</div>
+        <h2 data-i18n="flow.title">From DXF or SVG to STL in 3 steps</h2>
         <div class="workflow-steps">
           <div class="workflow-step">
             <div class="step-number">01</div>
             <div class="step-content">
-              <h4>Import your DXF or SVG file</h4>
-              <p>Load a vector file from any CAD or illustration tool. Set the unit scale and curve tolerance. The built-in validator immediately flags any open contours, micro-segments or other issues before you print.</p>
+              <h4 data-i18n="flow.s1t">Import your DXF or SVG file</h4>
+              <p data-i18n="flow.s1d">Load a vector file from any CAD or illustration tool. Set the unit scale and curve tolerance. The built-in validator immediately flags any open contours, micro-segments or other issues before you print.</p>
             </div>
           </div>
           <div class="workflow-step">
             <div class="step-number">02</div>
             <div class="step-content">
-              <h4>Configure all parameters</h4>
-              <p>Adjust wall thickness, box depth, acrylic rebate (or switch to a solid top), pick one of six base types, and set wall, acrylic and base colors — every change updates the 3D preview instantly, with no Generate button to press.</p>
+              <h4 data-i18n="flow.s2t">Configure all parameters</h4>
+              <p data-i18n="flow.s2d">Adjust wall thickness, box depth, acrylic rebate (or switch to a solid top), pick one of six base types, and set wall, acrylic and base colors — every change updates the 3D preview instantly, with no Generate button to press.</p>
             </div>
           </div>
           <div class="workflow-step">
             <div class="step-number">03</div>
             <div class="step-content">
-              <h4>Download your STL files</h4>
-              <p>Export the Wall STL, the Base STL (when printed separately) or even one STL per letter from a multi-shape DXF. Every file is ready to slice and print on any FDM printer. The license is verified locally — no internet connection required.</p>
+              <h4 data-i18n="flow.s3t">Download your STL files</h4>
+              <p data-i18n="flow.s3d">Export the Wall STL, the Base STL (when printed separately) or even one STL per letter from a multi-shape DXF. Every file is ready to slice and print on any FDM printer. The license is verified locally — no internet connection required.</p>
             </div>
           </div>
         </div>
@@ -716,23 +763,23 @@ footer p{ color:var(--muted); font-size:13px; }
 <section>
   <div class="container">
     <div class="section-title reveal">
-      <div class="section-label">Pricing</div>
-      <h2>Simple Pricing</h2>
+      <div class="section-label" data-i18n="price.label">Pricing</div>
+      <h2 data-i18n="price.title">Simple Pricing</h2>
     </div>
     <div class="pricing-card reveal">
-      <div class="pricing-badge">14-Day Free Trial</div>
+      <div class="pricing-badge" data-i18n="price.badge">14-Day Free Trial</div>
       <div class="price-amount">5€</div>
-      <div class="price-period">/ month</div>
+      <div class="price-period" data-i18n="price.period">/ month</div>
       <div class="pricing-divider"></div>
       <div class="pricing-features">
-        <div class="pricing-feature">Unlimited STL exports</div>
-        <div class="pricing-feature">Real-time 3D preview</div>
-        <div class="pricing-feature">All six base types · STL per object</div>
-        <div class="pricing-feature">Full custom color system (wall · acrylic · base)</div>
-        <div class="pricing-feature">macOS &amp; Windows</div>
-        <div class="pricing-feature">Offline license — no account required</div>
+        <div class="pricing-feature" data-i18n="price.f1">Unlimited STL exports</div>
+        <div class="pricing-feature" data-i18n="price.f2">Real-time 3D preview</div>
+        <div class="pricing-feature" data-i18n="price.f3">All six base types · STL per object</div>
+        <div class="pricing-feature" data-i18n="price.f4">Full custom color system (wall · acrylic · base)</div>
+        <div class="pricing-feature" data-i18n="price.f5">macOS &amp; Windows</div>
+        <div class="pricing-feature" data-i18n="price.f6">Offline license — no account required</div>
       </div>
-      <a href="#download" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;">⬇ Start Free Trial</a>
+      <a href="#download" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;" data-i18n="price.btn">⬇ Start Free Trial</a>
     </div>
   </div>
 </section>
@@ -741,16 +788,16 @@ footer p{ color:var(--muted); font-size:13px; }
 <section id="download">
   <div class="container">
     <div class="section-title reveal">
-      <div class="section-label">Download</div>
-      <h2>Download the Application</h2>
-      <p>Available for macOS and Windows. Includes a 14-day free trial — no account required.</p>
+      <div class="section-label" data-i18n="dl.label">Download</div>
+      <h2 data-i18n="dl.title">Download the Application</h2>
+      <p data-i18n="dl.sub">Available for macOS and Windows. Includes a 14-day free trial — no account required.</p>
     </div>
     <div class="download-grid reveal" style="max-width:720px;">
-      <a href="ChannelLetters-v1.0.30.dmg" class="download-btn">
+      <a href="ChannelLetters-v1.0.31.dmg" class="download-btn">
         <div class="download-icon"><img src="apple.png" alt="Apple" style="width:26px;height:26px;object-fit:contain;"></div>
         <div class="download-text">
-          <strong>Download for macOS</strong>
-          <span>Apple-signed &amp; notarized · macOS 12.0 or later</span>
+          <strong data-i18n="dl.macT">Download for macOS</strong>
+          <span data-i18n="dl.macS">Apple-signed &amp; notarized · macOS 12.0 or later</span>
         </div>
       </a>
       <a href="ChannelLetters-windows.zip" class="download-btn">
@@ -758,8 +805,8 @@ footer p{ color:var(--muted); font-size:13px; }
           <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="color:var(--cyan);"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/></svg>
         </div>
         <div class="download-text">
-          <strong>Download for Windows</strong>
-          <span>x64 setup · Windows 10 / 11 · See install notes below</span>
+          <strong data-i18n="dl.winT">Download for Windows</strong>
+          <span data-i18n="dl.winS">x64 setup · Windows 10 / 11 · See install notes below</span>
         </div>
       </a>
     </div>
@@ -770,17 +817,17 @@ footer p{ color:var(--muted); font-size:13px; }
         <div style="width:34px;height:34px;border-radius:10px;background:rgba(82,226,255,.08);border:1px solid rgba(82,226,255,.2);display:flex;align-items:center;justify-content:center;color:var(--cyan);">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/></svg>
         </div>
-        <strong style="font-size:17px;color:var(--text);">Windows installation notes</strong>
+        <strong style="font-size:17px;color:var(--text);" data-i18n="dl.winNotesTitle">Windows installation notes</strong>
       </div>
-      <p style="font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:14px;">The Windows build is not yet signed with a code-signing certificate, so Windows SmartScreen and Defender will warn you on first launch. The installer is safe — these steps unblock it:</p>
+      <p style="font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:14px;" data-i18n="dl.winIntro">The Windows build is not yet signed with a code-signing certificate, so Windows SmartScreen and Defender will warn you on first launch. The installer is safe — these steps unblock it:</p>
       <ol style="font-size:14px;color:var(--muted);line-height:1.8;padding-left:22px;">
-        <li><strong style="color:var(--text);">After downloading</strong>, extract the ZIP, then right-click <code style="background:rgba(82,226,255,.08);padding:2px 7px;border-radius:6px;color:var(--cyan);font-size:13px;">ChannelLetters_1.0.30_x64-setup.exe</code> → <strong style="color:var(--text);">Properties</strong> → at the bottom tick <strong style="color:var(--text);">Unblock</strong> → OK. Then double-click to run.</li>
-        <li>If you see <strong style="color:var(--text);">"Windows protected your PC"</strong>: click <strong style="color:var(--text);">More info</strong> → <strong style="color:var(--text);">Run anyway</strong>.</li>
-        <li>If Defender still flags the file: open <strong style="color:var(--text);">Settings → Virus &amp; threat protection → Manage settings → Add or remove exclusions</strong> and add the folder where you install the app.</li>
+        <li data-i18n="dl.winLi1"><strong style="color:var(--text);">After downloading</strong>, extract the ZIP, then right-click <code style="background:rgba(82,226,255,.08);padding:2px 7px;border-radius:6px;color:var(--cyan);font-size:13px;">ChannelLetters_1.0.30_x64-setup.exe</code> → <strong style="color:var(--text);">Properties</strong> → at the bottom tick <strong style="color:var(--text);">Unblock</strong> → OK. Then double-click to run.</li>
+        <li data-i18n="dl.winLi2">If you see <strong style="color:var(--text);">"Windows protected your PC"</strong>: click <strong style="color:var(--text);">More info</strong> → <strong style="color:var(--text);">Run anyway</strong>.</li>
+        <li data-i18n="dl.winLi3">If Defender still flags the file: open <strong style="color:var(--text);">Settings → Virus &amp; threat protection → Manage settings → Add or remove exclusions</strong> and add the folder where you install the app.</li>
       </ol>
-      <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-top:14px;font-style:italic;">A signed Windows build is in the works — these warnings will disappear once the certificate is in place.</p>
+      <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-top:14px;font-style:italic;" data-i18n="dl.winFoot">A signed Windows build is in the works — these warnings will disappear once the certificate is in place.</p>
     </div>
-    <p style="text-align:center;color:var(--muted);font-size:15px;line-height:1.7;max-width:560px;margin:32px auto 0;">
+    <p style="text-align:center;color:var(--muted);font-size:15px;line-height:1.7;max-width:560px;margin:32px auto 0;" data-i18n="dl.support">
       This app is a solo project built with care. If you find it useful and decide to subscribe, it means a lot — your support allows me to keep improving the app and adding new features over time.
     </p>
   </div>
@@ -790,9 +837,9 @@ footer p{ color:var(--muted); font-size:13px; }
 <section>
   <div class="container">
     <div class="section-title reveal">
-      <div class="section-label">Support</div>
-      <h2>How to subscribe</h2>
-      <p>Follow these steps to get your license key.</p>
+      <div class="section-label" data-i18n="sup.label">Support</div>
+      <h2 data-i18n="sup.title">How to subscribe</h2>
+      <p data-i18n="sup.sub">Follow these steps to get your license key.</p>
     </div>
 
     <!-- STEPS -->
@@ -801,32 +848,32 @@ footer p{ color:var(--muted); font-size:13px; }
       <div style="display:flex;gap:18px;padding:22px 0;border-bottom:1px solid var(--border);">
         <div style="width:38px;height:38px;border-radius:11px;background:rgba(82,226,255,.08);border:1px solid rgba(82,226,255,.2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--cyan);flex-shrink:0;">01</div>
         <div>
-          <h4 style="font-size:15px;font-weight:700;margin-bottom:5px;">Copy your Mac Hardware ID</h4>
-          <p style="font-size:13px;color:var(--muted);line-height:1.6;">Open the app, click <strong style="color:var(--text)">3D Channel Letters</strong> in the menu bar, then select <strong style="color:var(--text)">Copy Mac Hardware ID</strong>. This unique ID is needed to generate your personal license key.</p>
+          <h4 style="font-size:15px;font-weight:700;margin-bottom:5px;" data-i18n="sup.s1t">Copy your Mac Hardware ID</h4>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;" data-i18n="sup.s1d">Open the app, click <strong style="color:var(--text)">3D Channel Letters</strong> in the menu bar, then select <strong style="color:var(--text)">Copy Mac Hardware ID</strong>. This unique ID is needed to generate your personal license key.</p>
         </div>
       </div>
 
       <div style="display:flex;gap:18px;padding:22px 0;border-bottom:1px solid var(--border);">
         <div style="width:38px;height:38px;border-radius:11px;background:rgba(82,226,255,.08);border:1px solid rgba(82,226,255,.2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--cyan);flex-shrink:0;">02</div>
         <div>
-          <h4 style="font-size:15px;font-weight:700;margin-bottom:5px;">Send a payment of €5</h4>
-          <p style="font-size:13px;color:var(--muted);line-height:1.6;">Click <strong style="color:var(--text);">Pay with PayPal</strong> or <strong style="color:var(--text);">Pay with Revolut</strong> below — each button opens your payment app with the amount pre-filled. You can also search the usernames manually in the app.</p>
+          <h4 style="font-size:15px;font-weight:700;margin-bottom:5px;" data-i18n="sup.s2t">Send a payment of €5</h4>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;" data-i18n="sup.s2d">Click <strong style="color:var(--text);">Pay with PayPal</strong> or <strong style="color:var(--text);">Pay with Revolut</strong> below — each button opens your payment app with the amount pre-filled. You can also search the usernames manually in the app.</p>
         </div>
       </div>
 
       <div style="display:flex;gap:18px;padding:22px 0;border-bottom:1px solid var(--border);">
         <div style="width:38px;height:38px;border-radius:11px;background:rgba(82,226,255,.08);border:1px solid rgba(82,226,255,.2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--cyan);flex-shrink:0;">03</div>
         <div>
-          <h4 style="font-size:15px;font-weight:700;margin-bottom:5px;">Send your Hardware ID and payment confirmation</h4>
-          <p style="font-size:13px;color:var(--muted);line-height:1.6;">Click the button below to open a pre-filled email. Paste your <strong style="color:var(--text)">Mac Hardware ID</strong> and attach a screenshot or confirmation of your payment. Send it to <strong style="color:var(--cyan)">kralmilos@gmail.com</strong>.</p>
+          <h4 style="font-size:15px;font-weight:700;margin-bottom:5px;" data-i18n="sup.s3t">Send your Hardware ID and payment confirmation</h4>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;" data-i18n="sup.s3d">Click the button below to open a pre-filled email. Paste your <strong style="color:var(--text)">Mac Hardware ID</strong> and attach a screenshot or confirmation of your payment. Send it to <strong style="color:var(--cyan)">kralmilos@gmail.com</strong>.</p>
         </div>
       </div>
 
       <div style="display:flex;gap:18px;padding:22px 0;">
         <div style="width:38px;height:38px;border-radius:11px;background:rgba(82,226,255,.08);border:1px solid rgba(82,226,255,.2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--cyan);flex-shrink:0;">04</div>
         <div>
-          <h4 style="font-size:15px;font-weight:700;margin-bottom:5px;">Receive your license key</h4>
-          <p style="font-size:13px;color:var(--muted);line-height:1.6;">Once I verify your payment and Hardware ID, I will generate your personal license key and send it to your email within <strong style="color:var(--text)">24 hours</strong>. Paste it into the app and STL export is permanently unlocked.</p>
+          <h4 style="font-size:15px;font-weight:700;margin-bottom:5px;" data-i18n="sup.s4t">Receive your license key</h4>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;" data-i18n="sup.s4d">Once I verify your payment and Hardware ID, I will generate your personal license key and send it to your email within <strong style="color:var(--text)">24 hours</strong>. Paste it into the app and STL export is permanently unlocked.</p>
         </div>
       </div>
 
@@ -835,31 +882,31 @@ footer p{ color:var(--muted); font-size:13px; }
     <!-- PAYMENT BUTTONS -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:640px;margin:0 auto 40px;" class="reveal">
       <a href="https://paypal.me/miloskral1/5EUR" target="_blank" rel="noopener" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:28px 20px;background:linear-gradient(160deg,rgba(0,48,135,0.18),rgba(0,156,222,0.08));border:1px solid rgba(0,156,222,0.35);border-radius:16px;text-decoration:none;color:#fff;transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;">
-        <div style="font-size:13px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;">Option 1</div>
-        <div style="font-size:24px;font-weight:700;color:#fff;">Pay with PayPal</div>
+        <div style="font-size:13px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;" data-i18n="pay.opt1">Option 1</div>
+        <div style="font-size:24px;font-weight:700;color:#fff;" data-i18n="pay.paypal">Pay with PayPal</div>
         <div style="font-size:14px;color:var(--muted);">@miloskral1 &middot; €5.00</div>
-        <div style="margin-top:6px;padding:10px 22px;background:#0070ba;color:#fff;border-radius:999px;font-weight:600;font-size:14px;">Open PayPal →</div>
+        <div style="margin-top:6px;padding:10px 22px;background:#0070ba;color:#fff;border-radius:999px;font-weight:600;font-size:14px;" data-i18n="pay.openPaypal">Open PayPal →</div>
       </a>
       <a href="https://revolut.me/milosl11f/5EUR" target="_blank" rel="noopener" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:28px 20px;background:linear-gradient(160deg,rgba(20,20,30,0.6),rgba(40,40,55,0.3));border:1px solid rgba(255,255,255,0.18);border-radius:16px;text-decoration:none;color:#fff;transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;">
-        <div style="font-size:13px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;">Option 2</div>
-        <div style="font-size:24px;font-weight:700;color:#fff;">Pay with Revolut</div>
+        <div style="font-size:13px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;" data-i18n="pay.opt2">Option 2</div>
+        <div style="font-size:24px;font-weight:700;color:#fff;" data-i18n="pay.revolut">Pay with Revolut</div>
         <div style="font-size:14px;color:var(--muted);">@milosl11f &middot; €5.00</div>
-        <div style="margin-top:6px;padding:10px 22px;background:#fff;color:#000;border-radius:999px;font-weight:600;font-size:14px;">Open Revolut →</div>
+        <div style="margin-top:6px;padding:10px 22px;background:#fff;color:#000;border-radius:999px;font-weight:600;font-size:14px;" data-i18n="pay.openRevolut">Open Revolut →</div>
       </a>
     </div>
 
     <!-- EMAIL BUTTON -->
     <div style="text-align:center;margin-bottom:48px;" class="reveal">
-      <a href="mailto:kralmilos@gmail.com?subject=License%20Key%20Request%20%E2%80%94%203D%20Channel%20Letters&body=Hi%20Milos%2C%0A%0AI%20would%20like%20to%20request%20a%20license%20key%20for%203D%20Channel%20Letters.%0A%0AMy%20Mac%20Hardware%20ID%3A%20%5BPASTE%20YOUR%20HARDWARE%20ID%20HERE%5D%0A%0APayment%20confirmation%3A%20%5BATTACH%20SCREENSHOT%5D%0A%0AThank%20you!" class="btn btn-primary btn-lg">✉ Send License Request</a>
-      <p style="font-size:12px;color:var(--muted);margin-top:12px;">Opens your email app with a pre-filled message — paste your Hardware ID and attach payment proof.</p>
+      <a href="mailto:kralmilos@gmail.com?subject=License%20Key%20Request%20%E2%80%94%203D%20Channel%20Letters&body=Hi%20Milos%2C%0A%0AI%20would%20like%20to%20request%20a%20license%20key%20for%203D%20Channel%20Letters.%0A%0AMy%20Mac%20Hardware%20ID%3A%20%5BPASTE%20YOUR%20HARDWARE%20ID%20HERE%5D%0A%0APayment%20confirmation%3A%20%5BATTACH%20SCREENSHOT%5D%0A%0AThank%20you!" class="btn btn-primary btn-lg" data-i18n="pay.emailBtn">✉ Send License Request</a>
+      <p style="font-size:12px;color:var(--muted);margin-top:12px;" data-i18n="pay.emailNote">Opens your email app with a pre-filled message — paste your Hardware ID and attach payment proof.</p>
     </div>
 
-    <p style="text-align:center;color:var(--muted);font-size:13px;margin-top:24px;max-width:620px;margin-left:auto;margin-right:auto;line-height:1.7;">
+    <p style="text-align:center;color:var(--muted);font-size:13px;margin-top:24px;max-width:620px;margin-left:auto;margin-right:auto;line-height:1.7;" data-i18n="pay.priceLine">
       Price: €5 / month &nbsp;·&nbsp; 14-day free trial included &nbsp;·&nbsp; Try the software fully during the trial — once you pay, the subscription is non-refundable.
     </p>
 
     <div class="reveal" style="max-width:620px;margin:18px auto 0;padding:14px 18px;background:rgba(82,226,255,.05);border:1px solid rgba(82,226,255,.18);border-left:3px solid var(--cyan);border-radius:10px;">
-      <p style="font-size:12.5px;color:var(--muted);line-height:1.65;margin:0;">
+      <p style="font-size:12.5px;color:var(--muted);line-height:1.65;margin:0;" data-i18n="pay.beforePay">
         <strong style="color:var(--text);">Before you pay:</strong> by sending the €5 payment and requesting your license key, you expressly agree that the digital service begins immediately and you waive the EU 14-day right of withdrawal under Art. 16(m) of Directive 2011/83/EU. The free trial preceding payment is provided so you can fully evaluate the Software before committing. See <a href="#legal-refund" style="color:var(--cyan);text-decoration:none;">Trial &amp; No-Refund Policy</a> for details.
       </p>
     </div>
@@ -870,191 +917,191 @@ footer p{ color:var(--muted); font-size:13px; }
 <section id="legal" class="legal-section">
   <div class="container">
     <div class="section-title reveal">
-      <div class="section-label">Legal</div>
-      <h2>Terms &amp; Policies</h2>
-      <p>Clear, plain-language terms covering the trial, subscription, license, and privacy.</p>
+      <div class="section-label" data-i18n="legal.label">Legal</div>
+      <h2 data-i18n="legal.title">Terms &amp; Policies</h2>
+      <p data-i18n="legal.sub">Clear, plain-language terms covering the trial, subscription, license, and privacy.</p>
     </div>
 
-    <div class="legal-updated reveal">Last updated: 22 May 2026</div>
+    <div class="legal-updated reveal" data-i18n="legal.updated">Last updated: 22 May 2026</div>
 
     <div class="legal-toc reveal">
-      <a href="#legal-terms"><span class="toc-num">01</span>Terms of Service</a>
-      <a href="#legal-refund"><span class="toc-num">02</span>Trial &amp; No Refunds</a>
-      <a href="#legal-license"><span class="toc-num">03</span>License Terms</a>
-      <a href="#legal-privacy"><span class="toc-num">04</span>Privacy Policy</a>
+      <a href="#legal-terms"><span class="toc-num">01</span><span data-i18n="legal.toc1">Terms of Service</span></a>
+      <a href="#legal-refund"><span class="toc-num">02</span><span data-i18n="legal.toc2">Trial &amp; No Refunds</span></a>
+      <a href="#legal-license"><span class="toc-num">03</span><span data-i18n="legal.toc3">License Terms</span></a>
+      <a href="#legal-privacy"><span class="toc-num">04</span><span data-i18n="legal.toc4">Privacy Policy</span></a>
     </div>
 
     <div class="legal-grid">
 
       <!-- 01 TERMS OF SERVICE -->
       <article id="legal-terms" class="legal-card reveal">
-        <h3><span class="legal-num">01</span>Terms of Service</h3>
-        <p class="legal-sub">These terms govern your use of 3D Channel Letters (the “Software”), a desktop application for macOS and Windows that generates 3D-printable STL files from DXF or SVG vector input for the production of illuminated channel letters. By downloading, installing, or using the Software, you agree to these terms.</p>
+        <h3><span class="legal-num">01</span><span data-i18n="lt.h">Terms of Service</span></h3>
+        <p class="legal-sub" data-i18n="lt.intro">These terms govern your use of 3D Channel Letters (the “Software”), a desktop application for macOS and Windows that generates 3D-printable STL files from DXF or SVG vector input for the production of illuminated channel letters. By downloading, installing, or using the Software, you agree to these terms.</p>
 
-        <h4>Provider</h4>
-        <p>The Software is developed and provided by <strong>Miloš Kráľ</strong>, an individual sole developer based in the Slovak Republic, European Union.</p>
+        <h4 data-i18n="lt.h1">Provider</h4>
+        <p data-i18n="lt.p1">The Software is developed and provided by <strong>Miloš Kráľ</strong>, an individual sole developer based in the Slovak Republic, European Union.</p>
         <div class="legal-meta">
-          <div><strong>Contact</strong><a href="mailto:kralmilos@gmail.com">kralmilos@gmail.com</a></div>
-          <div><strong>Response time</strong>Typically within 24 hours</div>
+          <div><strong data-i18n="lt.contactLabel">Contact</strong><a href="mailto:kralmilos@gmail.com">kralmilos@gmail.com</a></div>
+          <div><strong data-i18n="lt.responseLabel">Response time</strong><span data-i18n="lt.responseVal">Typically within 24 hours</span></div>
         </div>
 
-        <h4>What the Software does</h4>
-        <p>The Software imports a DXF or SVG vector file, generates a 3D model of an illuminated channel letter according to the parameters you set (wall thickness, box depth, acrylic rebate or solid front, back type, colours) and exports STL files — Wall, Back (optional) and STL per object — that are ready to slice and print on a standard FDM 3D printer.</p>
+        <h4 data-i18n="lt.h2">What the Software does</h4>
+        <p data-i18n="lt.p2">The Software imports a DXF or SVG vector file, generates a 3D model of an illuminated channel letter according to the parameters you set (wall thickness, box depth, acrylic rebate or solid front, back type, colours) and exports STL files — Wall, Back (optional) and STL per object — that are ready to slice and print on a standard FDM 3D printer.</p>
 
-        <h4>Subscription &amp; trial</h4>
-        <p>The Software is offered as a paid monthly subscription at <strong>€5 / month</strong>. A <strong>14-day free trial</strong> is included with full functionality except STL export. STL export requires a valid license key issued after payment.</p>
+        <h4 data-i18n="lt.h3">Subscription &amp; trial</h4>
+        <p data-i18n="lt.p3">The Software is offered as a paid monthly subscription at <strong>€5 / month</strong>. A <strong>14-day free trial</strong> is included with full functionality except STL export. STL export requires a valid license key issued after payment.</p>
 
-        <h4>Manual payment &amp; activation</h4>
-        <p>Payment is processed manually via PayPal (<strong>@miloskral1</strong>) or Revolut (<strong>@milosl11f</strong>). After your payment is received and your Mac Hardware ID is verified, a personal license key is issued by email to the address you used to contact me, typically within <strong>24 hours</strong>. The license key unlocks STL export on the specific machine identified by the Hardware ID you provided.</p>
+        <h4 data-i18n="lt.h4">Manual payment &amp; activation</h4>
+        <p data-i18n="lt.p4">Payment is processed manually via PayPal (<strong>@miloskral1</strong>) or Revolut (<strong>@milosl11f</strong>). After your payment is received and your Mac Hardware ID is verified, a personal license key is issued by email to the address you used to contact me, typically within <strong>24 hours</strong>. The license key unlocks STL export on the specific machine identified by the Hardware ID you provided.</p>
 
-        <h4>Renewals &amp; cancellation</h4>
-        <div class="legal-callout">
+        <h4 data-i18n="lt.h5">Renewals &amp; cancellation</h4>
+        <div class="legal-callout" data-i18n="lt.callout1">
           <strong>No auto-renewal.</strong> There is no recurring charge and no stored payment method. Each monthly period requires a new manual €5 payment. To stop the subscription, simply don’t send the next payment — no cancellation form, no email required.
         </div>
 
-        <h4>Acceptable use</h4>
-        <p>You may use the Software for personal or commercial work, including producing STL files for client projects and selling the printed letters. You may not:</p>
-        <ul>
+        <h4 data-i18n="lt.h6">Acceptable use</h4>
+        <p data-i18n="lt.p6">You may use the Software for personal or commercial work, including producing STL files for client projects and selling the printed letters. You may not:</p>
+        <ul data-i18n="lt.ul1">
           <li>Redistribute, resell, or sublicense the Software itself</li>
           <li>Share, publish, or transfer your license key to another person or machine</li>
           <li>Reverse-engineer, decompile, or attempt to bypass the licensing mechanism</li>
           <li>Use the Software to produce content that is illegal in your jurisdiction</li>
         </ul>
 
-        <h4>Ownership of STL output</h4>
-        <p>All STL files generated by the Software belong to you. You may use, print, sell, and distribute the resulting letters and signage without any royalty, attribution, or further permission from the developer.</p>
+        <h4 data-i18n="lt.h7">Ownership of STL output</h4>
+        <p data-i18n="lt.p7">All STL files generated by the Software belong to you. You may use, print, sell, and distribute the resulting letters and signage without any royalty, attribution, or further permission from the developer.</p>
 
-        <h4>Warranty &amp; liability</h4>
-        <p>The Software is provided <strong>“as is”</strong>, without warranty of any kind, express or implied. The 14-day free trial gives you full opportunity to test the Software against your own DXF files and printing setup before paying. <strong>You are responsible for verifying STL output before printing or production.</strong> Paid subscriptions are non-refundable (see <a href="#legal-refund">Trial &amp; No-Refund Policy</a>). To the maximum extent permitted by law, the developer is not liable for material costs, printer wear, lost production time, lost client work, or any indirect, incidental, or consequential damages arising from the use of the Software. Total liability under any claim is limited to the amount you paid for the Software in the preceding twelve months.</p>
+        <h4 data-i18n="lt.h8">Warranty &amp; liability</h4>
+        <p data-i18n="lt.p8">The Software is provided <strong>“as is”</strong>, without warranty of any kind, express or implied. The 14-day free trial gives you full opportunity to test the Software against your own DXF files and printing setup before paying. <strong>You are responsible for verifying STL output before printing or production.</strong> Paid subscriptions are non-refundable (see <a href="#legal-refund">Trial &amp; No-Refund Policy</a>). To the maximum extent permitted by law, the developer is not liable for material costs, printer wear, lost production time, lost client work, or any indirect, incidental, or consequential damages arising from the use of the Software. Total liability under any claim is limited to the amount you paid for the Software in the preceding twelve months.</p>
 
-        <h4>Changes to these terms</h4>
-        <p>These terms may be updated to reflect changes to the Software, pricing, or applicable law. The current version is always published on this page with the “Last updated” date shown above. Material changes will also be communicated by email to active subscribers. Continued use of the Software after a change takes effect means you accept the revised terms.</p>
+        <h4 data-i18n="lt.h9">Changes to these terms</h4>
+        <p data-i18n="lt.p9">These terms may be updated to reflect changes to the Software, pricing, or applicable law. The current version is always published on this page with the “Last updated” date shown above. Material changes will also be communicated by email to active subscribers. Continued use of the Software after a change takes effect means you accept the revised terms.</p>
 
-        <h4>Governing law &amp; jurisdiction</h4>
-        <p>These terms are governed by the laws of the <strong>Slovak Republic</strong>. Any disputes arising from or related to the Software will be resolved by the competent courts of the Slovak Republic, without prejudice to mandatory consumer protection rights you may have under the law of your country of residence within the European Union.</p>
+        <h4 data-i18n="lt.h10">Governing law &amp; jurisdiction</h4>
+        <p data-i18n="lt.p10">These terms are governed by the laws of the <strong>Slovak Republic</strong>. Any disputes arising from or related to the Software will be resolved by the competent courts of the Slovak Republic, without prejudice to mandatory consumer protection rights you may have under the law of your country of residence within the European Union.</p>
       </article>
 
       <!-- 02 TRIAL & NO REFUNDS -->
       <article id="legal-refund" class="legal-card reveal">
-        <h3><span class="legal-num">02</span>Trial &amp; No-Refund Policy</h3>
-        <p class="legal-sub">The 14-day free trial <em>is</em> the money-back guarantee. Once you choose to subscribe, the payment is final.</p>
+        <h3><span class="legal-num">02</span><span data-i18n="lr.h">Trial &amp; No-Refund Policy</span></h3>
+        <p class="legal-sub" data-i18n="lr.intro">The 14-day free trial <em>is</em> the money-back guarantee. Once you choose to subscribe, the payment is final.</p>
 
-        <h4>How it works</h4>
-        <div class="legal-callout">
+        <h4 data-i18n="lr.h1">How it works</h4>
+        <div class="legal-callout" data-i18n="lr.callout1">
           <strong>Try before you pay.</strong> The Software runs with full functionality for <strong>14 days</strong> at no cost. The only thing the trial cannot do is export STL files. Every other feature — DXF and SVG import, 3D preview, all wall, acrylic and back-cover settings, all colour options — works exactly the same as in the paid version. Spend those 14 days deciding whether the Software fits your workflow.
         </div>
 
-        <h4>Why there are no refunds after payment</h4>
-        <p>The free trial gives you everything you need to evaluate the Software <strong>before</strong> you send any money. If it doesn’t suit you, simply don’t pay and the trial expires on its own — nothing more is required from you and nothing is owed.</p>
-        <p>If you do choose to send the €5 payment and request your license key, you are confirming that you have tried the Software and are satisfied with how it works. <strong>For this reason, paid subscriptions are non-refundable.</strong> This applies to every monthly period, including the first one.</p>
+        <h4 data-i18n="lr.h2">Why there are no refunds after payment</h4>
+        <p data-i18n="lr.p2a">The free trial gives you everything you need to evaluate the Software <strong>before</strong> you send any money. If it doesn’t suit you, simply don’t pay and the trial expires on its own — nothing more is required from you and nothing is owed.</p>
+        <p data-i18n="lr.p2b">If you do choose to send the €5 payment and request your license key, you are confirming that you have tried the Software and are satisfied with how it works. <strong>For this reason, paid subscriptions are non-refundable.</strong> This applies to every monthly period, including the first one.</p>
 
-        <h4>The Software is provided “as is”</h4>
-        <p>While every effort is made to produce accurate, print-ready geometry, the Software is provided <strong>“as is”</strong> without warranty of any kind. You are responsible for verifying every STL output before printing or production. The developer does not guarantee that the Software will be free of bugs, errors, or limitations in every possible DXF input or print configuration. <strong>No refunds are issued for software bugs, missing features, geometry that doesn’t suit a particular use case, or any other reason of dissatisfaction after payment.</strong></p>
+        <h4 data-i18n="lr.h3">The Software is provided “as is”</h4>
+        <p data-i18n="lr.p3">While every effort is made to produce accurate, print-ready geometry, the Software is provided <strong>“as is”</strong> without warranty of any kind. You are responsible for verifying every STL output before printing or production. The developer does not guarantee that the Software will be free of bugs, errors, or limitations in every possible DXF input or print configuration. <strong>No refunds are issued for software bugs, missing features, geometry that doesn’t suit a particular use case, or any other reason of dissatisfaction after payment.</strong></p>
 
-        <h4>EU consumer right of withdrawal — important</h4>
-        <p>If you are a consumer resident in the European Union, you would normally have a 14-day right of withdrawal under Directive 2011/83/EU for digital services. However, that right <strong>does not apply</strong> if you have:</p>
-        <ul>
+        <h4 data-i18n="lr.h4">EU consumer right of withdrawal — important</h4>
+        <p data-i18n="lr.p4">If you are a consumer resident in the European Union, you would normally have a 14-day right of withdrawal under Directive 2011/83/EU for digital services. However, that right <strong>does not apply</strong> if you have:</p>
+        <ul data-i18n="lr.ul1">
           <li>Given your <strong>express prior consent</strong> for the digital service to begin being supplied immediately, and</li>
           <li>Acknowledged that, by doing so, you <strong>lose the right of withdrawal</strong> once performance has begun.</li>
         </ul>
-        <div class="legal-callout">
+        <div class="legal-callout" data-i18n="lr.callout2">
           <strong>By sending payment and requesting your license key,</strong> you expressly consent to immediate delivery of the digital service (the license key + paid-tier features) and acknowledge that you thereby lose the EU statutory 14-day right of withdrawal under Art. 16(m) of Directive 2011/83/EU. The 14-day free trial preceding payment is provided precisely so that you can evaluate the Software before making this commitment.
         </div>
 
-        <h4>How to stop paying</h4>
-        <p>Subscriptions are paid one month at a time and there is <strong>no auto-renewal</strong>. If you decide the Software is no longer worth €5 / month — for any reason — simply don’t send the next payment. Your access to STL export will lapse at the end of the current paid period. No notice, no cancellation form, no email required.</p>
+        <h4 data-i18n="lr.h5">How to stop paying</h4>
+        <p data-i18n="lr.p5">Subscriptions are paid one month at a time and there is <strong>no auto-renewal</strong>. If you decide the Software is no longer worth €5 / month — for any reason — simply don’t send the next payment. Your access to STL export will lapse at the end of the current paid period. No notice, no cancellation form, no email required.</p>
 
-        <h4>Narrow exceptions</h4>
-        <p>The no-refund rule has two narrow exceptions, handled in good faith on a case-by-case basis:</p>
-        <ul>
+        <h4 data-i18n="lr.h6">Narrow exceptions</h4>
+        <p data-i18n="lr.p6">The no-refund rule has two narrow exceptions, handled in good faith on a case-by-case basis:</p>
+        <ul data-i18n="lr.ul2">
           <li><strong>Duplicate or accidental payments</strong> — if you accidentally pay twice for the same month, the duplicate amount is refunded in full within 5 business days.</li>
           <li><strong>License never delivered</strong> — if more than 7 days pass after your payment without a license key being delivered to you (and you have provided a valid Hardware ID), you are entitled to a full refund of that month’s payment.</li>
         </ul>
-        <p>To raise either of these, email <a href="mailto:kralmilos@gmail.com">kralmilos@gmail.com</a> with the payment details and any supporting screenshots.</p>
+        <p data-i18n="lr.p7">To raise either of these, email <a href="mailto:kralmilos@gmail.com">kralmilos@gmail.com</a> with the payment details and any supporting screenshots.</p>
       </article>
 
       <!-- 03 LICENSE TERMS -->
       <article id="legal-license" class="legal-card reveal">
-        <h3><span class="legal-num">03</span>License Terms</h3>
-        <p class="legal-sub">What the license grants, what it doesn’t, and how the offline activation works.</p>
+        <h3><span class="legal-num">03</span><span data-i18n="ll.h">License Terms</span></h3>
+        <p class="legal-sub" data-i18n="ll.intro">What the license grants, what it doesn’t, and how the offline activation works.</p>
 
-        <h4>Grant of license</h4>
-        <p>Subject to your active subscription, you are granted a <strong>non-exclusive, non-transferable, revocable license</strong> to install and use the Software for personal or commercial purposes on the single Mac whose Hardware ID was used to generate your license key.</p>
+        <h4 data-i18n="ll.h1">Grant of license</h4>
+        <p data-i18n="ll.p1">Subject to your active subscription, you are granted a <strong>non-exclusive, non-transferable, revocable license</strong> to install and use the Software for personal or commercial purposes on the single Mac whose Hardware ID was used to generate your license key.</p>
 
-        <h4>One license = one machine</h4>
-        <div class="legal-callout">
+        <h4 data-i18n="ll.h2">One license = one machine</h4>
+        <div class="legal-callout" data-i18n="ll.callout1">
           The license key is cryptographically bound to your <strong>Mac Hardware ID</strong> and will not unlock STL export on any other computer. If you change machines, contact <a href="mailto:kralmilos@gmail.com">kralmilos@gmail.com</a> with your new Hardware ID and proof of your previous license — a replacement key will be issued free of charge for the remainder of your subscription period.
         </div>
 
-        <h4>Offline activation</h4>
-        <p>Your license key is stored <strong>locally on your machine</strong>. The Software:</p>
-        <ul>
+        <h4 data-i18n="ll.h3">Offline activation</h4>
+        <p data-i18n="ll.p3">Your license key is stored <strong>locally on your machine</strong>. The Software:</p>
+        <ul data-i18n="ll.ul1">
           <li>Does not require an account, login, or registration</li>
           <li>Does not “phone home” or contact any licensing server</li>
           <li>Works fully offline, including on air-gapped production computers</li>
           <li>Does not transmit your Hardware ID, license key, or any other data anywhere once activated</li>
         </ul>
 
-        <h4>Restrictions</h4>
-        <p>You may not:</p>
-        <ul>
+        <h4 data-i18n="ll.h4">Restrictions</h4>
+        <p data-i18n="ll.p4">You may not:</p>
+        <ul data-i18n="ll.ul2">
           <li>Share, publish, sell, lease, or sublicense the license key</li>
           <li>Use the same license key on multiple machines simultaneously</li>
           <li>Modify, reverse-engineer, decompile, or disassemble the Software</li>
           <li>Remove or alter any copyright, trademark, or licensing notices</li>
         </ul>
 
-        <h4>Termination</h4>
-        <p>The license terminates automatically if you breach these terms. On termination you must stop using the Software and delete it from your machine. The developer reserves the right to revoke any license key found to have been shared, leaked, or fraudulently obtained.</p>
+        <h4 data-i18n="ll.h5">Termination</h4>
+        <p data-i18n="ll.p5">The license terminates automatically if you breach these terms. On termination you must stop using the Software and delete it from your machine. The developer reserves the right to revoke any license key found to have been shared, leaked, or fraudulently obtained.</p>
 
-        <h4>Updates</h4>
-        <p>Software updates released during your active subscription are included at no extra cost. Major new versions may, at the developer’s discretion, require a separate purchase — this will always be announced in advance to active subscribers.</p>
+        <h4 data-i18n="ll.h6">Updates</h4>
+        <p data-i18n="ll.p6">Software updates released during your active subscription are included at no extra cost. Major new versions may, at the developer’s discretion, require a separate purchase — this will always be announced in advance to active subscribers.</p>
 
-        <h4>App signing &amp; integrity</h4>
-        <p>The macOS build is <strong>Apple-signed and notarized</strong>. Always download the Software from <a href="https://www.lumisign3d.com">www.lumisign3d.com</a> — versions distributed elsewhere are unauthorized and may be tampered with.</p>
+        <h4 data-i18n="ll.h7">App signing &amp; integrity</h4>
+        <p data-i18n="ll.p7">The macOS build is <strong>Apple-signed and notarized</strong>. Always download the Software from <a href="https://www.lumisign3d.com">www.lumisign3d.com</a> — versions distributed elsewhere are unauthorized and may be tampered with.</p>
       </article>
 
       <!-- 04 PRIVACY POLICY -->
       <article id="legal-privacy" class="legal-card reveal">
-        <h3><span class="legal-num">04</span>Privacy Policy</h3>
-        <p class="legal-sub">The shortest privacy policy you’ll read this year, because almost nothing is collected.</p>
+        <h3><span class="legal-num">04</span><span data-i18n="lp.h">Privacy Policy</span></h3>
+        <p class="legal-sub" data-i18n="lp.intro">The shortest privacy policy you’ll read this year, because almost nothing is collected.</p>
 
-        <h4>What the Software collects</h4>
-        <div class="legal-callout">
+        <h4 data-i18n="lp.h1">What the Software collects</h4>
+        <div class="legal-callout" data-i18n="lp.callout1">
           <strong>Nothing.</strong> The desktop Software does not collect, transmit, or store any personal data, telemetry, usage analytics, or crash reports. It runs entirely on your machine and does not make any network requests.
         </div>
 
-        <h4>What this website collects</h4>
-        <p>This website (<a href="https://www.lumisign3d.com">www.lumisign3d.com</a>) is a static page. It does not use cookies, analytics scripts, tracking pixels, or third-party advertising networks. Standard server access logs (IP address, user-agent, page requested, timestamp) may be kept by the hosting provider for a short period for security and abuse prevention purposes — these are not used for tracking or profiling.</p>
+        <h4 data-i18n="lp.h2">What this website collects</h4>
+        <p data-i18n="lp.p2">This website (<a href="https://www.lumisign3d.com">www.lumisign3d.com</a>) is a static page. It does not use cookies, analytics scripts, tracking pixels, or third-party advertising networks. Standard server access logs (IP address, user-agent, page requested, timestamp) may be kept by the hosting provider for a short period for security and abuse prevention purposes — these are not used for tracking or profiling.</p>
 
-        <h4>What I collect when you subscribe</h4>
-        <p>When you request a license key, I receive and store the following, solely to fulfil the subscription:</p>
-        <ul>
+        <h4 data-i18n="lp.h3">What I collect when you subscribe</h4>
+        <p data-i18n="lp.p3">When you request a license key, I receive and store the following, solely to fulfil the subscription:</p>
+        <ul data-i18n="lp.ul1">
           <li><strong>Your email address</strong> — to send your license key and respond to support requests</li>
           <li><strong>Your Mac Hardware ID</strong> — to generate a license key bound to your machine</li>
           <li><strong>Payment confirmation</strong> — a screenshot or note showing PayPal/Revolut payment</li>
         </ul>
-        <p>This information is stored in a private spreadsheet and email inbox. It is never shared, sold, or transferred to any third party, except where strictly required by law.</p>
+        <p data-i18n="lp.p3b">This information is stored in a private spreadsheet and email inbox. It is never shared, sold, or transferred to any third party, except where strictly required by law.</p>
 
-        <h4>Payment data</h4>
-        <p>Payments are processed by <strong>PayPal</strong> and <strong>Revolut</strong> as independent payment providers. I receive only the information they choose to display about the transaction (sender name, amount, transaction ID, message). I do not see or store your card number, bank account details, or any other financial credentials. Their respective privacy policies apply to the payment itself.</p>
+        <h4 data-i18n="lp.h4">Payment data</h4>
+        <p data-i18n="lp.p4">Payments are processed by <strong>PayPal</strong> and <strong>Revolut</strong> as independent payment providers. I receive only the information they choose to display about the transaction (sender name, amount, transaction ID, message). I do not see or store your card number, bank account details, or any other financial credentials. Their respective privacy policies apply to the payment itself.</p>
 
-        <h4>Your rights (GDPR)</h4>
-        <p>If you are in the European Union, you have the right under the General Data Protection Regulation (GDPR) to:</p>
-        <ul>
+        <h4 data-i18n="lp.h5">Your rights (GDPR)</h4>
+        <p data-i18n="lp.p5">If you are in the European Union, you have the right under the General Data Protection Regulation (GDPR) to:</p>
+        <ul data-i18n="lp.ul2">
           <li>Request a copy of the personal data I hold about you</li>
           <li>Request correction of inaccurate data</li>
           <li>Request deletion of your data (right to be forgotten)</li>
           <li>Object to processing or request restriction</li>
           <li>Lodge a complaint with your national data protection authority — in Slovakia, that is the <em>Úrad na ochranu osobných údajov SR</em></li>
         </ul>
-        <p>To exercise any of these rights, email <a href="mailto:kralmilos@gmail.com">kralmilos@gmail.com</a>. Requests are answered within 30 days.</p>
+        <p data-i18n="lp.p5b">To exercise any of these rights, email <a href="mailto:kralmilos@gmail.com">kralmilos@gmail.com</a>. Requests are answered within 30 days.</p>
 
-        <h4>Data retention</h4>
-        <p>License records (email, Hardware ID, payment confirmation) are kept for as long as your subscription is active, plus a period required for accounting and tax purposes under Slovak law (typically 10 years for invoicing records). After that, the data is deleted.</p>
+        <h4 data-i18n="lp.h6">Data retention</h4>
+        <p data-i18n="lp.p6">License records (email, Hardware ID, payment confirmation) are kept for as long as your subscription is active, plus a period required for accounting and tax purposes under Slovak law (typically 10 years for invoicing records). After that, the data is deleted.</p>
 
-        <h4>Changes to this policy</h4>
-        <p>If this privacy policy changes, the “Last updated” date at the top of this section will reflect the new version, and active subscribers will be notified by email of any material changes.</p>
+        <h4 data-i18n="lp.h7">Changes to this policy</h4>
+        <p data-i18n="lp.p7">If this privacy policy changes, the “Last updated” date at the top of this section will reflect the new version, and active subscribers will be notified by email of any material changes.</p>
       </article>
 
     </div>
@@ -1070,16 +1117,16 @@ footer p{ color:var(--muted); font-size:13px; }
     </div>
     <div class="visit-counter" id="visitCounter" title="Unique visitors to lumisign3d.com" style="display:none;">
       <span class="visit-dot"></span>
-      <span>Visitors</span>
+      <span data-i18n="foot.visitors">Visitors</span>
       <span class="visit-count" id="visitCount">--</span>
     </div>
     <div class="footer-bottom" style="display:flex;align-items:center;gap:32px;">
       <div class="footer-links">
-        <a href="#legal-terms">Terms of Service</a>
-        <a href="#legal-refund">Trial &amp; Refunds</a>
-        <a href="#legal-license">License</a>
-        <a href="#legal-privacy">Privacy</a>
-        <a href="mailto:kralmilos@gmail.com">Contact</a>
+        <a href="#legal-terms" data-i18n="foot.terms">Terms of Service</a>
+        <a href="#legal-refund" data-i18n="foot.refunds">Trial &amp; Refunds</a>
+        <a href="#legal-license" data-i18n="foot.license">License</a>
+        <a href="#legal-privacy" data-i18n="foot.privacy">Privacy</a>
+        <a href="mailto:kralmilos@gmail.com" data-i18n="foot.contact">Contact</a>
         <a href="https://www.instagram.com/channelletters.app/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
           Instagram
@@ -1135,6 +1182,85 @@ document.querySelectorAll('.feature-card').forEach((c, i) => c.style.transitionD
 })();
 
 document.querySelectorAll('.screenshot-card').forEach((c, i) => c.style.transitionDelay = (i * .06) + 's');
+</script>
+
+<!-- ===== i18n / language switcher ===== -->
+<script src="translations.js"></script>
+<script>
+(function(){
+  const DEFAULT = 'en';
+  const LANGS = [
+    { code:'en', flag:'🇬🇧', name:'English'   },
+    { code:'sk', flag:'🇸🇰', name:'Slovenčina'},
+    { code:'cs', flag:'🇨🇿', name:'Čeština'   },
+    { code:'de', flag:'🇩🇪', name:'Deutsch'   },
+    { code:'pl', flag:'🇵🇱', name:'Polski'    },
+    { code:'hu', flag:'🇭🇺', name:'Magyar'    },
+    { code:'es', flag:'🇪🇸', name:'Español'   },
+    { code:'it', flag:'🇮🇹', name:'Italiano'  },
+    { code:'fr', flag:'🇫🇷', name:'Français'  },
+    { code:'ru', flag:'🇷🇺', name:'Русский'   },
+    { code:'zh', flag:'🇨🇳', name:'中文'       }
+  ];
+  const SHORT = { en:'EN', sk:'SK', cs:'CS', de:'DE', pl:'PL', hu:'HU', es:'ES', it:'IT', fr:'FR', ru:'RU', zh:'中文' };
+  const byCode = Object.fromEntries(LANGS.map(l => [l.code, l]));
+  const STORAGE_KEY = 'site_lang';
+
+  function getLang(){
+    try { const s = localStorage.getItem(STORAGE_KEY); if (s && byCode[s]) return s; } catch(e){}
+    return DEFAULT;
+  }
+  function apply(lang){
+    const I18N = window.I18N || {};
+    const dict = Object.assign({}, I18N.en || {}, I18N[lang] || {});
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const v = dict[el.getAttribute('data-i18n')];
+      if (v != null) el.innerHTML = v;
+    });
+    document.querySelectorAll('[data-i18n-attr]').forEach(el => {
+      el.getAttribute('data-i18n-attr').split(',').forEach(pair => {
+        const [attr, key] = pair.split(':');
+        const v = dict[key];
+        if (v != null) el.setAttribute(attr, v);
+      });
+    });
+    const l = byCode[lang] || byCode.en;
+    const cf = document.getElementById('langCurrentFlag');
+    const cn = document.getElementById('langCurrentName');
+    if (cf) cf.textContent = l.flag;
+    if (cn) cn.textContent = SHORT[lang] || lang.toUpperCase();
+    document.querySelectorAll('.lang-opt').forEach(o =>
+      o.classList.toggle('active', o.getAttribute('data-lang-opt') === lang));
+  }
+  function setLang(lang){
+    try { localStorage.setItem(STORAGE_KEY, lang); } catch(e){}
+    apply(lang);
+  }
+
+  // Build dropdown
+  const menu = document.getElementById('langMenu');
+  if (menu){
+    LANGS.forEach(l => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'lang-opt'; b.setAttribute('data-lang-opt', l.code); b.setAttribute('role','menuitem');
+      b.innerHTML = '<span class="lang-flag">'+l.flag+'</span><span>'+l.name+'</span><span class="lang-check">✓</span>';
+      b.addEventListener('click', () => { setLang(l.code); close(); });
+      menu.appendChild(b);
+    });
+  }
+  const sw = document.getElementById('langSwitch');
+  const btn = document.getElementById('langBtn');
+  function open(){ sw.classList.add('open'); btn.setAttribute('aria-expanded','true'); }
+  function close(){ sw.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+  if (btn){
+    btn.addEventListener('click', e => { e.stopPropagation(); sw.classList.contains('open') ? close() : open(); });
+    document.addEventListener('click', e => { if (!sw.contains(e.target)) close(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+  }
+
+  apply(getLang());
+})();
 </script>
 </body>
 </html>
