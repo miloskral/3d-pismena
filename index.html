@@ -793,14 +793,14 @@ footer p{ color:var(--muted); font-size:13px; }
       <p data-i18n="dl.sub">Available for macOS and Windows. Includes a 14-day free trial — no account required.</p>
     </div>
     <div class="download-grid reveal" style="max-width:720px;">
-      <a href="ChannelLetters-v1.0.32.dmg" class="download-btn">
+      <a href="ChannelLetters-v1.0.32.dmg" class="download-btn" id="dlMac" data-dl="mac">
         <div class="download-icon"><img src="apple.png" alt="Apple" style="width:26px;height:26px;object-fit:contain;"></div>
         <div class="download-text">
           <strong data-i18n="dl.macT">Download for macOS</strong>
           <span data-i18n="dl.macS">Apple-signed &amp; notarized · macOS 12.0 or later</span>
         </div>
       </a>
-      <a href="ChannelLetters-windows.zip" class="download-btn">
+      <a href="ChannelLetters-windows.zip" class="download-btn" id="dlWin" data-dl="win">
         <div class="download-icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="color:var(--cyan);"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/></svg>
         </div>
@@ -1119,10 +1119,16 @@ footer p{ color:var(--muted); font-size:13px; }
       <img src="ikonka.png" alt="3D Channel Letters logo">
       <strong>3D Channel Letters</strong>
     </div>
-    <div class="visit-counter" id="visitCounter" title="Unique visitors to lumisign3d.com" style="display:none;">
-      <span class="visit-dot"></span>
-      <span data-i18n="foot.visitors">Visitors</span>
-      <span class="visit-count" id="visitCount">--</span>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+      <div class="visit-counter" id="visitCounter" title="Unique visitors to lumisign3d.com" style="display:none;">
+        <span class="visit-dot"></span>
+        <span data-i18n="foot.visitors">Visitors</span>
+        <span class="visit-count" id="visitCount">--</span>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+        <span class="visit-counter" title="macOS downloads"><span class="visit-dot"></span>macOS&nbsp;<span class="visit-count" id="dlMacCount">–</span></span>
+        <span class="visit-counter" title="Windows downloads"><span class="visit-dot"></span>Windows&nbsp;<span class="visit-count" id="dlWinCount">–</span></span>
+      </div>
     </div>
     <div class="footer-bottom" style="display:flex;align-items:center;gap:32px;">
       <div class="footer-links">
@@ -1186,6 +1192,43 @@ document.querySelectorAll('.feature-card').forEach((c, i) => c.style.transitionD
       try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ count, date: today })); } catch(e) {}
     })
     .catch(() => { /* keep cached value visible if there was one */ });
+})();
+
+/* ---------- Download counters (macOS / Windows) — shared total via /api/downloads + Vercel KV ----------
+   Mirrors the visits counter. GET /api/downloads -> { mac, win }.
+   GET /api/downloads?hit=mac|win increments that platform, then returns both.
+*/
+(function(){
+  const macEl = document.getElementById('dlMacCount');
+  const winEl = document.getElementById('dlWinCount');
+  function render(d){
+    if (!d) return;
+    if (macEl && typeof d.mac === 'number') macEl.textContent = d.mac.toLocaleString('en-US');
+    if (winEl && typeof d.win === 'number') winEl.textContent = d.win.toLocaleString('en-US');
+  }
+
+  // Read the shared totals (no increment).
+  fetch('/api/downloads', { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(render)
+    .catch(() => {});
+
+  // Count a real download click at most once per browser session per platform.
+  document.querySelectorAll('a[data-dl]').forEach(a => {
+    a.addEventListener('click', () => {
+      const key = a.getAttribute('data-dl');
+      if (key !== 'mac' && key !== 'win') return;
+      const guard = 'dl_hit_' + key;
+      if (sessionStorage.getItem(guard)) return;
+      try { sessionStorage.setItem(guard, '1'); } catch(e) {}
+      const el = key === 'mac' ? macEl : winEl;        // optimistic +1
+      if (el) { const c = parseInt((el.textContent || '0').replace(/[^0-9]/g, ''), 10); if (!isNaN(c)) el.textContent = (c + 1).toLocaleString('en-US'); }
+      fetch('/api/downloads?hit=' + key, { cache: 'no-store' })
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(render)
+        .catch(() => {});
+    });
+  });
 })();
 
 document.querySelectorAll('.screenshot-card').forEach((c, i) => c.style.transitionDelay = (i * .06) + 's');
