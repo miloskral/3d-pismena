@@ -1125,9 +1125,9 @@ footer p{ color:var(--muted); font-size:13px; }
         <span data-i18n="foot.visitors">Visitors</span>
         <span class="visit-count" id="visitCount">--</span>
       </div>
-      <div id="dlCounters" style="display:none;gap:10px;flex-wrap:wrap;justify-content:center;">
-        <span class="visit-counter" title="macOS downloads"><span class="visit-dot"></span>macOS&nbsp;<span class="visit-count" id="dlMacCount">–</span></span>
-        <span class="visit-counter" title="Windows downloads"><span class="visit-dot"></span>Windows&nbsp;<span class="visit-count" id="dlWinCount">–</span></span>
+      <div id="dlCounters" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+        <span class="visit-counter" title="macOS downloads"><span class="visit-dot"></span>macOS&nbsp;<span class="visit-count" id="dlMacCount">0</span></span>
+        <span class="visit-counter" title="Windows downloads"><span class="visit-dot"></span>Windows&nbsp;<span class="visit-count" id="dlWinCount">0</span></span>
       </div>
     </div>
     <div class="footer-bottom" style="display:flex;align-items:center;gap:32px;">
@@ -1194,41 +1194,36 @@ document.querySelectorAll('.feature-card').forEach((c, i) => c.style.transitionD
     .catch(() => { /* keep cached value visible if there was one */ });
 })();
 
-/* ---------- Download counters (macOS / Windows) — shared total via /api/downloads + Vercel KV ----------
-   Mirrors the visits counter. GET /api/downloads -> { mac, win }.
-   GET /api/downloads?hit=mac|win increments that platform, then returns both.
+/* ---------- Download counters (macOS / Windows) — shared totals, no backend needed ----------
+   Uses the free counterapi.dev service (two counters: dl_mac, dl_win). Read on load,
+   increment on a real download click (once per browser session per platform).
 */
 (function(){
-  const macEl = document.getElementById('dlMacCount');
-  const winEl = document.getElementById('dlWinCount');
-  const box = document.getElementById('dlCounters');
-  function render(d){
-    if (!d) return;
-    if (macEl && typeof d.mac === 'number') macEl.textContent = d.mac.toLocaleString('en-US');
-    if (winEl && typeof d.win === 'number') winEl.textContent = d.win.toLocaleString('en-US');
-    if (box && (typeof d.mac === 'number' || typeof d.win === 'number')) box.style.display = 'flex';
+  const NS = 'lumisign3d';
+  const NAME = { mac: 'dl_mac', win: 'dl_win' };
+  const EL = { mac: document.getElementById('dlMacCount'), win: document.getElementById('dlWinCount') };
+
+  function set(key, n){ if (typeof n === 'number' && EL[key]) EL[key].textContent = n.toLocaleString('en-US'); }
+  function pull(key, suffix){
+    fetch(`https://api.counterapi.dev/v1/${NS}/${NAME[key]}${suffix}`, { cache: 'no-store' })
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => { const c = d && (d.count ?? d.value); set(key, c); })
+      .catch(() => {});
   }
 
-  // Read the shared totals (no increment).
-  fetch('/api/downloads', { cache: 'no-store' })
-    .then(r => r.ok ? r.json() : Promise.reject())
-    .then(render)
-    .catch(() => {});
+  // Read current totals (no increment).
+  pull('mac', ''); pull('win', '');
 
   // Count a real download click at most once per browser session per platform.
   document.querySelectorAll('a[data-dl]').forEach(a => {
     a.addEventListener('click', () => {
       const key = a.getAttribute('data-dl');
-      if (key !== 'mac' && key !== 'win') return;
+      if (!NAME[key]) return;
       const guard = 'dl_hit_' + key;
       if (sessionStorage.getItem(guard)) return;
       try { sessionStorage.setItem(guard, '1'); } catch(e) {}
-      const el = key === 'mac' ? macEl : winEl;        // optimistic +1
-      if (el) { const c = parseInt((el.textContent || '0').replace(/[^0-9]/g, ''), 10); if (!isNaN(c)) el.textContent = (c + 1).toLocaleString('en-US'); }
-      fetch('/api/downloads?hit=' + key, { cache: 'no-store' })
-        .then(r => r.ok ? r.json() : Promise.reject())
-        .then(render)
-        .catch(() => {});
+      if (EL[key]) { const c = parseInt((EL[key].textContent || '0').replace(/[^0-9]/g, ''), 10); if (!isNaN(c)) EL[key].textContent = (c + 1).toLocaleString('en-US'); }
+      pull(key, '/up');
     });
   });
 })();
