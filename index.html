@@ -1194,37 +1194,36 @@ document.querySelectorAll('.feature-card').forEach((c, i) => c.style.transitionD
     .catch(() => { /* keep cached value visible if there was one */ });
 })();
 
-/* ---------- Download counters (macOS / Windows) — shared totals, no backend needed ----------
-   Uses the free counterapi.dev service (two counters: dl_mac, dl_win). Read on load,
-   increment on a real download click (once per browser session per platform).
+/* ---------- Download counters (macOS / Windows) — shared totals via /api/downloads + Vercel KV ----------
+   Same reliable backend approach as the visits counter. GET /api/downloads -> { mac, win }.
+   GET /api/downloads?hit=mac|win increments that platform, then returns both.
+   Requires api/downloads.js deployed alongside api/visits.js.
 */
 (function(){
-  const NS = 'lumisign3d';
-  const NAME = { mac: 'dl_mac', win: 'dl_win' };
   const EL = { mac: document.getElementById('dlMacCount'), win: document.getElementById('dlWinCount') };
+  function render(d){
+    if (!d) return;
+    if (typeof d.mac === 'number' && EL.mac) EL.mac.textContent = d.mac.toLocaleString('en-US');
+    if (typeof d.win === 'number' && EL.win) EL.win.textContent = d.win.toLocaleString('en-US');
+  }
 
-  function set(key, n){ if (typeof n === 'number' && EL[key]) EL[key].textContent = n.toLocaleString('en-US'); }
+  // Read shared totals (no increment).
+  fetch('/api/downloads', { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(render)
+    .catch(() => {});
 
-  // Read current totals (no increment). A brand-new counter returns 400 until its first click.
-  Object.keys(NAME).forEach(key => {
-    fetch(`https://api.counterapi.dev/v1/${NS}/${NAME[key]}`, { cache: 'no-store' })
-      .then(r => r.ok ? r.json() : Promise.reject())
-      .then(d => { const c = d && (d.count ?? d.value); set(key, c); })
-      .catch(() => {});
-  });
-
-  // Count a real download click. Once per browser session per platform, but the
-  // session-guard is locked ONLY after the increment succeeds — so a failed call
-  // (rate limit / offline) can be retried on the next click instead of being lost.
+  // Count a real download click — once per browser session per platform, and the
+  // session-guard is locked ONLY after the increment succeeds (so a failed call can retry).
   document.querySelectorAll('a[data-dl]').forEach(a => {
     a.addEventListener('click', () => {
       const key = a.getAttribute('data-dl');
-      if (!NAME[key]) return;
-      const guard = 'dlhit2_' + key;
+      if (key !== 'mac' && key !== 'win') return;
+      const guard = 'dlhit3_' + key;
       if (sessionStorage.getItem(guard)) return;
-      fetch(`https://api.counterapi.dev/v1/${NS}/${NAME[key]}/up`, { cache: 'no-store', keepalive: true })
+      fetch('/api/downloads?hit=' + key, { cache: 'no-store', keepalive: true })
         .then(r => r.ok ? r.json() : Promise.reject())
-        .then(d => { try { sessionStorage.setItem(guard, '1'); } catch(e) {} const c = d && (d.count ?? d.value); set(key, c); })
+        .then(d => { try { sessionStorage.setItem(guard, '1'); } catch(e) {} render(d); })
         .catch(() => {});
     });
   });
