@@ -1125,7 +1125,7 @@ footer p{ color:var(--muted); font-size:13px; }
         <span data-i18n="foot.visitors">Visitors</span>
         <span class="visit-count" id="visitCount">--</span>
       </div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+      <div id="dlCounters" style="display:none;gap:10px;flex-wrap:wrap;justify-content:center;">
         <span class="visit-counter" title="macOS downloads"><span class="visit-dot"></span>macOS&nbsp;<span class="visit-count" id="dlMacCount">–</span></span>
         <span class="visit-counter" title="Windows downloads"><span class="visit-dot"></span>Windows&nbsp;<span class="visit-count" id="dlWinCount">–</span></span>
       </div>
@@ -1201,10 +1201,12 @@ document.querySelectorAll('.feature-card').forEach((c, i) => c.style.transitionD
 (function(){
   const macEl = document.getElementById('dlMacCount');
   const winEl = document.getElementById('dlWinCount');
+  const box = document.getElementById('dlCounters');
   function render(d){
     if (!d) return;
     if (macEl && typeof d.mac === 'number') macEl.textContent = d.mac.toLocaleString('en-US');
     if (winEl && typeof d.win === 'number') winEl.textContent = d.win.toLocaleString('en-US');
+    if (box && (typeof d.mac === 'number' || typeof d.win === 'number')) box.style.display = 'flex';
   }
 
   // Read the shared totals (no increment).
