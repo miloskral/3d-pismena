@@ -1204,26 +1204,28 @@ document.querySelectorAll('.feature-card').forEach((c, i) => c.style.transitionD
   const EL = { mac: document.getElementById('dlMacCount'), win: document.getElementById('dlWinCount') };
 
   function set(key, n){ if (typeof n === 'number' && EL[key]) EL[key].textContent = n.toLocaleString('en-US'); }
-  function pull(key, suffix){
-    fetch(`https://api.counterapi.dev/v1/${NS}/${NAME[key]}${suffix}`, { cache: 'no-store' })
+
+  // Read current totals (no increment). A brand-new counter returns 400 until its first click.
+  Object.keys(NAME).forEach(key => {
+    fetch(`https://api.counterapi.dev/v1/${NS}/${NAME[key]}`, { cache: 'no-store' })
       .then(r => r.ok ? r.json() : Promise.reject())
       .then(d => { const c = d && (d.count ?? d.value); set(key, c); })
       .catch(() => {});
-  }
+  });
 
-  // Read current totals (no increment).
-  pull('mac', ''); pull('win', '');
-
-  // Count a real download click at most once per browser session per platform.
+  // Count a real download click. Once per browser session per platform, but the
+  // session-guard is locked ONLY after the increment succeeds — so a failed call
+  // (rate limit / offline) can be retried on the next click instead of being lost.
   document.querySelectorAll('a[data-dl]').forEach(a => {
     a.addEventListener('click', () => {
       const key = a.getAttribute('data-dl');
       if (!NAME[key]) return;
-      const guard = 'dl_hit_' + key;
+      const guard = 'dlhit2_' + key;
       if (sessionStorage.getItem(guard)) return;
-      try { sessionStorage.setItem(guard, '1'); } catch(e) {}
-      if (EL[key]) { const c = parseInt((EL[key].textContent || '0').replace(/[^0-9]/g, ''), 10); if (!isNaN(c)) EL[key].textContent = (c + 1).toLocaleString('en-US'); }
-      pull(key, '/up');
+      fetch(`https://api.counterapi.dev/v1/${NS}/${NAME[key]}/up`, { cache: 'no-store', keepalive: true })
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(d => { try { sessionStorage.setItem(guard, '1'); } catch(e) {} const c = d && (d.count ?? d.value); set(key, c); })
+        .catch(() => {});
     });
   });
 })();
