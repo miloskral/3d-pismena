@@ -100,6 +100,18 @@ en: {
   "price.f4": "Full custom color system (wall · acrylic · base)",
   "price.f5": "macOS &amp; Windows",
   "price.f6": "Offline license — no account required",
+  "price.f7": "LumiSign NEON web app included",
+
+  "neon.badge": "NEW · Web application",
+  "neon.title": `LumiSign <span class="neon-glow">NEON</span> — neon signs in your browser`,
+  "neon.desc": `LumiSign NEON is a web application that turns a <strong style="color:var(--text)">DXF</strong> outline into a 3D-printable channel for <strong style="color:var(--text)">LED neon flex strips</strong>. Set the slot width, wall and base thickness, channel depth and optional back plate, add mounting and cable holes, split large signs to fit your print bed — and the built-in <strong style="color:var(--text)">material calculator</strong> instantly shows the required strip length, number of rolls and the physical size of the sign. Everything renders in a real-time 3D preview, right in your browser.`,
+  "neon.chips": `<span class="neon-chip">+ DXF import</span><span class="neon-chip">+ LED strip routing</span><span class="neon-chip">+ Mounting &amp; cable holes</span><span class="neon-chip">+ Print splitting</span><span class="neon-chip">+ Material calculator</span><span class="neon-chip">+ Real-time 3D preview</span><span class="neon-chip">+ STL export</span><span class="neon-chip">+ 11 languages</span>`,
+  "neon.license": `<strong style="color:#ff5468;">One license — both tools.</strong> Your 3D Channel Letters license key also unlocks LumiSign NEON. A single €5 / month subscription covers the desktop app and the web app.`,
+  "neon.btn": "Open NEON web app →",
+  "neon.note": "Runs in any modern browser — nothing to install.",
+
+  "ll.h8": "LumiSign NEON web app",
+  "ll.p8": `An active subscription also covers the <a href="https://neon.lumisign3d.com">LumiSign NEON</a> web application for generating 3D-printable channels for LED neon strips. The same license terms and restrictions apply.`,
   "price.btn": "⬇ Start Free Trial",
 
   "dl.label": "Download",
@@ -340,6 +352,18 @@ sk: {
   "price.f4": "Plný vlastný farebný systém (stena · akryl · základňa)",
   "price.f5": "macOS a Windows",
   "price.f6": "Offline licencia — bez účtu",
+  "price.f7": "Webová aplikácia LumiSign NEON v cene",
+
+  "neon.badge": "NOVINKA · Webová aplikácia",
+  "neon.title": `LumiSign <span class="neon-glow">NEON</span> — neónové nápisy v prehliadači`,
+  "neon.desc": `LumiSign NEON je webová aplikácia, ktorá premení <strong style="color:var(--text)">DXF</strong> obrys na 3D tlačiteľný kanál pre <strong style="color:var(--text)">LED neon flex pásiky</strong>. Nastavte šírku drážky, hrúbku steny a základne, hĺbku kanála aj voliteľnú zadnú dosku, pridajte montážne a káblové otvory, rozdeľte veľké nápisy podľa tlačovej plochy — a vstavaná <strong style="color:var(--text)">kalkulačka materiálu</strong> okamžite ukáže potrebnú dĺžku pásika, počet roliek a fyzickú veľkosť nápisu. Všetko sa vykresľuje v 3D náhľade v reálnom čase, priamo v prehliadači.`,
+  "neon.chips": `<span class="neon-chip">+ DXF import</span><span class="neon-chip">+ Trasovanie LED pásika</span><span class="neon-chip">+ Montážne a káblové otvory</span><span class="neon-chip">+ Delenie pre tlač</span><span class="neon-chip">+ Kalkulačka materiálu</span><span class="neon-chip">+ 3D náhľad v reálnom čase</span><span class="neon-chip">+ STL export</span><span class="neon-chip">+ 11 jazykov</span>`,
+  "neon.license": `<strong style="color:#ff5468;">Jedna licencia — oba nástroje.</strong> Váš licenčný kľúč pre 3D Channel Letters odomkne aj LumiSign NEON. Jedno predplatné 5 € / mesiac pokrýva desktopovú aj webovú aplikáciu.`,
+  "neon.btn": "Otvoriť webovú appku NEON →",
+  "neon.note": "Beží v každom modernom prehliadači — netreba nič inštalovať.",
+
+  "ll.h8": "Webová aplikácia LumiSign NEON",
+  "ll.p8": `Aktívne predplatné pokrýva aj webovú aplikáciu <a href="https://neon.lumisign3d.com">LumiSign NEON</a> na generovanie 3D tlačiteľných kanálov pre LED neónové pásiky. Platia rovnaké licenčné podmienky.`,
   "price.btn": "⬇ Spustiť skúšobnú verziu",
 
   "dl.label": "Stiahnuť",
@@ -580,6 +604,18 @@ cs: {
   "price.f4": "Plný vlastní barevný systém (stěna · akryl · základna)",
   "price.f5": "macOS a Windows",
   "price.f6": "Offline licence — bez účtu",
+  "price.f7": "Webová aplikace LumiSign NEON v ceně",
+
+  "neon.badge": "NOVINKA · Webová aplikace",
+  "neon.title": `LumiSign <span class="neon-glow">NEON</span> — neonové nápisy v prohlížeči`,
+  "neon.desc": `LumiSign NEON je webová aplikace, která promění <strong style="color:var(--text)">DXF</strong> obrys ve 3D tisknutelný kanál pro <strong style="color:var(--text)">LED neon flex pásky</strong>. Nastavte šířku drážky, tloušťku stěny a základny, hloubku kanálu i volitelnou zadní desku, přidejte montážní a kabelové otvory, rozdělte velké nápisy podle tiskové plochy — a vestavěná <strong style="color:var(--text)">kalkulačka materiálu</strong> okamžitě ukáže potřebnou délku pásku, počet rolí a fyzickou velikost nápisu. Vše se vykresluje ve 3D náhledu v reálném čase, přímo v prohlížeči.`,
+  "neon.chips": `<span class="neon-chip">+ DXF import</span><span class="neon-chip">+ Trasování LED pásku</span><span class="neon-chip">+ Montážní a kabelové otvory</span><span class="neon-chip">+ Dělení pro tisk</span><span class="neon-chip">+ Kalkulačka materiálu</span><span class="neon-chip">+ 3D náhled v reálném čase</span><span class="neon-chip">+ STL export</span><span class="neon-chip">+ 11 jazyků</span>`,
+  "neon.license": `<strong style="color:#ff5468;">Jedna licence — oba nástroje.</strong> Váš licenční klíč pro 3D Channel Letters odemkne i LumiSign NEON. Jedno předplatné 5 € / měsíc pokrývá desktopovou i webovou aplikaci.`,
+  "neon.btn": "Otevřít webovou aplikaci NEON →",
+  "neon.note": "Běží v každém moderním prohlížeči — není třeba nic instalovat.",
+
+  "ll.h8": "Webová aplikace LumiSign NEON",
+  "ll.p8": `Aktivní předplatné pokrývá i webovou aplikaci <a href="https://neon.lumisign3d.com">LumiSign NEON</a> pro generování 3D tisknutelných kanálů pro LED neonové pásky. Platí stejné licenční podmínky.`,
   "price.btn": "⬇ Spustit zkušební verzi",
 
   "dl.label": "Stáhnout",
@@ -820,6 +856,18 @@ de: {
   "price.f4": "Vollständiges eigenes Farbsystem (Wand · Acryl · Basis)",
   "price.f5": "macOS & Windows",
   "price.f6": "Offline-Lizenz — kein Konto erforderlich",
+  "price.f7": "LumiSign NEON Web-App inklusive",
+
+  "neon.badge": "NEU · Web-App",
+  "neon.title": `LumiSign <span class="neon-glow">NEON</span> — Neonschriftzüge im Browser`,
+  "neon.desc": `LumiSign NEON ist eine Web-App, die eine <strong style="color:var(--text)">DXF</strong>-Kontur in einen 3D-druckbaren Kanal für <strong style="color:var(--text)">LED-Neon-Flex-Streifen</strong> verwandelt. Stellen Sie Schlitzbreite, Wand- und Bodenstärke, Kanaltiefe und optionale Rückplatte ein, fügen Sie Montage- und Kabelöffnungen hinzu, teilen Sie große Schriftzüge passend zum Druckbett — und der integrierte <strong style="color:var(--text)">Materialrechner</strong> zeigt sofort die benötigte Streifenlänge, die Anzahl der Rollen und die physische Größe des Schriftzugs. Alles in einer Echtzeit-3D-Vorschau, direkt im Browser.`,
+  "neon.chips": `<span class="neon-chip">+ DXF-Import</span><span class="neon-chip">+ LED-Streifen-Routing</span><span class="neon-chip">+ Montage- &amp; Kabelöffnungen</span><span class="neon-chip">+ Druck-Aufteilung</span><span class="neon-chip">+ Materialrechner</span><span class="neon-chip">+ Echtzeit-3D-Vorschau</span><span class="neon-chip">+ STL-Export</span><span class="neon-chip">+ 11 Sprachen</span>`,
+  "neon.license": `<strong style="color:#ff5468;">Eine Lizenz — beide Tools.</strong> Ihr Lizenzschlüssel für 3D Channel Letters schaltet auch LumiSign NEON frei. Ein Abo für 5 € / Monat deckt die Desktop-App und die Web-App ab.`,
+  "neon.btn": "NEON Web-App öffnen →",
+  "neon.note": "Läuft in jedem modernen Browser — keine Installation nötig.",
+
+  "ll.h8": "LumiSign NEON Web-App",
+  "ll.p8": `Ein aktives Abonnement umfasst auch die Web-App <a href="https://neon.lumisign3d.com">LumiSign NEON</a> zur Erzeugung 3D-druckbarer Kanäle für LED-Neon-Streifen. Es gelten dieselben Lizenzbedingungen.`,
   "price.btn": "⬇ Kostenlose Testversion starten",
 
   "dl.label": "Herunterladen",
@@ -1060,6 +1108,18 @@ pl: {
   "price.f4": "Pełny własny system kolorów (ściana · akryl · podstawa)",
   "price.f5": "macOS i Windows",
   "price.f6": "Licencja offline — bez konta",
+  "price.f7": "Aplikacja webowa LumiSign NEON w cenie",
+
+  "neon.badge": "NOWOŚĆ · Aplikacja webowa",
+  "neon.title": `LumiSign <span class="neon-glow">NEON</span> — neonowe napisy w przeglądarce`,
+  "neon.desc": `LumiSign NEON to aplikacja webowa, która zamienia obrys <strong style="color:var(--text)">DXF</strong> w kanał do druku 3D dla <strong style="color:var(--text)">taśm LED neon flex</strong>. Ustaw szerokość rowka, grubość ścianki i podstawy, głębokość kanału oraz opcjonalną płytę tylną, dodaj otwory montażowe i kablowe, podziel duże napisy pod pole robocze drukarki — a wbudowany <strong style="color:var(--text)">kalkulator materiału</strong> od razu pokaże wymaganą długość taśmy, liczbę rolek i fizyczny rozmiar napisu. Wszystko w podglądzie 3D w czasie rzeczywistym, prosto w przeglądarce.`,
+  "neon.chips": `<span class="neon-chip">+ Import DXF</span><span class="neon-chip">+ Trasowanie taśmy LED</span><span class="neon-chip">+ Otwory montażowe i kablowe</span><span class="neon-chip">+ Podział do druku</span><span class="neon-chip">+ Kalkulator materiału</span><span class="neon-chip">+ Podgląd 3D w czasie rzeczywistym</span><span class="neon-chip">+ Eksport STL</span><span class="neon-chip">+ 11 języków</span>`,
+  "neon.license": `<strong style="color:#ff5468;">Jedna licencja — oba narzędzia.</strong> Twój klucz licencyjny 3D Channel Letters odblokowuje także LumiSign NEON. Jedna subskrypcja 5 € / mies. obejmuje aplikację desktopową i webową.`,
+  "neon.btn": "Otwórz aplikację NEON →",
+  "neon.note": "Działa w każdej nowoczesnej przeglądarce — bez instalacji.",
+
+  "ll.h8": "Aplikacja webowa LumiSign NEON",
+  "ll.p8": `Aktywna subskrypcja obejmuje także aplikację webową <a href="https://neon.lumisign3d.com">LumiSign NEON</a> do generowania kanałów do druku 3D dla taśm LED neon. Obowiązują te same warunki licencji.`,
   "price.btn": "⬇ Rozpocznij wersję próbną",
 
   "dl.label": "Pobierz",
@@ -1300,6 +1360,18 @@ hu: {
   "price.f4": "Teljes egyéni színrendszer (fal · akril · alap)",
   "price.f5": "macOS és Windows",
   "price.f6": "Offline licenc — fiók nélkül",
+  "price.f7": "LumiSign NEON webalkalmazás az árban",
+
+  "neon.badge": "ÚJ · Webalkalmazás",
+  "neon.title": `LumiSign <span class="neon-glow">NEON</span> — neonfeliratok a böngészőben`,
+  "neon.desc": `A LumiSign NEON egy webalkalmazás, amely a <strong style="color:var(--text)">DXF</strong> körvonalat 3D-nyomtatható csatornává alakítja <strong style="color:var(--text)">LED neon flex szalagokhoz</strong>. Állítsd be a horony szélességét, a fal- és alapvastagságot, a csatorna mélységét és az opcionális hátlapot, adj hozzá rögzítő- és kábelfuratokat, oszd fel a nagy feliratokat a nyomtatótér méretéhez — a beépített <strong style="color:var(--text)">anyagkalkulátor</strong> pedig azonnal megmutatja a szükséges szalaghosszt, a tekercsek számát és a felirat fizikai méretét. Minden valós idejű 3D előnézetben, közvetlenül a böngészőben.`,
+  "neon.chips": `<span class="neon-chip">+ DXF import</span><span class="neon-chip">+ LED szalag útvonal</span><span class="neon-chip">+ Rögzítő- és kábelfuratok</span><span class="neon-chip">+ Nyomtatási felosztás</span><span class="neon-chip">+ Anyagkalkulátor</span><span class="neon-chip">+ Valós idejű 3D előnézet</span><span class="neon-chip">+ STL export</span><span class="neon-chip">+ 11 nyelv</span>`,
+  "neon.license": `<strong style="color:#ff5468;">Egy licenc — mindkét eszköz.</strong> A 3D Channel Letters licenckulcsod a LumiSign NEON-t is feloldja. Egyetlen 5 € / hó előfizetés fedezi az asztali és a webalkalmazást is.`,
+  "neon.btn": "NEON webalkalmazás megnyitása →",
+  "neon.note": "Bármely modern böngészőben fut — telepítés nélkül.",
+
+  "ll.h8": "LumiSign NEON webalkalmazás",
+  "ll.p8": `Az aktív előfizetés a <a href="https://neon.lumisign3d.com">LumiSign NEON</a> webalkalmazásra is kiterjed, amely LED neon szalagokhoz készít 3D-nyomtatható csatornákat. Ugyanazok a licencfeltételek érvényesek.`,
   "price.btn": "⬇ Ingyenes próba indítása",
 
   "dl.label": "Letöltés",
@@ -1540,6 +1612,18 @@ es: {
   "price.f4": "Sistema de color personalizado completo (pared · acrílico · base)",
   "price.f5": "macOS y Windows",
   "price.f6": "Licencia sin conexión: sin cuenta",
+  "price.f7": "App web LumiSign NEON incluida",
+
+  "neon.badge": "NUEVO · Aplicación web",
+  "neon.title": `LumiSign <span class="neon-glow">NEON</span> — rótulos de neón en tu navegador`,
+  "neon.desc": `LumiSign NEON es una aplicación web que convierte un contorno <strong style="color:var(--text)">DXF</strong> en un canal imprimible en 3D para <strong style="color:var(--text)">tiras LED neón flex</strong>. Ajusta el ancho de la ranura, el grosor de pared y base, la profundidad del canal y la placa trasera opcional, añade orificios de montaje y cableado, divide rótulos grandes según tu cama de impresión — y la <strong style="color:var(--text)">calculadora de material</strong> integrada muestra al instante la longitud de tira necesaria, el número de rollos y el tamaño físico del rótulo. Todo en una vista previa 3D en tiempo real, directamente en el navegador.`,
+  "neon.chips": `<span class="neon-chip">+ Importación DXF</span><span class="neon-chip">+ Trazado de tira LED</span><span class="neon-chip">+ Orificios de montaje y cable</span><span class="neon-chip">+ División para impresión</span><span class="neon-chip">+ Calculadora de material</span><span class="neon-chip">+ Vista previa 3D en tiempo real</span><span class="neon-chip">+ Exportación STL</span><span class="neon-chip">+ 11 idiomas</span>`,
+  "neon.license": `<strong style="color:#ff5468;">Una licencia — dos herramientas.</strong> Tu clave de licencia de 3D Channel Letters también desbloquea LumiSign NEON. Una sola suscripción de 5 € / mes cubre la aplicación de escritorio y la web.`,
+  "neon.btn": "Abrir la app web NEON →",
+  "neon.note": "Funciona en cualquier navegador moderno — sin instalación.",
+
+  "ll.h8": "App web LumiSign NEON",
+  "ll.p8": `Una suscripción activa también cubre la aplicación web <a href="https://neon.lumisign3d.com">LumiSign NEON</a> para generar canales imprimibles en 3D para tiras LED de neón. Se aplican las mismas condiciones de licencia.`,
   "price.btn": "⬇ Iniciar prueba gratuita",
 
   "dl.label": "Descargar",
@@ -1780,6 +1864,18 @@ it: {
   "price.f4": "Sistema di colore personalizzato completo (parete · acrilico · base)",
   "price.f5": "macOS e Windows",
   "price.f6": "Licenza offline: nessun account richiesto",
+  "price.f7": "App web LumiSign NEON inclusa",
+
+  "neon.badge": "NOVITÀ · App web",
+  "neon.title": `LumiSign <span class="neon-glow">NEON</span> — insegne al neon nel tuo browser`,
+  "neon.desc": `LumiSign NEON è un'app web che trasforma un contorno <strong style="color:var(--text)">DXF</strong> in un canale stampabile in 3D per <strong style="color:var(--text)">strisce LED neon flex</strong>. Imposta la larghezza della scanalatura, lo spessore di parete e base, la profondità del canale e la piastra posteriore opzionale, aggiungi fori di montaggio e passacavi, dividi le insegne grandi in base al piano di stampa — e il <strong style="color:var(--text)">calcolatore di materiale</strong> integrato mostra subito la lunghezza di striscia necessaria, il numero di rotoli e le dimensioni fisiche dell'insegna. Tutto in un'anteprima 3D in tempo reale, direttamente nel browser.`,
+  "neon.chips": `<span class="neon-chip">+ Import DXF</span><span class="neon-chip">+ Percorso striscia LED</span><span class="neon-chip">+ Fori di montaggio e cavi</span><span class="neon-chip">+ Divisione per la stampa</span><span class="neon-chip">+ Calcolatore materiale</span><span class="neon-chip">+ Anteprima 3D in tempo reale</span><span class="neon-chip">+ Export STL</span><span class="neon-chip">+ 11 lingue</span>`,
+  "neon.license": `<strong style="color:#ff5468;">Una licenza — entrambi gli strumenti.</strong> La tua chiave di licenza di 3D Channel Letters sblocca anche LumiSign NEON. Un unico abbonamento da 5 € / mese copre l'app desktop e l'app web.`,
+  "neon.btn": "Apri l'app web NEON →",
+  "neon.note": "Funziona in qualsiasi browser moderno — nessuna installazione.",
+
+  "ll.h8": "App web LumiSign NEON",
+  "ll.p8": `Un abbonamento attivo copre anche l'app web <a href="https://neon.lumisign3d.com">LumiSign NEON</a> per generare canali stampabili in 3D per strisce LED neon. Si applicano le stesse condizioni di licenza.`,
   "price.btn": "⬇ Inizia la prova gratuita",
 
   "dl.label": "Scarica",
@@ -2020,6 +2116,18 @@ fr: {
   "price.f4": "Système de couleur personnalisé complet (paroi · acrylique · base)",
   "price.f5": "macOS et Windows",
   "price.f6": "Licence hors ligne — aucun compte requis",
+  "price.f7": "App web LumiSign NEON incluse",
+
+  "neon.badge": "NOUVEAU · Application web",
+  "neon.title": `LumiSign <span class="neon-glow">NEON</span> — enseignes néon dans votre navigateur`,
+  "neon.desc": `LumiSign NEON est une application web qui transforme un contour <strong style="color:var(--text)">DXF</strong> en un canal imprimable en 3D pour <strong style="color:var(--text)">rubans LED néon flex</strong>. Réglez la largeur de la rainure, l'épaisseur de paroi et de base, la profondeur du canal et la plaque arrière optionnelle, ajoutez des trous de fixation et de câblage, découpez les grandes enseignes selon votre plateau d'impression — et le <strong style="color:var(--text)">calculateur de matériau</strong> intégré affiche instantanément la longueur de ruban nécessaire, le nombre de rouleaux et la taille physique de l'enseigne. Le tout dans un aperçu 3D en temps réel, directement dans le navigateur.`,
+  "neon.chips": `<span class="neon-chip">+ Import DXF</span><span class="neon-chip">+ Routage du ruban LED</span><span class="neon-chip">+ Trous de fixation et câble</span><span class="neon-chip">+ Découpe pour l'impression</span><span class="neon-chip">+ Calculateur de matériau</span><span class="neon-chip">+ Aperçu 3D en temps réel</span><span class="neon-chip">+ Export STL</span><span class="neon-chip">+ 11 langues</span>`,
+  "neon.license": `<strong style="color:#ff5468;">Une licence — deux outils.</strong> Votre clé de licence 3D Channel Letters débloque aussi LumiSign NEON. Un seul abonnement à 5 € / mois couvre l'application de bureau et l'application web.`,
+  "neon.btn": "Ouvrir l'app web NEON →",
+  "neon.note": "Fonctionne dans tout navigateur moderne — aucune installation.",
+
+  "ll.h8": "App web LumiSign NEON",
+  "ll.p8": `Un abonnement actif couvre également l'application web <a href="https://neon.lumisign3d.com">LumiSign NEON</a> qui génère des canaux imprimables en 3D pour rubans LED néon. Les mêmes conditions de licence s'appliquent.`,
   "price.btn": "⬇ Démarrer l'essai gratuit",
 
   "dl.label": "Télécharger",
@@ -2260,6 +2368,18 @@ ru: {
   "price.f4": "Полная пользовательская система цвета (стенка · акрил · основание)",
   "price.f5": "macOS и Windows",
   "price.f6": "Офлайн-лицензия — без аккаунта",
+  "price.f7": "Веб-приложение LumiSign NEON включено",
+
+  "neon.badge": "НОВОЕ · Веб-приложение",
+  "neon.title": `LumiSign <span class="neon-glow">NEON</span> — неоновые вывески в браузере`,
+  "neon.desc": `LumiSign NEON — это веб-приложение, которое превращает <strong style="color:var(--text)">DXF</strong>-контур в канал для 3D-печати под <strong style="color:var(--text)">гибкий LED-неон</strong>. Задайте ширину паза, толщину стенки и основания, глубину канала и опциональную заднюю пластину, добавьте монтажные и кабельные отверстия, разделите крупные вывески под размер стола принтера — а встроенный <strong style="color:var(--text)">калькулятор материала</strong> сразу покажет нужную длину ленты, количество катушек и физический размер вывески. Всё в 3D-просмотре в реальном времени, прямо в браузере.`,
+  "neon.chips": `<span class="neon-chip">+ Импорт DXF</span><span class="neon-chip">+ Трассировка LED-ленты</span><span class="neon-chip">+ Монтажные и кабельные отверстия</span><span class="neon-chip">+ Разделение для печати</span><span class="neon-chip">+ Калькулятор материала</span><span class="neon-chip">+ 3D-просмотр в реальном времени</span><span class="neon-chip">+ Экспорт STL</span><span class="neon-chip">+ 11 языков</span>`,
+  "neon.license": `<strong style="color:#ff5468;">Одна лицензия — оба инструмента.</strong> Ваш лицензионный ключ 3D Channel Letters открывает и LumiSign NEON. Одна подписка 5 € / мес покрывает настольное и веб-приложение.`,
+  "neon.btn": "Открыть веб-приложение NEON →",
+  "neon.note": "Работает в любом современном браузере — без установки.",
+
+  "ll.h8": "Веб-приложение LumiSign NEON",
+  "ll.p8": `Активная подписка распространяется и на веб-приложение <a href="https://neon.lumisign3d.com">LumiSign NEON</a> для генерации каналов под LED-неон для 3D-печати. Действуют те же условия лицензии.`,
   "price.btn": "⬇ Начать бесплатную пробную версию",
 
   "dl.label": "Скачать",
@@ -2500,6 +2620,18 @@ zh: {
   "price.f4": "完整自定义颜色系统（壁面 · 亚克力 · 底座）",
   "price.f5": "macOS 和 Windows",
   "price.f6": "离线许可——无需账户",
+  "price.f7": "包含 LumiSign NEON 网页应用",
+
+  "neon.badge": "新功能 · 网页应用",
+  "neon.title": `LumiSign <span class="neon-glow">NEON</span> — 在浏览器中制作霓虹灯牌`,
+  "neon.desc": `LumiSign NEON 是一款网页应用，可将 <strong style="color:var(--text)">DXF</strong> 轮廓转换为适用于 <strong style="color:var(--text)">LED 柔性霓虹灯带</strong>的 3D 打印槽体。设置槽宽、壁厚与底厚、槽深及可选背板，添加安装孔和走线孔，按打印床尺寸拆分大型灯牌——内置<strong style="color:var(--text)">材料计算器</strong>即时显示所需灯带长度、卷数及灯牌实际尺寸。所有操作均在浏览器中以实时 3D 预览呈现。`,
+  "neon.chips": `<span class="neon-chip">+ DXF 导入</span><span class="neon-chip">+ LED 灯带布线</span><span class="neon-chip">+ 安装孔与走线孔</span><span class="neon-chip">+ 打印拆分</span><span class="neon-chip">+ 材料计算器</span><span class="neon-chip">+ 实时 3D 预览</span><span class="neon-chip">+ STL 导出</span><span class="neon-chip">+ 11 种语言</span>`,
+  "neon.license": `<strong style="color:#ff5468;">一个许可证——两款工具。</strong>您的 3D Channel Letters 许可证密钥同样可解锁 LumiSign NEON。每月 5 欧元的订阅同时覆盖桌面应用和网页应用。`,
+  "neon.btn": "打开 NEON 网页应用 →",
+  "neon.note": "可在任何现代浏览器中运行——无需安装。",
+
+  "ll.h8": "LumiSign NEON 网页应用",
+  "ll.p8": `有效订阅同时涵盖 <a href="https://neon.lumisign3d.com">LumiSign NEON</a> 网页应用，用于生成适配 LED 霓虹灯带的 3D 打印槽体。适用相同的许可条款。`,
   "price.btn": "⬇ 开始免费试用",
 
   "dl.label": "下载",
