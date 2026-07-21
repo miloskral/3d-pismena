@@ -846,7 +846,7 @@ footer p{ color:var(--muted); font-size:13px; }
     <div class="section-title reveal">
       <div class="section-label" data-i18n="apps.label">LumiSign3D Family</div>
       <h2 data-i18n="apps.title">One license — all apps</h2>
-      <p data-i18n="apps.sub">3D Channel Letters is part of the LumiSign3D family — a complete toolkit for illuminated signage. Below are live previews — every card is the real app running.</p>
+      <p data-i18n="apps.sub">3D Channel Letters is part of the LumiSign3D family — a complete toolkit for illuminated signage. Open any app with one click straight from its card.</p>
     </div>
 
     <div class="apps-license reveal" data-i18n="apps.license"><strong style="color:var(--text)">Your €5 / month license key unlocks everything.</strong> One key activates the desktop app, the web app and every online tool below — no extra subscriptions, no separate accounts. Try each app free, then use the same key everywhere.</div>
@@ -887,8 +887,7 @@ footer p{ color:var(--muted); font-size:13px; }
       <!-- 3 · LumiSign NEON -->
       <div class="app-card reveal">
         <div class="app-frame">
-          <iframe src="https://neon.lumisign3d.com/" loading="lazy" tabindex="-1" scrolling="no" title="LumiSign NEON"></iframe>
-          <span class="app-live"><span class="app-live-dot"></span><span data-i18n="apps.live">LIVE</span></span>
+          <div class="neon-visual" style="position:absolute;inset:0;min-height:0;border:0;border-radius:0;"><span>Neon</span></div>
           <a class="app-frame-link" href="https://neon.lumisign3d.com/" target="_blank" rel="noopener" aria-label="LumiSign NEON"></a>
         </div>
         <div class="app-body">
@@ -1454,7 +1453,7 @@ document.querySelectorAll('.screenshot-card').forEach((c, i) => c.style.transiti
 </script>
 
 <!-- ===== i18n / language switcher ===== -->
-<script src="translations.js?v=20260721"></script>
+<script src="translations.js?v=20260722"></script>
 <script>
 (function(){
   const DEFAULT = 'en';
