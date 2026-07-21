@@ -488,6 +488,50 @@ footer p{ color:var(--muted); font-size:13px; }
   .neon-visual{ min-height:180px; }
   .neon-visual span{ font-size:64px; }
 }
+
+/* ===== APP FAMILY ===== */
+.apps-license{
+  max-width:920px; margin:0 auto 48px; text-align:center;
+  background:linear-gradient(135deg,rgba(82,226,255,0.10),rgba(0,200,255,0.04));
+  border:1px solid rgba(82,226,255,0.35); border-left:3px solid var(--cyan);
+  border-radius:18px; padding:24px 30px;
+  font-size:15px; line-height:1.75; color:var(--muted);
+  box-shadow:0 0 40px rgba(82,226,255,0.08);
+}
+.apps-grid{ display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+.app-card{
+  border-radius:22px; overflow:hidden; border:1px solid var(--border);
+  background:linear-gradient(160deg,rgba(10,20,32,.95),rgba(5,12,20,.95));
+  transition:.3s; display:flex; flex-direction:column;
+}
+.app-card:hover{ transform:translateY(-5px); border-color:rgba(82,226,255,.3); box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 30px rgba(82,226,255,.1); }
+.app-frame{ position:relative; height:300px; overflow:hidden; background:#05080d; border-bottom:1px solid var(--border); }
+.app-frame iframe{ width:200%; height:200%; transform:scale(.5); transform-origin:0 0; border:0; pointer-events:none; display:block; }
+.app-frame-link{ position:absolute; inset:0; z-index:2; }
+.app-live{
+  position:absolute; top:14px; right:14px; z-index:3;
+  display:inline-flex; align-items:center; gap:7px; padding:6px 12px;
+  border-radius:999px; background:rgba(2,7,13,.78); border:1px solid rgba(82,226,255,.35);
+  color:var(--cyan); font-size:11px; font-weight:800; letter-spacing:.08em;
+  backdrop-filter:blur(6px);
+}
+.app-live-dot{ width:7px; height:7px; border-radius:50%; background:var(--cyan); box-shadow:0 0 8px var(--cyan); animation:pulse 2s infinite; }
+.app-body{ padding:26px 28px 28px; display:flex; flex-direction:column; flex:1; }
+.app-kind{ font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--cyan); margin-bottom:8px; }
+.app-body h3{ font-size:20px; font-weight:800; letter-spacing:-.3px; margin-bottom:10px; }
+.app-body p{ color:var(--muted); font-size:14px; line-height:1.7; margin-bottom:16px; }
+.app-chips{ display:flex; flex-wrap:wrap; gap:7px; margin-bottom:20px; }
+.app-chip{
+  display:inline-block; padding:4px 10px; border-radius:8px;
+  background:rgba(82,226,255,0.07); border:1px solid rgba(82,226,255,0.15);
+  color:var(--cyan); font-size:12px; font-weight:500;
+}
+.app-open{ margin-top:auto; display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:var(--cyan); text-decoration:none; }
+.app-open:hover{ text-decoration:underline; }
+@media(max-width:1100px){
+  .apps-grid{ grid-template-columns:1fr; }
+  .app-frame{ height:240px; }
+}
 </style>
 </head>
 <body>
@@ -504,6 +548,7 @@ footer p{ color:var(--muted); font-size:13px; }
     </a>
     <div class="nav-links">
       <a href="#features" class="nav-link" data-i18n="nav.features">Features</a>
+      <a href="#apps" class="nav-link" data-i18n="nav.apps">Apps</a>
       <a href="#neon" class="nav-link" style="color:#ff5468;">NEON</a>
       <a href="#legal" class="nav-link" data-i18n="nav.terms">Terms</a>
       <a href="https://www.instagram.com/channelletters.app/" target="_blank" rel="noopener" class="nav-link" title="Instagram @channelletters.app" style="display:inline-flex;align-items:center;gap:6px;">
@@ -802,13 +847,126 @@ footer p{ color:var(--muted); font-size:13px; }
         <h2 style="font-size:38px;font-weight:900;letter-spacing:-1px;margin-bottom:16px;" data-i18n="neon.title">LumiSign <span class="neon-glow">NEON</span> — neon signs in your browser</h2>
         <p style="color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:22px;" data-i18n="neon.desc">LumiSign NEON is a web application that turns a <strong style="color:var(--text)">DXF</strong> outline into a 3D-printable channel for <strong style="color:var(--text)">LED neon flex strips</strong>. Set the slot width, wall and base thickness, channel depth and optional back plate, add mounting and cable holes, split large signs to fit your print bed — and the built-in <strong style="color:var(--text)">material calculator</strong> instantly shows the required strip length, number of rolls and the physical size of the sign. Everything renders in a real-time 3D preview, right in your browser.</p>
         <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;" data-i18n="neon.chips"><span class="neon-chip">+ DXF import</span><span class="neon-chip">+ LED strip routing</span><span class="neon-chip">+ Mounting &amp; cable holes</span><span class="neon-chip">+ Print splitting</span><span class="neon-chip">+ Material calculator</span><span class="neon-chip">+ Real-time 3D preview</span><span class="neon-chip">+ STL export</span><span class="neon-chip">+ 11 languages</span></div>
-        <div class="legal-callout" style="background:rgba(255,84,104,.05);border-color:rgba(255,84,104,.2);border-left:3px solid #ff5468;" data-i18n="neon.license"><strong style="color:#ff5468;">One license — both tools.</strong> Your 3D Channel Letters license key also unlocks LumiSign NEON. A single €5 / month subscription covers the desktop app and the web app.</div>
+        <div class="legal-callout" style="background:rgba(255,84,104,.05);border-color:rgba(255,84,104,.2);border-left:3px solid #ff5468;" data-i18n="neon.license"><strong style="color:#ff5468;">One license — every app.</strong> Your 3D Channel Letters license key also unlocks LumiSign NEON and every other LumiSign3D app. A single €5 / month subscription covers everything.</div>
         <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-top:26px;">
           <a href="https://neon.lumisign3d.com" target="_blank" rel="noopener" class="btn btn-lg" style="background:linear-gradient(135deg,#ff5468,#ff2d55);color:#fff;box-shadow:0 4px 24px rgba(255,60,80,.35);" data-i18n="neon.btn">Open NEON web app →</a>
           <span style="font-size:13px;color:var(--muted);" data-i18n="neon.note">Runs in any modern browser — nothing to install.</span>
         </div>
       </div>
       <div class="neon-visual"><span>Neon</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- APP FAMILY -->
+<section id="apps" style="padding-top:0;">
+  <div class="container">
+    <div class="section-title reveal">
+      <div class="section-label" data-i18n="apps.label">LumiSign3D Family</div>
+      <h2 data-i18n="apps.title">One license — all apps</h2>
+      <p data-i18n="apps.sub">3D Channel Letters is part of the LumiSign3D family — a complete toolkit for illuminated signage. Below are live previews — every card is the real app running.</p>
+    </div>
+
+    <div class="apps-license reveal" data-i18n="apps.license"><strong style="color:var(--text)">Your €5 / month license key unlocks everything.</strong> One key activates the desktop app, the web app and every online tool below — no extra subscriptions, no separate accounts. Try each app free, then use the same key everywhere.</div>
+
+    <div class="apps-grid">
+
+      <!-- 1 · Web App -->
+      <div class="app-card reveal">
+        <div class="app-frame">
+          <iframe src="https://app.lumisign3d.com/app" loading="lazy" tabindex="-1" scrolling="no" title="3D Channel Letters — Web"></iframe>
+          <span class="app-live"><span class="app-live-dot"></span><span data-i18n="apps.live">LIVE</span></span>
+          <a class="app-frame-link" href="https://app.lumisign3d.com/app" target="_blank" rel="noopener" aria-label="3D Channel Letters — Web"></a>
+        </div>
+        <div class="app-body">
+          <div class="app-kind" data-i18n="apps.a1k">Web app</div>
+          <h3 data-i18n="apps.a1t">3D Channel Letters — Web</h3>
+          <p data-i18n="apps.a1d">The full Channel Letters experience in your browser — load a DXF and get a 3D model with an acrylic rebate. Configure walls, acrylic and base, tune the colors and download a separate STL for every part, ready to print.</p>
+          <div class="app-chips" data-i18n="apps.a1chips"><span class="app-chip">DXF import</span><span class="app-chip">Acrylic rebate</span><span class="app-chip">STL per object</span><span class="app-chip">14-day trial</span></div>
+          <a href="https://app.lumisign3d.com/app" target="_blank" rel="noopener" class="app-open"><span data-i18n="apps.open">Open</span> app.lumisign3d.com ↗</a>
+        </div>
+      </div>
+
+      <!-- 2 · DXF Generator -->
+      <div class="app-card reveal">
+        <div class="app-frame">
+          <iframe src="https://dxfgenerator.lumisign3d.com/" loading="lazy" tabindex="-1" scrolling="no" title="DXF Generator"></iframe>
+          <span class="app-live"><span class="app-live-dot"></span><span data-i18n="apps.live">LIVE</span></span>
+          <a class="app-frame-link" href="https://dxfgenerator.lumisign3d.com/" target="_blank" rel="noopener" aria-label="DXF Generator"></a>
+        </div>
+        <div class="app-body">
+          <div class="app-kind" data-i18n="apps.a2k">Web tool</div>
+          <h3 data-i18n="apps.a2t">DXF Generator</h3>
+          <p data-i18n="apps.a2d">Type your text, pick a font and download a clean DXF for neon signs and channel letters. Supports single-stroke and outline fonts, custom TTF/OTF/WOFF, kerning, welding of overlapping letters and arc smoothing. Exports DXF R12 in millimeters — ready for CNC, laser and bending machines.</p>
+          <div class="app-chips" data-i18n="apps.a2chips"><span class="app-chip">Text → DXF</span><span class="app-chip">Custom fonts (TTF/OTF)</span><span class="app-chip">DXF R12 · mm</span><span class="app-chip">CNC · laser</span></div>
+          <a href="https://dxfgenerator.lumisign3d.com/" target="_blank" rel="noopener" class="app-open"><span data-i18n="apps.open">Open</span> dxfgenerator.lumisign3d.com ↗</a>
+        </div>
+      </div>
+
+      <!-- 3 · LumiSign NEON -->
+      <div class="app-card reveal">
+        <div class="app-frame">
+          <iframe src="https://neon.lumisign3d.com/" loading="lazy" tabindex="-1" scrolling="no" title="LumiSign NEON"></iframe>
+          <span class="app-live"><span class="app-live-dot"></span><span data-i18n="apps.live">LIVE</span></span>
+          <a class="app-frame-link" href="https://neon.lumisign3d.com/" target="_blank" rel="noopener" aria-label="LumiSign NEON"></a>
+        </div>
+        <div class="app-body">
+          <div class="app-kind" data-i18n="apps.a3k">Web app</div>
+          <h3 data-i18n="apps.a3t">LumiSign NEON</h3>
+          <p data-i18n="apps.a3d">Turn a DXF or plain text into a 3D-printable channel for LED neon flex strips. The material calculator instantly shows the strip length, number of rolls and the size of the sign — and splits large signs into tiles that fit your print bed.</p>
+          <div class="app-chips" data-i18n="apps.a3chips"><span class="app-chip">Text → neon</span><span class="app-chip">Material calculator</span><span class="app-chip">Tile splitting</span><span class="app-chip">STL export</span></div>
+          <a href="https://neon.lumisign3d.com/" target="_blank" rel="noopener" class="app-open"><span data-i18n="apps.open">Open</span> neon.lumisign3d.com ↗</a>
+        </div>
+      </div>
+
+      <!-- 4 · ESP32 LED Simulator -->
+      <div class="app-card reveal">
+        <div class="app-frame">
+          <iframe src="https://ledsimulator.lumisign3d.com/app" loading="lazy" tabindex="-1" scrolling="no" title="ESP32 LED Simulator"></iframe>
+          <span class="app-live"><span class="app-live-dot"></span><span data-i18n="apps.live">LIVE</span></span>
+          <a class="app-frame-link" href="https://ledsimulator.lumisign3d.com/app" target="_blank" rel="noopener" aria-label="ESP32 LED Simulator"></a>
+        </div>
+        <div class="app-body">
+          <div class="app-kind" data-i18n="apps.a6k">Web app</div>
+          <h3 data-i18n="apps.a6t">ESP32 LED Simulator</h3>
+          <p data-i18n="apps.a6d">Simulate addressable LEDs (WS2812B) directly inside acrylic letters — see the strip layout, IN/OUT wiring and live effects. The calculator computes LED count, strip length, current and the required 5 V power supply, and generates ready-to-flash FastLED / WLED code for ESP32.</p>
+          <div class="app-chips" data-i18n="apps.a6chips"><span class="app-chip">Live effects</span><span class="app-chip">Power calculator</span><span class="app-chip">FastLED / WLED code</span><span class="app-chip">Wi-Fi (ESP32)</span></div>
+          <a href="https://ledsimulator.lumisign3d.com/app" target="_blank" rel="noopener" class="app-open"><span data-i18n="apps.open">Open</span> ledsimulator.lumisign3d.com ↗</a>
+        </div>
+      </div>
+
+      <!-- 5 · Gift Box Designer -->
+      <div class="app-card reveal">
+        <div class="app-frame">
+          <iframe src="https://giftbox.lumisign3d.com/" loading="lazy" tabindex="-1" scrolling="no" title="Gift Box Designer"></iframe>
+          <span class="app-live"><span class="app-live-dot"></span><span data-i18n="apps.live">LIVE</span></span>
+          <a class="app-frame-link" href="https://giftbox.lumisign3d.com/" target="_blank" rel="noopener" aria-label="Gift Box Designer"></a>
+        </div>
+        <div class="app-body">
+          <div class="app-kind" data-i18n="apps.a4k">Web tool</div>
+          <h3 data-i18n="apps.a4t">Gift Box Designer</h3>
+          <p data-i18n="apps.a4d">Design and print your own gift box in a few clicks. Pick a format from A4 to A1, adjust the dimensions and download a precise cutting plan ready to cut out and fold — in five languages.</p>
+          <div class="app-chips" data-i18n="apps.a4chips"><span class="app-chip">A4–A1 formats</span><span class="app-chip">Cutting plan</span><span class="app-chip">SK · CZ · PL · EN · DE</span></div>
+          <a href="https://giftbox.lumisign3d.com/" target="_blank" rel="noopener" class="app-open"><span data-i18n="apps.open">Open</span> giftbox.lumisign3d.com ↗</a>
+        </div>
+      </div>
+
+      <!-- 6 · Perimeters -->
+      <div class="app-card reveal">
+        <div class="app-frame">
+          <iframe src="https://perimeters.lumisign3d.com/" loading="lazy" tabindex="-1" scrolling="no" title="Perimeters"></iframe>
+          <span class="app-live"><span class="app-live-dot"></span><span data-i18n="apps.live">LIVE</span></span>
+          <a class="app-frame-link" href="https://perimeters.lumisign3d.com/" target="_blank" rel="noopener" aria-label="Perimeters"></a>
+        </div>
+        <div class="app-body">
+          <div class="app-kind" data-i18n="apps.a5k">Web tool</div>
+          <h3 data-i18n="apps.a5t">Perimeters</h3>
+          <p data-i18n="apps.a5d">Upload a vector and instantly get the exact perimeter of every path — that is, how much sheet metal you need for the returns (side walls) of your channel letters. No guessing, no wasted material.</p>
+          <div class="app-chips" data-i18n="apps.a5chips"><span class="app-chip">Vector perimeters</span><span class="app-chip">Sheet length</span><span class="app-chip">Instant result</span></div>
+          <a href="https://perimeters.lumisign3d.com/" target="_blank" rel="noopener" class="app-open"><span data-i18n="apps.open">Open</span> perimeters.lumisign3d.com ↗</a>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -832,7 +990,7 @@ footer p{ color:var(--muted); font-size:13px; }
         <div class="pricing-feature" data-i18n="price.f4">Full custom color system (wall · acrylic · base)</div>
         <div class="pricing-feature" data-i18n="price.f5">macOS · Windows · Web browser</div>
         <div class="pricing-feature" data-i18n="price.f6">Offline license — no account required</div>
-        <div class="pricing-feature" data-i18n="price.f7">LumiSign NEON web app included</div>
+        <div class="pricing-feature" data-i18n="price.f7">All LumiSign3D web apps included (NEON · DXF Generator · Gift Box · Perimeters · LED Simulator)</div>
       </div>
       <a href="#download" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;" data-i18n="price.btn">⬇ Start Free Trial</a>
     </div>
