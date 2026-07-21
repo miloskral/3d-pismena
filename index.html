@@ -507,6 +507,12 @@ footer p{ color:var(--muted); font-size:13px; }
 .app-card:hover{ transform:translateY(-5px); border-color:rgba(82,226,255,.3); box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 30px rgba(82,226,255,.1); }
 .app-frame{ position:relative; height:300px; overflow:hidden; background:#05080d; border-bottom:1px solid var(--border); }
 .app-frame iframe{ width:200%; height:200%; transform:scale(.5); transform-origin:0 0; border:0; pointer-events:none; display:block; }
+.app-frame img{ width:100%; height:100%; object-fit:cover; object-position:top; display:block; }
+.led-visual{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:22px; background:radial-gradient(circle at 50% 60%, rgba(82,226,255,.07), transparent 70%), #05080d; }
+.led-strip{ display:flex; gap:14px; }
+.led-dot{ width:16px; height:16px; border-radius:50%; animation:ledPulse 1.6s infinite; }
+.led-visual .led-label{ font-size:13px; font-weight:800; letter-spacing:.25em; color:var(--muted); text-transform:uppercase; }
+@keyframes ledPulse{ 0%,100%{ opacity:.35; transform:scale(.85); } 50%{ opacity:1; transform:scale(1.15); } }
 .app-frame-link{ position:absolute; inset:0; z-index:2; }
 .app-live{
   position:absolute; top:14px; right:14px; z-index:3;
@@ -549,7 +555,6 @@ footer p{ color:var(--muted); font-size:13px; }
     <div class="nav-links">
       <a href="#features" class="nav-link" data-i18n="nav.features">Features</a>
       <a href="#apps" class="nav-link" data-i18n="nav.apps">Apps</a>
-      <a href="#neon" class="nav-link" style="color:#ff5468;">NEON</a>
       <a href="#legal" class="nav-link" data-i18n="nav.terms">Terms</a>
       <a href="https://www.instagram.com/channelletters.app/" target="_blank" rel="noopener" class="nav-link" title="Instagram @channelletters.app" style="display:inline-flex;align-items:center;gap:6px;">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
@@ -835,29 +840,6 @@ footer p{ color:var(--muted); font-size:13px; }
   </div>
 </section>
 
-<!-- LUMISIGN NEON -->
-<section id="neon" style="padding-top:0;">
-  <div class="container">
-    <div class="neon-card reveal">
-      <div>
-        <div class="badge" style="background:rgba(255,84,104,.08);border-color:rgba(255,84,104,.3);color:#ff5468;">
-          <span class="badge-dot" style="background:#ff5468;box-shadow:0 0 8px #ff5468;"></span>
-          <span data-i18n="neon.badge">NEW · Web application</span>
-        </div>
-        <h2 style="font-size:38px;font-weight:900;letter-spacing:-1px;margin-bottom:16px;" data-i18n="neon.title">LumiSign <span class="neon-glow">NEON</span> — neon signs in your browser</h2>
-        <p style="color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:22px;" data-i18n="neon.desc">LumiSign NEON is a web application that turns a <strong style="color:var(--text)">DXF</strong> outline into a 3D-printable channel for <strong style="color:var(--text)">LED neon flex strips</strong>. Set the slot width, wall and base thickness, channel depth and optional back plate, add mounting and cable holes, split large signs to fit your print bed — and the built-in <strong style="color:var(--text)">material calculator</strong> instantly shows the required strip length, number of rolls and the physical size of the sign. Everything renders in a real-time 3D preview, right in your browser.</p>
-        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;" data-i18n="neon.chips"><span class="neon-chip">+ DXF import</span><span class="neon-chip">+ LED strip routing</span><span class="neon-chip">+ Mounting &amp; cable holes</span><span class="neon-chip">+ Print splitting</span><span class="neon-chip">+ Material calculator</span><span class="neon-chip">+ Real-time 3D preview</span><span class="neon-chip">+ STL export</span><span class="neon-chip">+ 11 languages</span></div>
-        <div class="legal-callout" style="background:rgba(255,84,104,.05);border-color:rgba(255,84,104,.2);border-left:3px solid #ff5468;" data-i18n="neon.license"><strong style="color:#ff5468;">One license — every app.</strong> Your 3D Channel Letters license key also unlocks LumiSign NEON and every other LumiSign3D app. A single €5 / month subscription covers everything.</div>
-        <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-top:26px;">
-          <a href="https://neon.lumisign3d.com" target="_blank" rel="noopener" class="btn btn-lg" style="background:linear-gradient(135deg,#ff5468,#ff2d55);color:#fff;box-shadow:0 4px 24px rgba(255,60,80,.35);" data-i18n="neon.btn">Open NEON web app →</a>
-          <span style="font-size:13px;color:var(--muted);" data-i18n="neon.note">Runs in any modern browser — nothing to install.</span>
-        </div>
-      </div>
-      <div class="neon-visual"><span>Neon</span></div>
-    </div>
-  </div>
-</section>
-
 <!-- APP FAMILY -->
 <section id="apps" style="padding-top:0;">
   <div class="container">
@@ -874,8 +856,7 @@ footer p{ color:var(--muted); font-size:13px; }
       <!-- 1 · Web App -->
       <div class="app-card reveal">
         <div class="app-frame">
-          <iframe src="https://app.lumisign3d.com/app" loading="lazy" tabindex="-1" scrolling="no" title="3D Channel Letters — Web"></iframe>
-          <span class="app-live"><span class="app-live-dot"></span><span data-i18n="apps.live">LIVE</span></span>
+          <img src="screen6.png" alt="3D Channel Letters Web — 3D preview with explode view" loading="lazy">
           <a class="app-frame-link" href="https://app.lumisign3d.com/app" target="_blank" rel="noopener" aria-label="3D Channel Letters — Web"></a>
         </div>
         <div class="app-body">
@@ -922,8 +903,19 @@ footer p{ color:var(--muted); font-size:13px; }
       <!-- 4 · ESP32 LED Simulator -->
       <div class="app-card reveal">
         <div class="app-frame">
-          <iframe src="https://ledsimulator.lumisign3d.com/app" loading="lazy" tabindex="-1" scrolling="no" title="ESP32 LED Simulator"></iframe>
-          <span class="app-live"><span class="app-live-dot"></span><span data-i18n="apps.live">LIVE</span></span>
+          <div class="led-visual">
+            <div class="led-strip">
+              <span class="led-dot" style="background:#ff3b4e;box-shadow:0 0 14px #ff3b4e;animation-delay:0s;"></span>
+              <span class="led-dot" style="background:#ff9f1c;box-shadow:0 0 14px #ff9f1c;animation-delay:.2s;"></span>
+              <span class="led-dot" style="background:#ffe94a;box-shadow:0 0 14px #ffe94a;animation-delay:.4s;"></span>
+              <span class="led-dot" style="background:#3dff7a;box-shadow:0 0 14px #3dff7a;animation-delay:.6s;"></span>
+              <span class="led-dot" style="background:#52e2ff;box-shadow:0 0 14px #52e2ff;animation-delay:.8s;"></span>
+              <span class="led-dot" style="background:#4a6bff;box-shadow:0 0 14px #4a6bff;animation-delay:1s;"></span>
+              <span class="led-dot" style="background:#c44aff;box-shadow:0 0 14px #c44aff;animation-delay:1.2s;"></span>
+              <span class="led-dot" style="background:#ff4ad4;box-shadow:0 0 14px #ff4ad4;animation-delay:1.4s;"></span>
+            </div>
+            <div class="led-label">WS2812B · ESP32</div>
+          </div>
           <a class="app-frame-link" href="https://ledsimulator.lumisign3d.com/app" target="_blank" rel="noopener" aria-label="ESP32 LED Simulator"></a>
         </div>
         <div class="app-body">
@@ -1462,7 +1454,7 @@ document.querySelectorAll('.screenshot-card').forEach((c, i) => c.style.transiti
 </script>
 
 <!-- ===== i18n / language switcher ===== -->
-<script src="translations.js"></script>
+<script src="translations.js?v=20260721"></script>
 <script>
 (function(){
   const DEFAULT = 'en';
